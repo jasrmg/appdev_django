@@ -1,59 +1,309 @@
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+/*profile header*/
+.profile {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  color: var(--secondary-color);
+  background: var(--darker-primary-color);
+  padding: 20px;
+  width: 60vw;
+  border-radius: 5px; /* Added border-radius for a softer look */
+}
+.profile img {
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  margin-right: 20px;
+  border: 3px solid var(--secondary-color);
+}
+.profile h1 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: bold;
+  line-height: 20px;
+}
+.profile p {
+  margin: 5px 0;
+}
 
-  /*===========VARIABLES=============*/
-  :root {
-    --bg-color: #fdeed8;
-    --nav-color: #33221a;
-    --button-color: #1c1b1b;
-  }
+.followers_avatar img {
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--secondary-color);
+  margin: 0;
+}
+.buttons {
+  margin-left: auto; /* Aligns buttons to the right */
+}
+.button {
+  padding: 10px 15px;
+  background: var(--accent-color);
+  border: none;
+  color: var(--primary-color);
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 10px; /* Space between buttons */
+}
+/*body below the profile*/
+.body_content {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  width: 60vw;
+}
+/*sidebar*/
+.sidebar {
+  flex: 1;
+  background-color: var(--darker-primary-color);
+  color: var(--secondary-color);
+  padding: 20px;
 
-  * {
-    font-size: 16px;
-    margin: 0;
-    box-sizing: border-box;
-  }
+  position: sticky;
+  top: 1px;
+  height: 700px;
+  max-width: 406px;
+  border-radius: 10px;
+  margin-right: 10px;
+}
+.intro {
+  font-weight: bold;
+  font-size: 20px;
+  color: var(--secondary-color);
+  margin-top: 10px;
+}
+.bio_container {
+  text-align: center;
+}
+.bio_text {
+  margin: 10px 0;
+  word-wrap: break-word; /*ensures long words break to the next line*/
+  overflow: hidden; /*ensures text stays in the container*/
+  text-overflow: ellipsis; /*adds... at the end of overflowing text*/
+  max-width: 100%;
+  max-height: 120px;
+}
+.edit_bio {
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  color: var(--primary-color);
+  padding: 10px 120px;
+  border-radius: 5px;
 
-  body {
-    font-family: Poppins, sans-serif;
-    background: var(--bg-color);
-  }
+  background-color: var(--accent-color);
+  margin: 25px 0;
+}
+.info {
+  margin-bottom: 15px;
+}
+.follower_header {
+  margin-left: 10px;
+}
+.follower_title {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+.number_of_follower {
+  opacity: 80%;
+}
+.followers_container {
+  background-color: var(--accent-color);
+  color: var(--primary-color);
+  padding: 10px;
+  border-radius: 8px;
+}
+.follower_picture {
+  width: 102px;
+  height: 102px;
+  border-radius: 8px;
+}
+.followers {
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.follower_card p {
+  font-size: 12px;
+  font-weight: bold;
+  text-align: left;
+  padding-left: 5px;
+}
+/*main_content*/
+.main_content {
+  flex: 2;
+}
+/*whats on your mind*/
+.createPost {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: var(--darker-primary-color);
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.avatar_post {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  border: 1px solid var(--secondary-color);
+}
+.createPost input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid var(--accent-color);
+  border-radius: 20px;
+  background-color: var(--primary-color);
+  outline: none;
+  font-size: 14px;
+}
+.createPost input[type="text"]::placeholder {
+  color: var(--secondary-color);
+  opacity: 50%;
+}
+/*post*/
+/* Sample post styling */
+.post {
+  background-color: var(--darker-primary-color);
+  color: var(--secondary-color);
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
 
-  .profile_details {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 15px;
-  }
+.post_header {
+  display: flex;
+  align-items: center;
+}
 
-  #profile_avatar {
-    width: 156px;
-    height: 155px;
-    border-radius: 50%;
-    border: 2px solid #1c1b1b;
-    margin-bottom: 15px;
-  }
+.post_info {
+  margin-left: 10px;
+}
 
-  .name {
-    font-size: 2rem;
-    font-weight: bold;
-  }
+.post_info h3 {
+  margin: 0;
+  font-size: 16px;
+}
 
-  .username {
-    font-size: 1rem;
-    font-weight: lighter;
-  }
+.post_info p {
+  font-size: 12px;
+  color: gray;
+}
 
-  .bio {
-    text-align: center;
-    padding: 10px;
-  }
+.post_body {
+  margin-top: 10px;
+}
 
-  .break {
+.post_body p {
+  font-size: 14px;
+}
 
-    margin: auto;
-    width: 60vw;
-    border: 0.5px solid rgba(28, 27, 27, 0.3);
-  }
+.post_image {
+  width: 100%;
+  height: auto;
+  margin-top: 10px;
+  border-radius: 8px;
+}
 
-  
+/* Center post footer buttons */
+.post_footer {
+  display: flex;
+  justify-content: center; /* Center the buttons */
+  gap: 10px; /* Space between the buttons */
+  margin-top: 10px;
+}
+
+.post_footer button {
+  background-color: var(--accent-color);
+  color: var(--primary-color);
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.post_footer button i {
+  margin-right: 5px;
+}
+
+/* Comment input section */
+.comment_section {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.comment_section .avatar_post {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  border: 1px solid var(--secondary-color);
+}
+
+.comment_section input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid var(--accent-color);
+  border-radius: 20px;
+  background-color: var(--primary-color);
+  outline: none;
+  font-size: 14px;
+}
+
+.comment_section input[type="text"]::placeholder {
+  color: var(--secondary-color);
+}
+/*samplecomment*/
+.comment {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 10px;
+  background-color: var(--primary-color);
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.comment img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.comment_content {
+  display: flex;
+  flex-direction: column;
+}
+
+.comment_info {
+  margin-bottom: 5px; /* Space between name/time and comment */
+}
+
+.comment_info h4 {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1; /* To ensure it's on a single line */
+}
+
+.comment_info p {
+  margin: 2px 0;
+  font-size: 12px;
+  color: gray;
+}
+
+.comment p {
+  margin: 0;
+  font-size: 14px;
+}

@@ -138,18 +138,25 @@ def create_post(request, username):
     'form':form,
   }
   return render(request, 'OnlyPans/modals/create_post.html', context)
+
+#profile view main code
 @login_required
 def profile_view(request, username):
+  # request_username = User.objects.get(username=username)
+  # print('Req: ', request_username.username)
   user = get_object_or_404(User, username=username)
+
+  is_own_profile = request.user == user #flag to check if the user is the user authenticated
   createpost_form = CreatePostForm()
   editprofile_form = EditProfileForm(instance=user)
-
+  print('User data: ', user.username)
   posts = Post.objects.filter(user=user).order_by('-created_at')
   context = {
   'title': 'OnlyPans | Profile',
   'user': user,
   'createpost_form': createpost_form,
   'editprofile_form': editprofile_form,
+  'is_own_profile': is_own_profile,
   'posts':posts,
   }
   return render(request, 'OnlyPans/profile_view.html', context)

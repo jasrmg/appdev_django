@@ -1,54 +1,64 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %} {% if title %} {{ title }} {% else %} APPDEV {% endif %} {% endblock %}</title>
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  
-</head>
-<body>
-  <!--NAVBAR-->
-  <nav>
-    <div class="left_side">
-      <img src="{% static 'images/onlypans_logo.png' %}" alt="OnlyPans Logo" class="logo">
-      <p class="title">OnlyPans</p>
-    </div>
-    
-    <div class="mid">
-      <div class="search-container">
-        <i class="fas fa-search search-icon"></i>
-        <input type="text" placeholder="Search..." class="searchbar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% block title %} {% if title %} {{ title }} {% else %} APPDEV {% endif %}
+      {% endblock %}
+    </title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!--NAVBAR-->
+    <nav>
+      <div class="left_side">
+        <img
+          src="{% static 'images/onlypans_logo.png' %}"
+          alt="OnlyPans Logo"
+          class="logo"
+        />
+        <p class="title">OnlyPans</p>
       </div>
+
+      <div class="mid">
+        <div class="search-container">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" placeholder="Search..." class="searchbar" />
+        </div>
         <i class="fas fa-home icon home-icon"></i>
         <i class="fas fa-heart icon heart-icon"></i>
         <i class="fas fa-bell icon notification-icon"></i>
-    </div>
+      </div>
 
-    <div class="right">
-      <div class="user-avatar">
-        <a href="{% url 'profile' request.user.username %}">
-          <img src="{{ user.avatar.url }}" alt="User Avatar" class="avatar">
-        </a>
-        <span class="drop-down-arrow" onclick="toggleDropdown(event)">
-          <i class="fas fa-chevron-down"></i>
-        </span>
-        <div class="dropdown-content" id="userDropdown">
-          <a href="#">Change Password</a>
-          <!--CHANGE PASSWORD MODAL-->
-          <a href="{% url 'logout' %}">Logout</a>
+      <div class="right">
+        <div class="user-avatar">
+          <a href="{% url 'profile' request.user.username %}">
+            <img
+              src="{{ request.user.avatar.url }}"
+              alt="User Avatar"
+              class="avatar"
+            />
+          </a>
+          <span class="drop-down-arrow" onclick="toggleDropdown(event)">
+            <i class="fas fa-chevron-down"></i>
+          </span>
+          <div class="dropdown-content" id="userDropdown">
+            <a href="#">Change Password</a>
+            <!--CHANGE PASSWORD MODAL-->
+            <a href="{% url 'logout' %}">Logout</a>
+          </div>
         </div>
       </div>
-    </div>
-  </nav>
+    </nav>
 
-  {% block content %}
+    {% block content %} {% endblock %}
 
-
-  {% endblock %}
-
-<script src="{% static 'js/base.js' %}"></script>
-</body>
+    <script src="{% static 'js/base.js' %}"></script>
+  </body>
 </html>

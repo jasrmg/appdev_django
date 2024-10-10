@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
 /*GLOBAL*/
 :root {
   --primary-color: #fdeed8;
@@ -12,7 +12,6 @@
   --soft-lavender: #e1bee7;
   --light-cream: #fff3e0;
   --sky-blue: #87ceeb;
-
 }
 * {
   box-sizing: border-box;
@@ -31,12 +30,7 @@ body {
   justify-content: center;
   align-items: center;
 }
-
-
-
-
-
-
+/*NAA SA profile.css ang SUMPAY SA PROFILE NA CSS*/
 /*NAVBAR*/
 nav {
   display: flex;
@@ -116,7 +110,7 @@ nav {
 .dropdown-content {
   display: none;
   position: absolute;
-  bottom: -100px;/*position below the avatar*/
+  bottom: -100px; /*position below the avatar*/
   right: 0;
   background-color: var(--secondary-color);
   min-width: 160px;

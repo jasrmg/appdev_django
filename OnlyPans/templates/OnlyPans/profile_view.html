@@ -1,28 +1,334 @@
-{% include 'base.html' %}
-{% load static %}
-<link rel="stylesheet" href="{% static 'css/profile.css' %}">
-<script src="{% static 'js/profile.js' %}" defer></script>
+{% include 'base.html' %} {% load static %} {% block content %}
+<!--naa sa profile.css ang style gpamutang mostly-->
+<link rel="stylesheet" href="{% static 'css/profile.css' %}" />
 
-{% block content %}
-<div class="profile_container">
-    {% include 'OnlyPans/modals/messages_modal.html' %}
-    <div class="profile_details">
-      <img src="{% if user.avatar %}{{ user.avatar.url }}{% else %}{%  static 'images/avatars/default.jpeg' %}{% endif %}" alt="User Avatar" class="user-avatar" id="profile_avatar">
-
-          <p class="name">{{ user.first_name }} {{ user.last_name }}</p>
-          <p class="username">@{{ user.username }}</p>
-        
+{% if user.is_authenticated %}
+<div class="body">
+  <div class="profile">
+    <img src="https://via.placeholder.com/120" alt="Profile Picture" />
+    <div>
+      <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+      <!--ilisanan pani diri ug naa nakoy following-->
+      <p>1.6K followers · 2.9K following</p>
+      <!--ilisanan pani diri ug naa nakoy following-->
+      <div class="followers_avatar">
+        <img
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
+          alt="follower1"
+          class="follow_avatar"
+        />
+        <img
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
+          alt="follower1"
+          class="follow_avatar"
+        />
+        <img
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
+          alt="follower1"
+          class="follow_avatar"
+        />
+        <img
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
+          alt="follower1"
+          class="follow_avatar"
+        />
+        <img
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
+          alt="follower1"
+          class="follow_avatar"
+        />
+        <img
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
+          alt="follower1"
+          class="follow_avatar"
+        />
+        <img
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
+          alt="follower1"
+          class="follow_avatar"
+        />
+      </div>
     </div>
-        <!-- Edit Profile Modal -->
-        {% include 'OnlyPans/modals/edit_profile.html' %}
-        <div class="break"></div>
-        <p class="bio">{{ user.bio }}</p>
-        <div class="break"></div>
-    </div>
+    <!--i condition na if ang logged user ang nakakita kay edit ray makita tas if visiting user kay follow-->
 
-      <!--Create Post Modal-->
-      {% include 'OnlyPans/modals/create_post.html' %}
-      <!--Posts-->
-      {% include 'OnlyPans/posts.html' %}
+    <div class="buttons">
+      {% if is_own_profile %}
+      <button class="button" id="editProfileBtn">Edit</button>
+      <!--EDIT PROFILE MODAL-->
+      {% else %}
+      <button class="button">Follow</button>
+      {% endif %}
+    </div>
+  </div>
+  <div class="body_content">
+    <div class="sidebar">
+      <p class="intro">Intro</p>
+
+      <div class="bio_container">
+        <p class="bio_text">above all, try</p>
+        {% if is_own_profile %}
+        <button class="edit_bio" id="editBioBtn">Edit bio</button>
+        <!--EDIT BIO MODAL-->
+        {% endif %}
+      </div>
+
+      <div class="followers_container">
+        <div class="follower_header">
+          <p class="follower_title">Follower</p>
+          <p class="number_of_follower">1,454 followers</p>
+        </div>
+        <div class="followers">
+          <div class="follower_card">
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
+              alt="follower1"
+              class="follower_picture"
+            />
+            <p class="follower_name">Name, LastName</p>
+          </div>
+          <div class="follower_card">
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
+              alt="follower1"
+              class="follower_picture"
+            />
+            <p class="follower_name">aSD tEST 1234 LONG NAME AAAAA</p>
+          </div>
+          <div class="follower_card">
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
+              alt="follower1"
+              class="follower_picture"
+            />
+            <p class="follower_name">Doriz</p>
+          </div>
+          <div class="follower_card">
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
+              alt="follower1"
+              class="follower_picture"
+            />
+            <p class="follower_name">Name, LastName</p>
+          </div>
+          <div class="follower_card">
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
+              alt="follower1"
+              class="follower_picture"
+            />
+            <p class="follower_name">Jelly Gwapa</p>
+          </div>
+          <div class="follower_card">
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
+              alt="follower1"
+              class="follower_picture"
+            />
+            <p class="follower_name">Doriz</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--end of sidebar-->
+
+    <!--main content-->
+    <div class="main_content">
+      <div class="createPost">
+        <img
+          src="https://via.placeholder.com/120"
+          alt="pp"
+          class="avatar_post"
+        />
+        <input
+          type="text"
+          placeholder="What's cooking, Admin?"
+          id="createPostDiv"
+        />
+        <!--Create POST MODAL-->
+      </div>
+
+      <!--post-->
+      <div class="post">
+        <div class="post_header">
+          <img
+            src="https://via.placeholder.com/50"
+            alt="pp"
+            class="avatar_post"
+          />
+          <div class="post_info">
+            <h3>Jeff Sarmago</h3>
+            <p>2 hours ago</p>
+          </div>
+        </div>
+        <div class="post_body">
+          <p>
+            Here's a sample post. I'm trying a new recipe today: Chocolate Chip
+            Cookies! 🍪
+          </p>
+          <img
+            src="https://via.placeholder.com/600x300"
+            alt="post image"
+            class="post_image"
+          />
+        </div>
+        <div class="post_footer">
+          <button class="like_button">
+            <i class="fa-solid fa-heart"></i> Delicious
+          </button>
+          <button class="comment_button">
+            <i class="fa-solid fa-comment"></i> Comment
+          </button>
+        </div>
+        <div class="comment_section">
+          <img
+            src="https://via.placeholder.com/40"
+            alt="pp"
+            class="avatar_post"
+          />
+          <input type="text" placeholder="Write a comment..." />
+        </div>
+      </div>
+      <div class="post">
+        <div class="post_header">
+          <img
+            src="https://via.placeholder.com/50"
+            alt="pp"
+            class="avatar_post"
+          />
+          <div class="post_info">
+            <h3>Jeff Sarmago</h3>
+            <p>2 hours ago</p>
+          </div>
+        </div>
+        <div class="post_body">
+          <p>
+            Here's a sample post. I'm trying a new recipe today: Chocolate Chip
+            Cookies! 🍪
+          </p>
+          <img
+            src="https://img.freepik.com/free-photo/delicious-cookies-arrangement_23-2150707201.jpg"
+            alt="post image"
+            class="post_image"
+          />
+        </div>
+        <div class="post_footer">
+          <button class="like_button">
+            <i class="fa-solid fa-heart"></i> Delicious
+          </button>
+          <button class="comment_button">
+            <i class="fa-solid fa-comment"></i> Comment
+          </button>
+        </div>
+        <div class="comment_section">
+          <img
+            src="https://via.placeholder.com/40"
+            alt="pp"
+            class="avatar_post"
+          />
+          <input type="text" placeholder="Write a comment..." />
+        </div>
+      </div>
+      <div class="post">
+        <div class="post_header">
+          <img
+            src="https://via.placeholder.com/50"
+            alt="pp"
+            class="avatar_post"
+          />
+          <div class="post_info">
+            <h3>Jeff Sarmago</h3>
+            <p>2 hours ago</p>
+          </div>
+        </div>
+        <div class="post_body">
+          <p>
+            Here's a sample post. I'm trying a new recipe today: Chocolate Chip
+            Cookies! 🍪
+          </p>
+          <img
+            src="https://via.placeholder.com/600x300"
+            alt="post image"
+            class="post_image"
+          />
+        </div>
+        <div class="post_footer">
+          <button class="like_button">
+            <i class="fa-solid fa-heart"></i> Delicious
+          </button>
+          <button class="comment_button">
+            <i class="fa-solid fa-comment"></i> Comment
+          </button>
+        </div>
+        <div class="comment_section">
+          <img
+            src="https://via.placeholder.com/40"
+            alt="pp"
+            class="avatar_post"
+          />
+          <input type="text" placeholder="Write a comment..." />
+        </div>
+      </div>
+      <div class="post">
+        <div class="post_header">
+          <img
+            src="https://via.placeholder.com/50"
+            alt="pp"
+            class="avatar_post"
+          />
+          <div class="post_info">
+            <h3>Jeff Sarmago</h3>
+            <p>2 hours ago</p>
+          </div>
+        </div>
+        <div class="post_body">
+          <p>
+            Here's a sample post. I'm trying a new recipe today: Chocolate Chip
+            Cookies! 🍪
+          </p>
+          <img
+            src="https://via.placeholder.com/600x300"
+            alt="post image"
+            class="post_image"
+          />
+        </div>
+        <div class="post_footer">
+          <button class="like_button">
+            <i class="fa-solid fa-heart"></i> Delicious
+          </button>
+          <button class="comment_button">
+            <i class="fa-solid fa-comment"></i> Comment
+          </button>
+        </div>
+        <!-- Sample comment -->
+        <div class="comment">
+          <img
+            src="https://via.placeholder.com/40"
+            alt="pp"
+            class="avatar_post"
+          />
+          <div class="comment_content">
+            <div class="comment_info">
+              <h4>Maria Garcia</h4>
+              <p>1 hour ago</p>
+            </div>
+            <p>
+              Those cookies sound delicious! I can't wait to try making them
+              🍪🤤
+            </p>
+          </div>
+        </div>
+        <!-- add Comment section -->
+        <div class="comment_section">
+          <img
+            src="https://via.placeholder.com/40"
+            alt="pp"
+            class="avatar_post"
+          />
+          <input type="text" placeholder="Write a comment..." id="addComment" />
+          <!--Comment Modal-->
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-{% endblock %}
+{% endif %} {% endblock %}
