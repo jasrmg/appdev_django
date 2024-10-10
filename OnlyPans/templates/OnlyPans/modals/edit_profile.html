@@ -1,0 +1,81 @@
+{% load static %}
+{% if user == request.user %}
+<!--styles for the modal-->
+<style>
+  .editprofilecontainer {
+    display: flex;
+    justify-content: center;
+  }
+  .btn {
+    padding: 3px 10px;
+    margin: 10px 0;
+  }`
+  /*modal content*/
+  .modal-content {
+    box-sizing: border-box;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 30px;
+    border: 1px solid #000;
+    width: 40%;
+    border-radius: 8px;
+    text-align: center;
+  }
+  .modal-open {
+    overflow: hidden;
+  }
+  /*close btn*/
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  .close:hover,
+  .close:focus {
+    color: red;
+    text-decoration: none;
+    cursor: pointer;
+  }
+</style>
+<!--Trigger Button-->
+<div class="editprofilecontainer">
+  <button id="openEditProfileModalBtn" class="btn">Edit Profile</button>
+  <!--Edit Profile Modal-->
+  <div id="editProfileModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h5>Edit Profile</h5>
+        <form method="POST" enctype="multipart/form-data" action="{% url 'edit_profile' user.username %}">
+          {% csrf_token %}  
+          {{ editprofile_form.as_p }}
+          <button type="submit" class="btn">Save changes</button>
+        </form>
+      </div>
+  </div>
+</div>
+
+
+<script>
+  var modal = document.getElementById('editProfileModal');
+  var btn = document.getElementById('openEditProfileModalBtn');
+  var span = document.getElementsByClassName('close')[0];
+
+  btn.onclick = function () {
+    modal.style.display = "block";  
+    document.body.classList.add("modal-open");
+  }
+
+  span.onclick = function() {
+    modal.style.display = "none";
+    document.body.classList.remove("modal-open");
+  }
+
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+      document.body.classList.remove("modal-open");
+    }
+  }
+</script>
+{% endif %}

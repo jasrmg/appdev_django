@@ -1,0 +1,4 @@
+<div class="form-group">
+  <label for="{{ widget.attrs.id }}">{{ widget.label }}</label>
+  <input type="{{ widget.type }}" name="{{ widget.name }}" {% include "django/forms/widgets/attrs.html" %}>
+</div>

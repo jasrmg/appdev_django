@@ -1,0 +1,28 @@
+{% include 'base.html' %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+<script src="{% static 'js/profile.js' %}" defer></script>
+
+{% block content %}
+<div class="profile_container">
+    {% include 'OnlyPans/modals/messages_modal.html' %}
+    <div class="profile_details">
+      <img src="{% if user.avatar %}{{ user.avatar.url }}{% else %}{%  static 'images/avatars/default.jpeg' %}{% endif %}" alt="User Avatar" class="user-avatar" id="profile_avatar">
+
+          <p class="name">{{ user.first_name }} {{ user.last_name }}</p>
+          <p class="username">@{{ user.username }}</p>
+        
+    </div>
+        <!-- Edit Profile Modal -->
+        {% include 'OnlyPans/modals/edit_profile.html' %}
+        <div class="break"></div>
+        <p class="bio">{{ user.bio }}</p>
+        <div class="break"></div>
+    </div>
+
+      <!--Create Post Modal-->
+      {% include 'OnlyPans/modals/create_post.html' %}
+      <!--Posts-->
+      {% include 'OnlyPans/posts.html' %}
+</div>
+{% endblock %}

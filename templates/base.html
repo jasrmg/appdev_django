@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %} {% if title %} {{ title }} {% else %} APPDEV {% endif %} {% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+  <!--FONT AWESOME ICONS-->
+  <script src="https://kit.fontawesome.com/9a157c2796.js" crossorigin="anonymous"></script>
+  
+</head>
+<body>
+  {% include 'navbar.html' %}
+  {% block content %}
+
+
+  {% endblock %}
+
+  <script>
+    function toggleDropdown(event) {
+      const dropdown = document.getElementById("dropdownContent");
+      event.stopPropagation();
+      //toggle the display of the dropdown
+      if (dropdown.style.display === "none" || dropdown.style.display === "") {
+        dropdown.style.display = "block";
+      } else {
+        dropdown.style.display = "none"
+      }
+    }
+
+    window.onclick = function(event) {
+      const dropdown = document.getElementById("dropdownContent");
+      if (event.target.closest('.navbar_settings') == null) {
+        dropdown.style.display = "none";
+      }
+    };
+  </script>
+</body>
+</html>

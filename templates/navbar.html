@@ -1,0 +1,48 @@
+{% load static %}
+<div class="navbar">
+  <!--DIRI: usbononon wa pay klaro-->
+  <div class="navbar_logo">
+    <p>image logo</p>
+  </div>
+  <div class="navbar_mid">
+    <!--DIRI: usbononon wa pay klaro-->
+    <div class="search_bar">
+      <form action="" method="GET">
+        {% csrf_token %}
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Search. . ." name="query">
+      </form>
+    </div>
+    <div class="home">
+      <a href="{% url 'home' %}">
+          <i class="fa-solid fa-house"></i>
+      </a>
+  </div>
+  
+    <!--DIRI: usbononon wa pay klaro-->
+    <div class="categories">
+      <p>Categories</p>
+      <i class="fa-solid fa-caret-down"></i>
+    </div>
+    
+  </div>
+  <div class="navbar_right">
+    <a href="{% url 'profile' request.user.username %}">
+    <img src="{% if user.avatar %}{{ user.avatar.url }}{% else %}{% static 'images/avatars/default-avatar.jpeg' %}{% endif %}" alt="User Avatar" class="user-avatar" id="user_avatar">
+    </a>
+    <div class="user_details">
+      <p id="name"> {{ user.first_name }} {{ user.last_name }}</p> <!-- Displaying user's full name -->
+      <p id="username">@{{ user.username }}</p> <!-- Displaying username -->
+    </div>
+    <!--DROP DOWN-->
+    <div class="navbar_settings" onclick="toggleDropdown(event)">
+      <i class="fa-solid fa-gear" id="icon"></i>
+      <div class="dropdown-content" id="dropdownContent">
+          <p><a href="{% url 'profile' request.user.username %}">Profile</a></p>
+          <p><a href="">Settings</a></p>
+          <p><a href="{% url 'logout' %}">Logout</a></p>
+      </div>
+    </div>
+  
+  </div>
+</div>
