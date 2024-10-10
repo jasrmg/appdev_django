@@ -5,7 +5,11 @@
 {% if user.is_authenticated %}
 <div class="body">
   <div class="profile">
-    <img src="https://via.placeholder.com/120" alt="Profile Picture" />
+    {% if is_own_profile %}
+    <img src="{{ request.user.avatar.url }}" alt="Profile Picture" />
+    {% else %}
+    <img src="{{ user.avatar.url }}" alt="Profile Picture" />
+    {% endif %}
     <div>
       <h1>{{ user.first_name }} {{ user.last_name }}</h1>
       <!--ilisanan pani diri ug naa nakoy following-->
@@ -62,16 +66,22 @@
   </div>
   <div class="body_content">
     <div class="sidebar">
+      {% if is_own_profile %}
       <p class="intro">Intro</p>
-
       <div class="bio_container">
-        <p class="bio_text">above all, try</p>
-        {% if is_own_profile %}
+        <p class="bio_text">{{ user.bio }}</p>
         <button class="edit_bio" id="editBioBtn">Edit bio</button>
         <!--EDIT BIO MODAL-->
-        {% endif %}
       </div>
-
+      {% else %}
+      <br />
+      <p class="intro">Intro</p>
+      <div class="bio_container">
+        <br />
+        <p class="bio_text">{{ user.bio }}</p>
+        <br />
+      </div>
+      {% endif %}
       <div class="followers_container">
         <div class="follower_header">
           <p class="follower_title">Follower</p>
@@ -116,7 +126,7 @@
               alt="follower1"
               class="follower_picture"
             />
-            <p class="follower_name">Jelly Gwapa</p>
+            <p class="follower_name">Unsaon mani</p>
           </div>
           <div class="follower_card">
             <img
@@ -134,29 +144,35 @@
     <!--main content-->
     <div class="main_content">
       <div class="createPost">
-        <img
-          src="https://via.placeholder.com/120"
-          alt="pp"
-          class="avatar_post"
-        />
+        <img src="{{ request.user.avatar.url }}" alt="pp" class="avatar_post" />
+        {% if is_own_profile %}
         <input
           type="text"
-          placeholder="What's cooking, Admin?"
+          placeholder="What's cooking, {{ request.user.first_name }}?"
           id="createPostDiv"
         />
         <!--Create POST MODAL-->
+        {% else %}
+        <input
+          type="text"
+          placeholder="Write something to {{ user.first_name }}?"
+          id="createPostDiv"
+        />
+        <!--Create POST MODAL-->
+        {% endif %}
       </div>
 
       <!--post-->
       <div class="post">
         <div class="post_header">
           <img
-            src="https://via.placeholder.com/50"
+            src="{{ request.user.avatar.url }}"
             alt="pp"
             class="avatar_post"
           />
           <div class="post_info">
-            <h3>Jeff Sarmago</h3>
+            <h3>{{ user.first_name | title }} {{ user.last_name | title }}</h3>
+            <!--sakto nani diri sa post himoonon na lng na modal para reusable-->
             <p>2 hours ago</p>
           </div>
         </div>
