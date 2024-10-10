@@ -9,5 +9,5 @@ __pycache__/
 
 *.sqlite3
 
-static/
+
 media/
