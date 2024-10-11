@@ -25,7 +25,9 @@
 .profile p {
   margin: 5px 0;
 }
-
+a {
+  text-decoration: none;
+}
 .followers_avatar img {
   width: 30px;
   height: 30px;
@@ -61,22 +63,29 @@
 
   position: sticky;
   top: 1px;
-  height: 100vh;
+  height: auto;
+  max-height: 100vh;
   max-width: 406px;
   border-radius: 10px;
   margin-right: 10px;
 }
+/*for icons in the sidebar*/
+.sidebar i {
+  margin: 10px 4px;
+}
+
 .intro {
   font-weight: bold;
   font-size: 20px;
   color: var(--secondary-color);
   margin-top: 10px;
 }
+
 .bio_container {
   text-align: center;
 }
 .bio_text {
-  margin: 10px 0;
+  margin-top: 35px;
   word-wrap: break-word; /*ensures long words break to the next line*/
   overflow: hidden; /*ensures text stays in the container*/
   text-overflow: ellipsis; /*adds... at the end of overflowing text*/
@@ -88,7 +97,7 @@
   font-weight: bold;
   border: none;
   color: var(--primary-color);
-  padding: 10px 120px;
+  padding: 10px 100px;
   border-radius: 5px;
 
   background-color: var(--accent-color);
@@ -149,7 +158,7 @@
   margin: 0 auto;
 }
 .avatar_post {
-  width: 40px;
+  min-width: 40px;
   height: 40px;
   border-radius: 50%;
   margin-right: 10px;

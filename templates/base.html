@@ -13,6 +13,8 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
+    <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
   </head>
   <body>
     <!--NAVBAR-->
@@ -28,8 +30,16 @@
 
       <div class="mid">
         <div class="search-container">
-          <i class="fas fa-search search-icon"></i>
-          <input type="text" placeholder="Search..." class="searchbar" />
+          <form action="{% url 'search' %}" method="GET">
+            {% csrf_token %}
+            <i class="fas fa-search search-icon"></i>
+            <input
+              type="text"
+              name="q"
+              placeholder="Search..."
+              class="searchbar"
+            />
+          </form>
         </div>
         <i class="fas fa-home icon home-icon"></i>
         <i class="fas fa-heart icon heart-icon"></i>

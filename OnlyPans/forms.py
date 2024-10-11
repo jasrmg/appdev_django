@@ -31,7 +31,7 @@ class CustomClearableFileInput(ClearableFileInput):
 class EditProfileForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'bio', 'avatar']
+        fields = ['first_name', 'last_name', 'avatar']
     
     def __init__(self, *args, **kwargs):
         super(EditProfileForm, self).__init__(*args, **kwargs)
@@ -39,14 +39,7 @@ class EditProfileForm(forms.ModelForm):
         # First name and last name fields
         self.fields['first_name'].widget.attrs.update({'class': 'form-control', 'placeholder': 'First Name'})
         self.fields['last_name'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Last Name'})
-        
-        # Bio field
-        self.fields['bio'].widget.attrs.update({
-            'class': 'form-control', 
-            'placeholder': 'Tell me something about yourself. . .',
-            'rows': 3,  # Set height
-            'cols': 40  # Set width
-        })
+
         
         # Avatar field (use custom widget)
         self.fields['avatar'].widget = CustomClearableFileInput()

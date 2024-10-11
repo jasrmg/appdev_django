@@ -4,8 +4,9 @@ from django.http import HttpResponse
 from django.contrib.auth import login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db.models import Q
 
-from OnlyPans.models import Ingredient, Post, PostImage
+from OnlyPans.models import Follow, Ingredient, Post, PostImage
 
 from .forms import EditProfileForm, CreatePostForm, SignupForm, LoginForm
 
@@ -79,24 +80,23 @@ def logout_view(request):
 User = get_user_model()
 
 def edit_profile(request, username):
-  user = get_object_or_404(User, username=username)
-  form = None
+    user = get_object_or_404(User, username=username)
+    form = None
 
-  if request.user == user:
-    if request.method == 'POST':
-      form = EditProfileForm(request.POST, request.FILES, instance=user)
-      if form.is_valid():
-        form.save()
-        messages.success(request, 'Updated and ready to serve! Your profile is now the main course!')
-        return redirect('profile', username=user.username)
-    else:
-      form = EditProfileForm(instance=user)
+    if request.user == user:
+        if request.method == 'POST':
+            form = EditProfileForm(request.POST, request.FILES, instance=user)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Updated and ready to serve! Your profile is now the main course!')
+                return redirect('profile', username=user.username)
+        else:
+            form = EditProfileForm(instance=user)
 
-  context = {
-     'form': form,
-  }
-  return render(request, 'OnlyPans/modals/edit_profile.html', context)
-
+    context = {
+        'form': form,
+    }
+    return render(request, 'OnlyPans/modals/edit_profile.html', context)
 
 def create_post(request, username):
   user = get_object_or_404(User, username=username)
@@ -145,22 +145,38 @@ def profile_view(request, username):
   # request_username = User.objects.get(username=username)
   # print('Req: ', request_username.username)
   user = get_object_or_404(User, username=username)
-
+  #flags
   is_own_profile = request.user == user #flag to check if the user is the user authenticated
+  is_following = Follow.objects.filter(follower=request.user, followed=user).exists() #check if the visiting user is following the other account
+
+  #forms
   createpost_form = CreatePostForm()
   editprofile_form = EditProfileForm(instance=user)
-  print('User data: ', user.username)
-
   posts = Post.objects.filter(user=user).order_by('-created_at').prefetch_related('images', 'comment_set')
+  followers = user.followers.all() #get the followers of the user
+  following = user.following.all() #get the following of the user
+  number_of_follower = followers.count()
+  number_of_following = following.count()
   
-  
+  #show 2 random comment and fetch the ingredients:
+  for post in posts:
+    comments = list(post.comment_set.all())
+    #fetching the post ingredients:
+    post.ingredients_list = post.ingredients.all()[:3]#first 3 ingredients only
+    #2 random comments
+    post.random_comments = random.sample(comments, min(2, len(comments)))
   context = {
   'title': 'OnlyPans | Profile',
   'user': user,
   'createpost_form': createpost_form,
   'editprofile_form': editprofile_form,
   'is_own_profile': is_own_profile,
+  'is_following': is_following,
   'posts': posts,
+  'follower': followers,
+  'following': following,
+  'number_of_follower': number_of_follower,
+  'number_of_following': number_of_following,
   }
   return render(request, 'OnlyPans/profile_view.html', context)
 
@@ -172,6 +188,29 @@ def delete_post(request, post_id):
         messages.success(request, "Your post has been deleted.")
     return redirect('profile', username=request.user.username)
 
+#search
+def search_view(request):
+  query = request.GET.get('q')
+  post = []
+  users = []
+
+  if query:
+    #search post by title or description:
+    posts = Post.objects.filter(
+      Q(title__icontains=query) | Q(description__icontains=query)
+    ).distinct()
+    #search users by username or name
+    users = User.objects.filter(
+      Q(username__icontains=query) | Q(first_name__icontains=query) | Q(last_name__icontains=query)
+    ).distinct()
+
+  context = {
+    'query': query,
+    'posts': posts,
+    'users': users,
+  }
+  return render(request, 'OnlyPans/searchtest.html', context)
+    
 # @login_required
 # def edit_post(request, post_id):
 #     post = get_object_or_404(Post, post_id=post_id)

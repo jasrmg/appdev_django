@@ -4,6 +4,7 @@
 
 {% if user.is_authenticated %}
 <div class="body">
+  {% include 'OnlyPans/modals/messages_modal.html' %}
   <div class="profile">
     {% if is_own_profile %}
     <img src="{{ request.user.avatar.url }}" alt="Profile Picture" />
@@ -13,130 +14,93 @@
     <div>
       <h1>{{ user.first_name }} {{ user.last_name }}</h1>
       <!--ilisanan pani diri ug naa nakoy following-->
-      <p>1.6K followers · 2.9K following</p>
+      <p>
+        <p>
+          {{ number_of_follower }} follower{% if number_of_follower > 1 %}s{% endif %} · 
+          {{ number_of_following }} following{% if number_of_following > 1 %}s{% endif %}
+        </p>
+      </p>
       <!--ilisanan pani diri ug naa nakoy following-->
+      
       <div class="followers_avatar">
+      {% if follower %}
+      {% for user in follower|slice:":6" %}
+      <a href="{% url 'profile' user.follower.username %}">
         <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
-          alt="follower1"
+          src="{{ user.follower.avatar.url }}"
+          alt="{{ user.follower.username }}"
           class="follow_avatar"
         />
-        <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
-          alt="follower1"
-          class="follow_avatar"
-        />
-        <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
-          alt="follower1"
-          class="follow_avatar"
-        />
-        <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
-          alt="follower1"
-          class="follow_avatar"
-        />
-        <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
-          alt="follower1"
-          class="follow_avatar"
-        />
-        <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
-          alt="follower1"
-          class="follow_avatar"
-        />
-        <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
-          alt="follower1"
-          class="follow_avatar"
-        />
+      </a>
+      {% endfor %}
+      {% endif %}
       </div>
+      
     </div>
-    <!--i condition na if ang logged user ang nakakita kay edit ray makita tas if visiting user kay follow-->
 
     <div class="buttons">
       {% if is_own_profile %}
       <button class="button" id="editProfileBtn">Edit</button>
       <!--EDIT PROFILE MODAL-->
+      {% include 'OnlyPans/modals/edit_profile.html' %}
       {% else %}
-      <button class="button">Follow</button>
+      {% if is_following %}
+      <button class="button" id="unfollowBtn">Unfollow</button>
+      {% else %}
+      <button class="button" id="followBtn">Follow</button>
+      {% endif %}
       {% endif %}
     </div>
   </div>
   <div class="body_content">
     <div class="sidebar">
-      {% if is_own_profile %}
+      
       <p class="intro">Intro</p>
+      <p></p><i class="fas fa-wifi" style="transform: rotate(50deg);"></i>Followed by <strong>{{ number_of_follower }} people</strong></p>
+      <p><i class="fas fa-calendar-alt"></i>Joined on <strong>{{ user.date_joined|date:"F j, Y" }}</strong></p>
+      {% if is_own_profile %}
       <div class="bio_container">
         <p class="bio_text">{{ user.bio }}</p>
         <button class="edit_bio" id="editBioBtn">Edit bio</button>
         <!--EDIT BIO MODAL-->
       </div>
       {% else %}
-      <br />
-      <p class="intro">Intro</p>
       <div class="bio_container">
-        <br />
         <p class="bio_text">{{ user.bio }}</p>
         <br />
       </div>
       {% endif %}
       <div class="followers_container">
         <div class="follower_header">
-          <p class="follower_title">Follower</p>
-          <p class="number_of_follower">1,454 followers</p>
+          
+          <p class="follower_title">Follower{% if number_of_follower > 1 %}s{% endif %}</p>
+          <p class="number_of_follower">{{ number_of_follower }} follower{% if number_of_follower > 1 %}s{% endif %}</p>
         </div>
+        {% if follower %}
+        
         <div class="followers">
+          {% for user in follower %}
           <div class="follower_card">
+            
+            <a href="{% url 'profile' user.follower.username %}">
             <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
-              alt="follower1"
+              src="{{ user.follower.avatar.url }}"
+              alt="{{ user.follower.username }}"
               class="follower_picture"
             />
-            <p class="follower_name">Name, LastName</p>
+          </a>
+            <p class="follower_name">{{ user.follower.last_name }}, {{ user.follower.first_name }}</p>           
           </div>
-          <div class="follower_card">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
-              alt="follower1"
-              class="follower_picture"
-            />
-            <p class="follower_name">aSD tEST 1234 LONG NAME AAAAA</p>
-          </div>
-          <div class="follower_card">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
-              alt="follower1"
-              class="follower_picture"
-            />
-            <p class="follower_name">Doriz</p>
-          </div>
-          <div class="follower_card">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
-              alt="follower1"
-              class="follower_picture"
-            />
-            <p class="follower_name">Name, LastName</p>
-          </div>
-          <div class="follower_card">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
-              alt="follower1"
-              class="follower_picture"
-            />
-            <p class="follower_name">Unsaon mani</p>
-          </div>
-          <div class="follower_card">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dVbLMzlaeJnL5C6RpZ8HLRECJhH6ILEGKg&s"
-              alt="follower1"
-              class="follower_picture"
-            />
-            <p class="follower_name">Doriz</p>
-          </div>
+          {% endfor %}
+          <div class="follower_card"></div>
+          {% if number_of_follower == 0 %}
+          <p class="number_of_follower">No follower</p> 
+          {% endif %}
+
         </div>
+        
+        
+        {% endif %}
       </div>
     </div>
     <!--end of sidebar-->

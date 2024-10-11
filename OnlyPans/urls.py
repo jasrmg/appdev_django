@@ -20,4 +20,7 @@ urlpatterns = [
   #MODALS
   path('edit_profile/<str:username>/', views.edit_profile, name='edit_profile'),
   path('create_post/<str:username>/', views.create_post, name='create_post'),
+
+  #search test
+  path('search/', views.search_view, name='search'),
 ]

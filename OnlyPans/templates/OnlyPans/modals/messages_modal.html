@@ -1,29 +1,27 @@
-{% if messages %}
-{% for message in messages %}
+{% load static %} {% if messages %} {% for message in messages %}
 <div class="modal bg-muted fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content" style="text-align: center;">
-            {% if message.tags == 'success' %}
-                <h5 class="modal-title" style="color: green;">Success!</h5>
-                <hr>
-                <p>{{ message }}</p>
-            {% elif message.tags == 'error' %}
-                <h5 class="modal-title" style="color: red;">Error!</h5>
-                <hr>
-                <p>{{ message }}</p>
-            {% endif %}
-        </div>
+  <div class="modal-dialog">
+    <div class="modal-content" style="text-align: center">
+      {% if message.tags == 'success' %}
+      <h5 class="modal-title" style="color: green">Success!</h5>
+      <hr />
+      <p>{{ message }}</p>
+      {% elif message.tags == 'error' %}
+      <h5 class="modal-title" style="color: red">Error!</h5>
+      <hr />
+      <p>{{ message }}</p>
+      {% endif %}
     </div>
+  </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script>
-$(document).ready(function() {
+  $(document).ready(function () {
     $("#myModal").modal("show");
-    setTimeout(function() {
-        $('#myModal').modal('hide');
+    setTimeout(function () {
+      $("#myModal").modal("hide");
     }, 2000);
-});
+  });
 </script>
-{% endfor %}
-{% endif %}
+{% endfor %} {% endif %}
