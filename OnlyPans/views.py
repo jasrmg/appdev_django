@@ -150,14 +150,17 @@ def profile_view(request, username):
   createpost_form = CreatePostForm()
   editprofile_form = EditProfileForm(instance=user)
   print('User data: ', user.username)
-  posts = Post.objects.filter(user=user).order_by('-created_at')
+
+  posts = Post.objects.filter(user=user).order_by('-created_at').prefetch_related('images', 'comment_set')
+  
+  
   context = {
   'title': 'OnlyPans | Profile',
   'user': user,
   'createpost_form': createpost_form,
   'editprofile_form': editprofile_form,
   'is_own_profile': is_own_profile,
-  'posts':posts,
+  'posts': posts,
   }
   return render(request, 'OnlyPans/profile_view.html', context)
 

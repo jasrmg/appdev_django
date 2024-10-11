@@ -1,0 +1,59 @@
+{% load static %} {% if posts %} {% for post in posts %}
+<div class="post">
+  <div class="post_header">
+    <img src="{{ post.user.avatar.url }}" alt="pp" class="avatar_post" />
+    <div class="post_info">
+      <h3>{{ post.user.username }}</h3>
+      <p>{{ post.created_at | timesince}} ago.</p>
+    </div>
+  </div>
+  <div class="post_body">
+    <h3>{{ post.title }}</h3>
+    <p>{{ post.description }}</p>
+    <!-- Loop through images related to the post -->
+    <div class="post_images">
+      {% for image in post.images.all %}
+      <img
+        src="{{ image.image.url }}"
+        alt="{{ post.title }}"
+        class="post_image"
+      />
+      {% endfor %}
+    </div>
+  </div>
+  <div class="post_footer">
+    <button class="like_button">
+      <i class="fa-solid fa-heart"></i> Delicious
+    </button>
+    <button class="comment_button">
+      <i class="fa-solid fa-comment"></i> Comment
+    </button>
+  </div>
+
+  <!-- Comments Section -->
+  {% for comment in post.comment_set.all %}
+  <div class="comment">
+    <img src="{{ comment.user.avatar.url }}" alt="pp" class="avatar_post" />
+    <div class="comment_content">
+      <div class="comment_info">
+        <h4>{{ comment.user.first_name }} {{ comment.user.last_name }}</h4>
+        <p>{{ comment.created_at | timesince }}</p>
+      </div>
+      <p>{{ comment.message }}</p>
+    </div>
+  </div>
+  {% endfor %}
+
+  <!-- Add Comment Section -->
+  <div class="comment_section">
+    <img src="{{ request.user.avatar.url }}" alt="pp" class="avatar_post" />
+    <input type="text" placeholder="Write a comment..." id="addComment" />
+    <!--Comment Modal-->
+  </div>
+</div>
+{% endfor %} {% else %}
+<!--style anan pa-->
+<div class="post">
+  <p style="text-align: center; opacity: 70%">No post to show</p>
+</div>
+{% endif %}

@@ -61,7 +61,7 @@
 
   position: sticky;
   top: 1px;
-  height: 700px;
+  height: 100vh;
   max-width: 406px;
   border-radius: 10px;
   margin-right: 10px;
@@ -134,6 +134,7 @@
 /*main_content*/
 .main_content {
   flex: 2;
+  min-height: 100vh;
 }
 /*whats on your mind*/
 .createPost {
