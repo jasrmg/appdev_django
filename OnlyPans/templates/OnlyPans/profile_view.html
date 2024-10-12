@@ -2,6 +2,7 @@
 <!--naa sa profile.css ang style gpamutang mostly-->
 <link rel="stylesheet" href="{% static 'css/profile.css' %}" />
 
+
 {% if user.is_authenticated %}
 <div class="body">
   <!--modal para sa messages-->
@@ -107,12 +108,23 @@
 
     <!--main content-->
     <div class="main_content">
-      <!--create post modal-->
+      <!-- Create post modal -->
       {% include 'OnlyPans/modals/create_post.html' %}
-
-      <!--post-->
-      {% include 'OnlyPans/post.html' %}
-    </div>
+  
+      <!-- Posts Container -->
+      <div id="post-container">
+              {% include 'OnlyPans/post.html' with post=post %}
+      </div>
+  
+      <!-- Loading indicator -->
+      <div id="loading" style="display: none;">Loading more posts...</div>
+  </div>
+  
   </div>
 </div>
+
+<script>
+  var username = "{{ request.user.username | escapejs }}";
+</script>
+<script src="{% static 'js/showposts.js' %}"></script>
 {% endif %} {% endblock %}

@@ -5,6 +5,10 @@ from django.contrib.auth import login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
+#for scrolling
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.http import JsonResponse
+
 
 from OnlyPans.models import Follow, Ingredient, Post, PostImage
 
@@ -142,43 +146,64 @@ def create_post(request, username):
 #profile view main code
 @login_required
 def profile_view(request, username):
-  # request_username = User.objects.get(username=username)
-  # print('Req: ', request_username.username)
-  user = get_object_or_404(User, username=username)
-  #flags
-  is_own_profile = request.user == user #flag to check if the user is the user authenticated
-  is_following = Follow.objects.filter(follower=request.user, followed=user).exists() #check if the visiting user is following the other account
+    user = get_object_or_404(User, username=username)
 
-  #forms
-  createpost_form = CreatePostForm()
-  editprofile_form = EditProfileForm(instance=user)
-  posts = Post.objects.filter(user=user).order_by('-created_at').prefetch_related('images', 'comment_set')
-  followers = user.followers.all() #get the followers of the user
-  following = user.following.all() #get the following of the user
-  number_of_follower = followers.count()
-  number_of_following = following.count()
-  
-  #show 2 random comment and fetch the ingredients:
-  for post in posts:
-    comments = list(post.comment_set.all())
-    #fetching the post ingredients:
-    post.ingredients_list = post.ingredients.all()[:3]#first 3 ingredients only
-    #2 random comments
-    post.random_comments = random.sample(comments, min(2, len(comments)))
-  context = {
-  'title': 'OnlyPans | Profile',
-  'user': user,
-  'createpost_form': createpost_form,
-  'editprofile_form': editprofile_form,
-  'is_own_profile': is_own_profile,
-  'is_following': is_following,
-  'posts': posts,
-  'follower': followers,
-  'following': following,
-  'number_of_follower': number_of_follower,
-  'number_of_following': number_of_following,
-  }
-  return render(request, 'OnlyPans/profile_view.html', context)
+    # Flags
+    is_own_profile = request.user == user  # Check if the user is the authenticated user
+    is_following = Follow.objects.filter(follower=request.user, followed=user).exists()  # Check if the visiting user is following the account
+
+    # Forms
+    createpost_form = CreatePostForm()
+    editprofile_form = EditProfileForm(instance=user)
+
+    # Fetch user posts and prefetch related fields
+    posts = Post.objects.filter(user=user).order_by('-created_at').prefetch_related('images', 'comment_set', 'ingredients')
+
+    # Process each post for random comments and its ingredients
+    for post in posts:
+        comments = list(post.comment_set.all())
+        # Fetch the first 3 ingredients
+        post.ingredients_list = post.ingredients.all()[:3]
+        # 2 random comments
+        post.random_comments = random.sample(comments, min(2, len(comments)))
+
+    paginator = Paginator(posts, 1)  # Display one post per page
+    page_number = request.GET.get('page', 3)  # Get the current page number from the request
+
+    try:
+        page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)  # If the page is not an integer, return the first page
+    except EmptyPage:
+        page_obj = []  # Return an empty list if the page is out of range
+
+    # Handle AJAX requests
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+        if not page_obj:  # If there are no posts to show
+            return HttpResponse('')  # Return an empty response for AJAX
+        return render(request, 'OnlyPans/post.html', {'posts': page_obj})
+
+    # Followers and following
+    followers = user.followers.all()
+    following = user.following.all()
+    number_of_follower = followers.count()
+    number_of_following = following.count()
+
+    context = {
+        'title': 'OnlyPans | Profile',
+        'user': user,
+        'createpost_form': createpost_form,
+        'editprofile_form': editprofile_form,
+        'is_own_profile': is_own_profile,
+        'is_following': is_following,
+        'posts': page_obj,
+        'follower': followers,
+        'following': following,
+        'number_of_follower': number_of_follower,
+        'number_of_following': number_of_following,
+    }
+    return render(request, 'OnlyPans/profile_view.html', context)
+
 
 @login_required
 def delete_post(request, post_id):

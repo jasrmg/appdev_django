@@ -60,7 +60,6 @@ a {
   background-color: var(--darker-primary-color);
   color: var(--secondary-color);
   padding: 20px;
-
   position: sticky;
   top: 1px;
   height: auto;
@@ -316,4 +315,10 @@ a {
 .comment p {
   margin: 0;
   font-size: 14px;
+}
+/*para sa loader*/
+#loading {
+  text-align: center;
+  padding: 10px;
+  font-size: 18px;
 }
