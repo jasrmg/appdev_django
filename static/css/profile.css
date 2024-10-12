@@ -88,7 +88,6 @@ a {
   margin-top: 35px;
   word-wrap: break-word; /*ensures long words break to the next line*/
   overflow: hidden; /*ensures text stays in the container*/
-  text-overflow: ellipsis; /*adds... at the end of overflowing text*/
   max-width: 100%;
   max-height: 120px;
 }
@@ -158,8 +157,10 @@ a {
   margin: 0 auto;
 }
 .avatar_post {
-  width: 40px;
-  height: 40px;
+  max-width: 40px;
+  max-height: 40px;
+  min-width: 40px;
+  min-height: 40px;
   border-radius: 50%;
   margin-right: 10px;
   border: 1px solid var(--secondary-color);
@@ -174,8 +175,7 @@ a {
   font-size: 14px;
 }
 .createPost input[type="text"]::placeholder {
-  color: var(--secondary-color);
-  opacity: 50%;
+  color: #8d8d8d;
 }
 /*post*/
 /* Sample post styling */

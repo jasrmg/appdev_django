@@ -12,7 +12,7 @@ from django.http import JsonResponse
 
 from OnlyPans.models import Follow, Ingredient, Post, PostImage
 
-from .forms import EditProfileForm, CreatePostForm, SignupForm, LoginForm
+from .forms import EditBioForm, EditProfileForm, CreatePostForm, SignupForm, LoginForm
 
 # Create your views here.
 def test(request):
@@ -102,6 +102,18 @@ def edit_profile(request, username):
     }
     return render(request, 'OnlyPans/modals/edit_profile.html', context)
 
+def edit_bio(request, username):
+  user = get_object_or_404(User, username=username)
+  if request.method == 'POST':
+     form = EditBioForm(request.POST, instance=user)
+     if form.is_valid():
+        form.save()
+        messages.success(request, '🥳 Ta-da! Your bio just got a glow-up! It’s now sizzling with personality! 🌟🍽️')
+        return redirect('profile', username=username)
+  else:
+     form = EditProfileForm(instance=user) 
+  return render(request, 'OnlyPans/modals/edit_bio.html', {'editbio_form': form})
+
 def create_post(request, username):
   user = get_object_or_404(User, username=username)
   form = None
@@ -155,7 +167,7 @@ def profile_view(request, username):
     # Forms
     createpost_form = CreatePostForm()
     editprofile_form = EditProfileForm(instance=user)
-
+    editbio_form = EditBioForm(instance=user)
     # Fetch user posts and prefetch related fields
     posts = Post.objects.filter(user=user).order_by('-created_at').prefetch_related('images', 'comment_set', 'ingredients')
 
@@ -194,6 +206,7 @@ def profile_view(request, username):
         'user': user,
         'createpost_form': createpost_form,
         'editprofile_form': editprofile_form,
+        'editbio_form': editbio_form,
         'is_own_profile': is_own_profile,
         'is_following': is_following,
         'posts': page_obj,

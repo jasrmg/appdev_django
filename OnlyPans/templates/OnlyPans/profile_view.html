@@ -64,6 +64,7 @@
         <p class="bio_text">{{ user.bio }}</p>
         <button class="button edit_bio" id="editBioBtn">Edit bio</button>
         <!--EDIT BIO MODAL-->
+        {% include 'OnlyPans/modals/edit_bio.html' %}
       </div>
       {% else %}
       <div class="bio_container">

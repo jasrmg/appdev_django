@@ -14,7 +14,7 @@ class User(AbstractUser):
 
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default='O')
 
-    bio = models.TextField(default='Welcome!')
+    bio = models.CharField(max_length=150, default='Edit your Bio')
     avatar = models.ImageField(null=True, blank=True, default='images/avatars/other.jpeg', upload_to='uploads/profile_pics/')
 
     USERNAME_FIELD = 'username'

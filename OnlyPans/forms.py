@@ -44,7 +44,24 @@ class EditProfileForm(forms.ModelForm):
         # Avatar field (use custom widget)
         self.fields['avatar'].widget = CustomClearableFileInput()
         self.fields['avatar'].label = 'Avatar'  # Label change
-        self.fields['avatar'].widget.attrs.update({'class': 'form-control-file'})
+        self.fields['avatar'].widget.attrs.update({
+            'class': 'form-control-file',
+            'id': 'uploadFileBtn',
+            })
+class EditBioForm(forms.ModelForm):
+    bio = forms.CharField(
+        widget=forms.Textarea(attrs={'rows':2, 'cols':10, 'style': 'resize: none;padding: 10px;border-radius: 4px;text-align: center;overflow: hidden; font-family: Poppins;background-color: #fdeed8;border: 1px solid #33221a'}), required=False
+    )
+    class Meta:
+        model = User
+        fields = ['bio']
+
+    def __init__(self, *args, **kwargs):
+        super(EditBioForm, self).__init__(*args, **kwargs)
+        self.fields['bio'].label = ""  # Remove the label for bio
+
+
+        
 
 #CREATE POST FORM
 class CreatePostForm(forms.ModelForm):

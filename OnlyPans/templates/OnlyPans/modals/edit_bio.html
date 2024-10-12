@@ -1,0 +1,124 @@
+{% load static %}
+
+<style>
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+  .editBiocontent {
+    background-color: #e6d4bc;
+    margin: 15% auto;
+    padding: 20px;
+    border: 2px solid #33221a;
+    width: 30%;
+    border-radius: 10px;
+  }
+
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: red;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .modal-header h2 {
+    text-align: center;
+  }
+
+  /* Submit button styling */
+  .modal-footer {
+    display: flex;
+    justify-content: center;
+  }
+  #editBioSubmitbtn {
+    padding: 10px 20px;
+    background-color: #33221a;
+    color: #fdeed8;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+  }
+  textarea {
+    padding: 0;
+    margin: 0;
+    border: none;
+    outline: none;
+    resize: none;
+    text-indent: 0;
+    line-height: normal;
+    overflow: auto;
+    width: 80%;
+    box-sizing: border-box;
+  }
+</style>
+
+<!-- Modal HTML for Editing Bio -->
+<div id="editBio" class="modal">
+  <div class="editBiocontent">
+    <div class="modal-header">
+      <span class="close" id="bioClose">&times;</span>
+      <h2>Edit Bio</h2>
+    </div>
+    <div class="modal-body">
+      <form action="{% url 'edit_bio' request.user.username %}" method="POST">
+        {% csrf_token %} {{ editbio_form.as_p }}
+        <div class="modal-footer">
+          <input type="submit" value="Submit" id="editBioSubmitbtn" disabled />
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const bioForm = document.querySelector("#editBio form");
+    const bioSubmitButton = document.getElementById("editBioSubmitbtn");
+    let bioFormChanged = false;
+
+    // Enable the submit button when any change is detected in the form
+    bioForm.addEventListener("change", function () {
+      bioFormChanged = true;
+      bioSubmitButton.disabled = false; // Enable submit button
+    });
+
+    // Prevent form submission if no changes are made
+    bioForm.addEventListener("submit", function (e) {
+      if (!bioFormChanged) {
+        e.preventDefault();
+      }
+    });
+  });
+
+  // Modal behavior for open and close
+  var biomodal = document.getElementById("editBio");
+  var editBioBtn = document.getElementById("editBioBtn"); // Trigger button for opening modal
+  var bioCloseBtn = document.getElementById("bioClose");
+
+  editBioBtn.onclick = function () {
+    biomodal.style.display = "block";
+  };
+  bioCloseBtn.onclick = function () {
+    biomodal.style.display = "none";
+  };
+  window.onclick = function (event) {
+    if (event.target == biomodal) {
+      biomodal.style.display = "none";
+    }
+  };
+</script>
