@@ -145,7 +145,7 @@ a {
   flex: 2;
   min-height: 100vh;
 }
-/*whats on your mind*/
+/*CREATE POST CSS*/
 .createPost {
   display: flex;
   align-items: center;
@@ -158,7 +158,7 @@ a {
   margin: 0 auto;
 }
 .avatar_post {
-  min-width: 40px;
+  width: 40px;
   height: 40px;
   border-radius: 50%;
   margin-right: 10px;

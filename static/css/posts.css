@@ -11,7 +11,6 @@ ul {
 .post_container {
   display: flex;
   justify-content: center;
-  
 }
 
 .post_content {
@@ -59,7 +58,8 @@ ul {
 .post_buttons {
   display: flex;
 }
-.more, .delete {
+.more,
+.delete {
   cursor: pointer;
   margin-right: 20px;
   color: #fdeed8; /* Button text color */
@@ -86,7 +86,8 @@ ul {
 /*---------------------------------------------*/
 
 /* Edit and delete modals */
-.modal, .delete-modal {
+.modal,
+.delete-modal {
   display: none;
   position: fixed;
   z-index: 1000;
@@ -97,7 +98,8 @@ ul {
   background-color: rgba(0, 0, 0, 0.8);
 }
 
-.modal-content, .delete-modal-content {
+.modal-content,
+.delete-modal-content {
   background-color: #fefefe;
   margin: 10% auto;
   padding: 20px;
@@ -106,17 +108,18 @@ ul {
   border-radius: 10px;
 }
 
-.close, .delete-modal-close {
+.close,
+.delete-modal-close {
   color: #aaa;
   float: right;
   font-size: 28px;
   font-weight: bold;
 }
-.delete-modal-confirm-btn {
-  background-color: #c0392b; /* Red color for delete button */
-  color: white; /* White text */
-  border: none; /* No border */
-  padding: 10px 15px; /* Padding */
-  border-radius: 5px; /* Rounded corners */
-  cursor: pointer; /* Pointer on hover */
-}
+/* .delete-modal-confirm-btn {
+  background-color: #c0392b; Red color for delete button
+  color: white; White text
+  border: none; No border
+  padding: 10px 15px; Padding
+  border-radius: 5px; Rounded corners
+  cursor: pointer; Pointer on hover
+} */
