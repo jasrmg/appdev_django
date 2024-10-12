@@ -1,7 +1,7 @@
 let currentPage = 1; // Initialize the current page
-const postContainer = document.getElementById("post-container"); // Make sure this matches your HTML container ID
+const postContainer = document.getElementById("post-container"); // Container for your posts
 let loading = false; // Prevent multiple requests while loading
-
+console.log(username);
 window.addEventListener("scroll", () => {
   // Check if the user has scrolled to the bottom of the page and not already loading posts
   if (
@@ -13,7 +13,7 @@ window.addEventListener("scroll", () => {
     currentPage++; // Increment the page number
 
     // Make an AJAX request to fetch more posts
-    fetch(`/profile/${username}?page=${currentPage}`, {
+    fetch(`/profile/${username}/?page=${currentPage}`, {
       method: "GET",
       headers: {
         "X-Requested-With": "XMLHttpRequest",
@@ -27,7 +27,7 @@ window.addEventListener("scroll", () => {
       })
       .then((html) => {
         // Check if the HTML returned contains any posts
-        if (html.trim() === "") {
+        if (html.trim().length === 0) {
           // No more posts available, stop loading
           window.removeEventListener("scroll", this); // Remove the scroll listener
         } else {

@@ -46,6 +46,7 @@ a {
   font-weight: bold;
   cursor: pointer;
   margin-left: 10px; /* Space between buttons */
+  letter-spacing: 1.5px;
 }
 /*body below the profile*/
 .body_content {

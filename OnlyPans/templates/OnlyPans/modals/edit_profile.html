@@ -13,10 +13,10 @@
     background-color: rgba(0, 0, 0, 0.4);
   }
   .editProfilecontent {
-    background-color: #fefefe;
+    background-color: #e6d4bc;
     margin: 15% auto;
     padding: 20px;
-    border: 1px solid #888;
+    border: 2px solid #33221a;
     width: 30%;
     border-radius: 10px;
   }
@@ -28,11 +28,28 @@
     font-weight: bold;
   }
 
-  .close:hove,
+  .close:hover,
   .close:focus {
-    color: black;
+    color: red;
     text-decoration: none;
     cursor: pointer;
+  }
+  .modal-header h2 {
+    text-align: center;
+  }
+  /*para sa submit button*/
+  .modal-footer {
+    display: flex;
+    justify-content: center;
+  }
+  #editProfileSubmitbtn {
+    padding: 10px 20px;
+    background-color: #33221a;
+    color: #fdeed8;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    letter-spacing: 1.5px;
   }
 </style>
 <div id="editProfile" class="modal">
@@ -48,8 +65,9 @@
         enctype="multipart/form-data"
       >
         {% csrf_token %} {{ editprofile_form.as_p }}
-
-        <input type="submit" value="Submit" />
+        <div class="modal-footer">
+          <input type="submit" value="Submit" id="editProfileSubmitbtn" />
+        </div>
       </form>
     </div>
   </div>

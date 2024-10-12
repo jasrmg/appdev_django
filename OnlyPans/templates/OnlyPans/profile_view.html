@@ -62,7 +62,7 @@
       {% if is_own_profile %}
       <div class="bio_container">
         <p class="bio_text">{{ user.bio }}</p>
-        <button class="edit_bio" id="editBioBtn">Edit bio</button>
+        <button class="button edit_bio" id="editBioBtn">Edit bio</button>
         <!--EDIT BIO MODAL-->
       </div>
       {% else %}
@@ -113,7 +113,7 @@
   
       <!-- Posts Container -->
       <div id="post-container">
-              {% include 'OnlyPans/post.html' with post=post %}
+        {% include 'OnlyPans/post.html' %}
       </div>
   
       <!-- Loading indicator -->
@@ -124,7 +124,7 @@
 </div>
 
 <script>
-  var username = "{{ request.user.username | escapejs }}";
+  var username = "{{ user.username | escapejs }}";
 </script>
 <script src="{% static 'js/showposts.js' %}"></script>
 {% endif %} {% endblock %}

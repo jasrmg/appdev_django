@@ -168,7 +168,7 @@ def profile_view(request, username):
         post.random_comments = random.sample(comments, min(2, len(comments)))
 
     paginator = Paginator(posts, 1)  # Display one post per page
-    page_number = request.GET.get('page', 3)  # Get the current page number from the request
+    page_number = request.GET.get('page', 1)  # Get the current page number from the request
 
     try:
         page_obj = paginator.page(page_number)
