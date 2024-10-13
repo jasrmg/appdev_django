@@ -117,3 +117,20 @@ class CreatePostForm(forms.ModelForm):
         if len(ingredients_list) < 2:
             raise forms.ValidationError('You must provide at least two ingredients, separated by commas')
         return ingredients
+
+
+# class EditPostForm(forms.ModelForm):
+#     class Meta:
+#         model = Post
+#         fields = ['title', 'category', 'description', 'ingredients', 'image']
+
+#     def __init__(self, *args, **kwargs):
+#         super(EditPostForm, self).__init__(*args, **kwargs)
+        
+#     def clean_ingredients(self):
+#         ingredients = self.cleaned_data.get('ingredients')
+#         if ingredients:
+#             ingredient_list = [ingredient.strip() for ingredient in ingredients.split(',')]
+#             if len(ingredient_list) < 2:
+#                 raise forms.ValidationError('PLease enter at least two ingredients.')
+#         return ingredients

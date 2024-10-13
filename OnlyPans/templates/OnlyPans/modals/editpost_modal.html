@@ -1,0 +1,96 @@
+{% load static %}
+<style>
+  /* Style for edit post modal */
+  #editPost {
+    /* Same styles as the create post modal */
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  .editPostContent {
+    background-color: #e6d4bc;
+    margin: 2.85% auto;
+    padding: 20px;
+    border: 2px solid #33221a;
+    width: 50%;
+    border-radius: 10px;
+    text-align: center;
+  }
+
+  /* You can copy the rest of the CSS from your Create Post modal */
+</style>
+<!-- Edit Post Modal -->
+<div id="editPost" class="modal">
+  <div class="editPostContent">
+    <div class="modal-header">
+      <span class="close" id="editPostX">&times;</span>
+      <h2>Edit Post</h2>
+    </div>
+    <div class="modal-body">
+      <form
+        action=""{# {% url 'edit_post' post.post_id %} #}
+        method="POST"
+        enctype="multipart/form-data"
+      >
+        {% csrf_token %}
+        <div class="form-group">
+          <div class="form-field">
+            {{ editpost_form.title.label }}<br />
+            {{ editpost_form.title }}
+          </div>
+          <div class="form-field">
+            {{ editpost_form.category.label }}<br />
+            {{ editpost_form.category }}
+          </div>
+        </div>
+        <div class="form-field">
+          {{ editpost_form.description.label }}<br />
+          {{ editpost_form.description }}
+        </div>
+        <div class="form-field">
+          {{ editpost_form.ingredients.label }}<br />
+          {{ editpost_form.ingredients }}
+        </div>
+        <div class="form-field">
+          {{ editpost_form.image.label }}<br />
+          {{ editpost_form.image }}
+        </div>
+        <input type="hidden" name="edit_post" />
+        <div class="modal-footer">
+          <input type="submit" value="Update" id="editPostSubmitbtn" />
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  // JavaScript to handle edit post modal behavior
+  document.addEventListener("DOMContentLoaded", function () {
+    const editPostModal = document.getElementById("editPost");
+    const openEditPostBtn = document.getElementById("editPostBtn"); // Button or input to open edit modal
+    const closeEditPostBtn = document.getElementById("editPostX");
+
+    // Function to close modal
+    const closeModal = () => (editPostModal.style.display = "none");
+
+    // Open modal when clicking the button
+    openEditPostBtn.addEventListener("click", () => {
+      editPostModal.style.display = "block";
+    });
+
+    // Close modal when clicking the 'X' button or outside the modal
+    closeEditPostBtn.addEventListener("click", closeModal);
+
+    window.addEventListener("click", (event) => {
+      if (event.target === editPostModal) closeModal();
+    });
+  });
+</script>

@@ -15,13 +15,12 @@
     {% endif %}
     <div>
       <h1>{{ user.first_name }} {{ user.last_name }}</h1>
-      <p>
+      
         <!--show sa following-->
         <p>
-          {{ number_of_follower }} follower{% if number_of_follower > 1 %}s{% endif %} · 
+          <a> {% include 'OnlyPans/modals/follower_modal.html' %} {{ number_of_follower }} follower{% if number_of_follower > 1 %}s{% endif %} </a> · 
           {{ number_of_following }} following{% if number_of_following > 1 %}s{% endif %}
         </p>
-      </p>
       <!--show sa following-->
       <div class="followers_avatar">
       {% if follower %}
@@ -45,11 +44,14 @@
       <!--EDIT PROFILE MODAL-->
       {% include 'OnlyPans/modals/edit_profile.html' %}
       {% else %}
-      {% if is_following %}
-      <button class="button" id="unfollowBtn">Unfollow</button>
-      {% else %}
-      <button class="button" id="followBtn">Follow</button>
-      {% endif %}
+      <form method="POST" action="{% url 'follow_user' username=user.username %}">
+        {% csrf_token %}
+        {% if is_following %}
+          <button class="button" id="unfollowBtn">Unfollow</button>
+        {% else %}
+          <button class="button" id="followBtn">Follow</button>
+        {% endif %}
+      </form>
       {% endif %}
     </div>
   </div>
@@ -110,8 +112,13 @@
     <!--main content-->
     <div class="main_content">
       <!-- Create post modal -->
-      {% include 'OnlyPans/modals/create_post.html' %}
-  
+      {% if is_own_profile  %}
+        {% include 'OnlyPans/modals/create_post.html' %}
+      {% else %}
+        <style>
+          .post { margin: 0;}
+        </style>
+      {% endif %}
       <!-- Posts Container -->
       <div id="post-container">
         {% include 'OnlyPans/post.html' %}

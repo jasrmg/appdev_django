@@ -154,6 +154,32 @@ def create_post(request, username):
   print('outside if: ', form)
   return render(request, 'OnlyPans/modals/create_post.html', context)
 
+# def edit_post(request, post_id):
+#   post = get_object_or_404(Post, id=post_id)
+
+#   if request.method == 'POST':
+#     editpost_form = CreatePostForm(request.POST, request.FILES, instance=post)
+#     if editpost_form.is_valid():
+#       editpost_form.save()
+#       messages.success(request, 'Post successfully edited!')
+#       redirect_to = request.POST.get('redirect_to', 'profile')
+#       return redirect(redirect_to, username=request.user.username)
+#   else:
+#     editpost_form = CreatePostForm(instance=post)
+#   context = {
+#      'editpost_form': editpost_form,
+#      'post': post,
+#   }
+#   return render(request, 'OnlyPans/modals/editpost_modal.html', context)
+
+@login_required
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, post_id=post_id)
+    if request.user == post.user:  # Check if the logged-in user is the owner of the post
+        post.delete()
+        messages.success(request, "Your post has been deleted.")
+    return redirect('profile', username=request.user.username)
+
 #profile view main code
 @login_required
 def profile_view(request, username):
@@ -167,6 +193,7 @@ def profile_view(request, username):
     createpost_form = CreatePostForm()
     editprofile_form = EditProfileForm(instance=user)
     editbio_form = EditBioForm(instance=user)
+    # editpost_form = EditPostForm()
     # Fetch user posts and prefetch related fields
     posts = Post.objects.filter(user=user).order_by('-created_at').prefetch_related('images', 'comment_set', 'ingredients')
 
@@ -199,7 +226,9 @@ def profile_view(request, username):
     following = user.following.all()
     number_of_follower = followers.count()
     number_of_following = following.count()
-
+    print('followers:')
+    for follow in followers:
+       print(follow.follower.username)
     context = {
         'title': 'OnlyPans | Profile',
         'user': user,
@@ -217,13 +246,7 @@ def profile_view(request, username):
     return render(request, 'OnlyPans/profile_view.html', context)
 
 
-@login_required
-def delete_post(request, post_id):
-    post = get_object_or_404(Post, post_id=post_id)
-    if request.user == post.user:  # Check if the logged-in user is the owner of the post
-        post.delete()
-        messages.success(request, "Your post has been deleted.")
-    return redirect('profile', username=request.user.username)
+
 
 #search
 def search_view(request):
@@ -248,22 +271,18 @@ def search_view(request):
   }
   return render(request, 'OnlyPans/searchtest.html', context)
     
-# @login_required
-# def edit_post(request, post_id):
-#     post = get_object_or_404(Post, post_id=post_id)
-#     if request.user == post.user:  # Check if the logged-in user is the owner of the post
-#         if request.method == 'POST':
-#             form = CreatePostForm(request.POST, request.FILES, instance=post)
-#             if form.is_valid():
-#                 form.save()
-#                 messages.success(request, "Your post has been updated successfully!")
-#                 return redirect('profile', username=request.user.username)
-#         else:
-#             form = CreatePostForm(instance=post)
-#         return render(request, 'OnlyPans/edit_post.html', {'form': form})
-#     else:
-#         messages.error(request, "You do not have permission to edit this post.")
-#         return redirect('profile', username=request.user.username)
+#follow unfollow
+@login_required
+def follow_user(request, username):
+  target_user = get_object_or_404(User, username=username)
+
+  #check if the logged user is already following the target user
+  follow, created = Follow.objects.get_or_create(follower=request.user, followed=target_user)
+
+  if not created:
+    follow.delete()
+  
+  return redirect('profile', username=target_user.username)
 
 
 
