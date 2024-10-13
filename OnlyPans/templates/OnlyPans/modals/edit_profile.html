@@ -98,34 +98,37 @@
     const submitButton = document.getElementById("editProfileSubmitbtn");
     let formChanged = false;
 
-    // Enable the submit button when any change is detected in the form
-    form.addEventListener("change", function () {
+    // Enable submit button when form changes
+    form.addEventListener("change", () => {
       formChanged = true;
-      submitButton.disabled = false; // Enable submit button
+      submitButton.disabled = false;
     });
 
-    // Prevent form submission if no changes are made
-    form.addEventListener("submit", function (e) {
+    // Prevent submission if no changes are made
+    form.addEventListener("submit", (e) => {
       if (!formChanged) {
-        e.preventDefault();
+        e.preventDefault(); // Block submission if form is unchanged
       }
     });
+
+    // Modal behavior for open/close
+    const editModal = document.getElementById("editProfile");
+    const openModalBtn = document.getElementById("editProfileBtn");
+    const closeModalBtn = document.getElementById("editX");
+
+    // Function to close modal
+    const closeModal = () => (editModal.style.display = "none");
+
+    // Open modal when clicking the button
+    openModalBtn.addEventListener("click", () => {
+      editModal.style.display = "block";
+    });
+
+    // Close modal when clicking the 'X' button or outside the modal
+    closeModalBtn.addEventListener("click", closeModal);
+
+    window.addEventListener("click", (event) => {
+      if (event.target === editModal) closeModal();
+    });
   });
-
-  // Modal behavior for open and close
-  var editmodal = document.getElementById("editProfile");
-  var editprofileBtn = document.getElementById("editProfileBtn");
-  var editXBtn = document.getElementById("editX");
-
-  editprofileBtn.onclick = function () {
-    editmodal.style.display = "block";
-  };
-  editXBtn.onclick = function () {
-    editmodal.style.display = "none";
-  };
-  window.onclick = function (event) {
-    if (event.target == editmodal) {
-      editmodal.style.display = "none";
-    }
-  };
 </script>

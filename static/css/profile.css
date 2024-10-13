@@ -66,6 +66,7 @@ a {
   height: auto;
   max-height: 100vh;
   max-width: 406px;
+  min-width: 406px;
   border-radius: 10px;
   margin-right: 10px;
 }

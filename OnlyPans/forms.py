@@ -9,6 +9,11 @@ class SignupForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'gender', 'password1', 'password2']  # No 'bio' or 'avatar'
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -37,8 +42,8 @@ class EditProfileForm(forms.ModelForm):
         super(EditProfileForm, self).__init__(*args, **kwargs)
         
         # First name and last name fields
-        self.fields['first_name'].widget.attrs.update({'class': 'form-control', 'placeholder': 'First Name'})
-        self.fields['last_name'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Last Name'})
+        self.fields['first_name'].widget.attrs.update({'class': 'form-control', 'placeholder': 'First Name'}, required=True) 
+        self.fields['last_name'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Last Name'}, required=True)
 
         
         # Avatar field (use custom widget)
