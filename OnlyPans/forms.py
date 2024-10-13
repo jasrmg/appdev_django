@@ -42,8 +42,8 @@ class EditProfileForm(forms.ModelForm):
         super(EditProfileForm, self).__init__(*args, **kwargs)
         
         # First name and last name fields
-        self.fields['first_name'].widget.attrs.update({'class': 'form-control', 'placeholder': 'First Name'}, required=True) 
-        self.fields['last_name'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Last Name'}, required=True)
+        self.fields['first_name'].widget.attrs.update({'class': 'form-control', 'placeholder': 'First Name', 'style':'text-align: center;'}, required=True) 
+        self.fields['last_name'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Last Name', 'style':'text-align: center;'}, required=True)
 
         
         # Avatar field (use custom widget)
@@ -53,6 +53,7 @@ class EditProfileForm(forms.ModelForm):
             'class': 'form-control-file',
             'id': 'uploadFileBtn',
             })
+        
 class EditBioForm(forms.ModelForm):
     bio = forms.CharField(
         widget=forms.Textarea(attrs={'rows':2, 'cols':10, 'style': 'resize: none;padding: 10px;border-radius: 4px;text-align: center;overflow: hidden; font-family: Poppins;background-color: #fdeed8;border: 1px solid #33221a'}), required=False
@@ -77,7 +78,7 @@ class CreatePostForm(forms.ModelForm):
     title = forms.CharField(
         max_length=100, 
         required=True, 
-        widget=forms.TextInput(attrs={'placeholder': 'Name of your Recipe'})
+        widget=forms.TextInput(attrs={'placeholder': 'Name of your Recipe', 'style': 'font-family: Poppins, sans-serif;'})
     )
 
     category = forms.ModelChoiceField(
@@ -89,7 +90,7 @@ class CreatePostForm(forms.ModelForm):
         widget=forms.Textarea(attrs={
             'placeholder': 'Describe your recipe. . .',
             'class': 'description-class',  # Add your custom class
-            'style': 'height: 100px;',  # Change the height here'
+            'style': 'height: 100px; font-family: Poppins',  # Change the height here'
         }), 
         required=True
     )
@@ -98,7 +99,7 @@ class CreatePostForm(forms.ModelForm):
         widget=forms.Textarea(attrs={
             'placeholder': 'List your ingredients (comma-separated)...',
             'class': 'ingredients-class',  # Add your custom class
-            'style': 'height: 80px;',  # Change the height here
+            'style': 'height: 80px; font-family: Poppins',  # Change the height here
         }), 
         required=True
     )

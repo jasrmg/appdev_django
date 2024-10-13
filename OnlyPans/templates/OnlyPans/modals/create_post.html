@@ -1,4 +1,113 @@
 {% load static %}
+
+<!-- Style for create post modal -->
+<style>
+  /* Apply Poppins font to the body */
+  body {
+    font-family: "Poppins", sans-serif; /* Use Poppins font */
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  .createPostContent {
+    background-color: #e6d4bc;
+    margin: 3.2% auto;
+    padding: 20px;
+    border: 2px solid #33221a;
+    width: 50%;
+    border-radius: 10px;
+    text-align: center;
+  }
+
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: red;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .modal-header h2 {
+    text-align: center;
+  }
+
+  /* Submit button styling */
+  .modal-footer {
+    display: flex;
+    justify-content: center;
+  }
+
+  #createPostSubmitbtn {
+    padding: 10px 20px;
+    background-color: #33221a;
+    color: #fdeed8;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+  }
+
+  /* Error message styling */
+  #errorMsg {
+    color: red;
+    text-align: center;
+    display: none; /* Initially hidden */
+  }
+
+  /* Styling for input fields (description, ingredients, category) */
+  .form-field input,
+  .form-field select,
+  .form-field textarea {
+    background-color: #f3e4d7; /* Light background color similar to recipe name */
+    border: 1px solid #33221a; /* Border color */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px; /* Padding inside input fields */
+    width: 100%; /* Full width */
+    box-sizing: border-box; /* Include padding and border in element's total width */
+    margin-top: 5px; /* Spacing above the fields */
+  }
+
+  /* Center text in textareas */
+  .form-field textarea {
+    text-align: center; /* Center text */
+    height: 100px; /* Adjust height as needed */
+  }
+
+  /* Centering the image upload input */
+  .form-field {
+    text-align: center; /* Center the content */
+  }
+
+  .form-field input[type="file"] {
+    margin-bottom: 20px; /* Margin below the image upload input */
+  }
+
+  .form-field input:focus,
+  .form-field select:focus,
+  .form-field textarea:focus {
+    outline: none; /* Remove default outline */
+    border-color: #1c1b1b; /* Change border color on focus */
+    box-shadow: 0 0 5px rgba(28, 27, 27, 0.5); /* Optional shadow on focus */
+  }
+</style>
+
+<!-- Create post content -->
 <div class="createPost">
   <img src="{{ request.user.avatar.url }}" alt="pp" class="avatar_post" />
   {% if is_own_profile %}
@@ -7,13 +116,105 @@
     placeholder="What's cooking, {{ request.user.first_name }}?"
     id="createPostDiv"
   />
-  <!--Create POST MODAL-->
+  <!-- Create POST MODAL -->
+  <div id="createPost" class="modal">
+    <div class="createPostContent">
+      <div class="modal-header">
+        <span class="close" id="createPostX">&times;</span>
+        <h2>Create Post</h2>
+      </div>
+      <div class="modal-body">
+        <form
+          action="{% url 'create_post' request.user.username %}"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          {% csrf_token %}
+          <div class="form-group">
+            <div class="form-field">
+              {{ createpost_form.title.label }}<br />
+              {{ createpost_form.title }}
+            </div>
+            <div class="form-field">
+              {{ createpost_form.category.label }}<br />
+              {{ createpost_form.category }}
+            </div>
+          </div>
+          <div class="form-field">
+            {{ createpost_form.description.label }}<br />
+            {{ createpost_form.description }}
+          </div>
+          <div class="form-field">
+            {{ createpost_form.ingredients.label }}<br />
+            {{ createpost_form.ingredients }}
+          </div>
+          <div class="form-field">
+            {{ createpost_form.image.label }}<br />
+            {{ createpost_form.image }}
+          </div>
+          <input type="hidden" name="create_post" />
+          <div class="modal-footer">
+            <input
+              type="submit"
+              value="Submit"
+              id="createPostSubmitbtn"
+              disabled
+            />
+            <!-- Initially disabled -->
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
   {% else %}
   <input
     type="text"
     placeholder="Write something to {{ user.first_name }}?"
     id="createPostDiv"
   />
-  <!--Create POST MODAL-->
+  <!-- Create POST MODAL -->
   {% endif %}
 </div>
+
+<!-- Script for create post modal -->
+<script>
+  // JavaScript to handle form change and submission behavior
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("#createPost form");
+    const submitButton = document.getElementById("createPostSubmitbtn");
+    let formChanged = false;
+
+    // Enable submit button when form changes
+    form.addEventListener("change", () => {
+      formChanged = true;
+      submitButton.disabled = false;
+    });
+
+    // Prevent submission if no changes are made
+    form.addEventListener("submit", (e) => {
+      if (!formChanged) {
+        e.preventDefault(); // Block submission if form is unchanged
+      }
+    });
+
+    // Modal behavior for open/close
+    const createPostModal = document.getElementById("createPost");
+    const openCreatePostBtn = document.getElementById("createPostDiv"); // Select the input to open modal
+    const closeCreatePostBtn = document.getElementById("createPostX");
+
+    // Function to close modal
+    const closeModal = () => (createPostModal.style.display = "none");
+
+    // Open modal when clicking the input field
+    openCreatePostBtn.addEventListener("click", () => {
+      createPostModal.style.display = "block";
+    });
+
+    // Close modal when clicking the 'X' button or outside the modal
+    closeCreatePostBtn.addEventListener("click", closeModal);
+
+    window.addEventListener("click", (event) => {
+      if (event.target === createPostModal) closeModal();
+    });
+  });
+</script>

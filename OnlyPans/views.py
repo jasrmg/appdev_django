@@ -122,6 +122,7 @@ def create_post(request, username):
     if request.method == 'POST':
       if 'create_post' in request.POST:
         form = CreatePostForm(request.POST, request.FILES)
+        print('inside if: ', form)
         if form.is_valid():
           post = form.save(commit=False)
           post.user = request.user
@@ -142,10 +143,7 @@ def create_post(request, username):
             
           messages.success(request, "You've just whipped up a recipe that's bound to get some cheeky likes!")
           origin = request.POST.get('origin')
-          if origin == 'home':
-            return redirect('login')
-          else:
-            return redirect('profile', username=user.username)
+          return redirect('profile', username=username)
         else:
           messages.error(request, "Oops! Looks like your ingredients need some space. Toss in a few commas and try again!")
 
@@ -153,6 +151,7 @@ def create_post(request, username):
   context = {
     'form':form,
   }
+  print('outside if: ', form)
   return render(request, 'OnlyPans/modals/create_post.html', context)
 
 #profile view main code

@@ -1,6 +1,9 @@
 {% load static %}
 
 <style>
+  * {
+    box-sizing: border-box;
+  }
   .modal {
     display: none;
     position: fixed;
@@ -65,6 +68,24 @@
     width: 80%;
     box-sizing: border-box;
   }
+  #editBioSubmitbtn {
+    margin-top: 10px;
+    font-weight: 500;
+    padding: 10px 20px;
+    background-color: #33221a;
+    color: #fdeed8;
+    border: 2px solid #33221a;
+    border-radius: 10px;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  #editBioSubmitbtn:hover {
+    background-color: #f6e3d1; /* Lighter background on hover */
+    color: #33221a; /* Change text color on hover */
+    border: 2px solid #33221a;
+  }
 </style>
 
 <!-- Modal HTML for Editing Bio -->
@@ -86,39 +107,43 @@
 </div>
 
 <script>
+  // JavaScript to handle form change and submission behavior
   document.addEventListener("DOMContentLoaded", function () {
     const bioForm = document.querySelector("#editBio form");
     const bioSubmitButton = document.getElementById("editBioSubmitbtn");
     let bioFormChanged = false;
 
-    // Enable the submit button when any change is detected in the form
-    bioForm.addEventListener("change", function () {
+    // Enable submit button when form changes
+    bioForm.addEventListener("change", () => {
       bioFormChanged = true;
       bioSubmitButton.disabled = false; // Enable submit button
     });
 
-    // Prevent form submission if no changes are made
-    bioForm.addEventListener("submit", function (e) {
+    // Prevent submission if no changes are made
+    bioForm.addEventListener("submit", (e) => {
       if (!bioFormChanged) {
-        e.preventDefault();
+        e.preventDefault(); // Block submission if form is unchanged
       }
     });
+
+    // Modal behavior for open/close
+    const biomodal = document.getElementById("editBio");
+    const editBioBtn = document.getElementById("editBioBtn"); // Trigger button for opening modal
+    const bioCloseBtn = document.getElementById("bioClose");
+
+    // Function to close modal
+    const closeModal = () => (biomodal.style.display = "none");
+
+    // Open modal when clicking the button
+    editBioBtn.addEventListener("click", () => {
+      biomodal.style.display = "block";
+    });
+
+    // Close modal when clicking the 'X' button or outside the modal
+    bioCloseBtn.addEventListener("click", closeModal);
+
+    window.addEventListener("click", (event) => {
+      if (event.target === biomodal) closeModal();
+    });
   });
-
-  // Modal behavior for open and close
-  var biomodal = document.getElementById("editBio");
-  var editBioBtn = document.getElementById("editBioBtn"); // Trigger button for opening modal
-  var bioCloseBtn = document.getElementById("bioClose");
-
-  editBioBtn.onclick = function () {
-    biomodal.style.display = "block";
-  };
-  bioCloseBtn.onclick = function () {
-    biomodal.style.display = "none";
-  };
-  window.onclick = function (event) {
-    if (event.target == biomodal) {
-      biomodal.style.display = "none";
-    }
-  };
 </script>
