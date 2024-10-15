@@ -95,7 +95,7 @@
       <span class="close" id="bioClose">&times;</span>
       <h2>Edit Bio</h2>
     </div>
-    <div class="modal-body">
+    <div class="editmodal-body">
       <form action="{% url 'edit_bio' request.user.username %}" method="POST">
         {% csrf_token %} {{ editbio_form.as_p }}
         <div class="modal-footer">

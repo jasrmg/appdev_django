@@ -229,6 +229,11 @@ def profile_view(request, username):
     print('followers:')
     for follow in followers:
        print(follow.follower.username)
+
+    # print('following')
+    # for user in following:
+    #    print(user.followed.username)
+
     context = {
         'title': 'OnlyPans | Profile',
         'user': user,

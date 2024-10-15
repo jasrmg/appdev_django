@@ -1,7 +1,112 @@
 {% include 'base.html' %} {% load static %} {% block content %}
 <!--naa sa profile.css ang style gpamutang mostly-->
 <link rel="stylesheet" href="{% static 'css/profile.css' %}" />
+<!--style para sa follower ug following na modal-->
+<style>
+  .follow_details {
+    display: flex;
+  }
+  .dot {
+    padding: 0 10px;
 
+  }
+  #followerModalBtn,
+  #followingModalBtn {
+    cursor: pointer;
+  }
+  #followerModal,
+  #followingModal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+  .followerContent,
+  .followingContent {
+    background-color: #e6d4bc;
+    margin: 6% auto;
+    padding: 20px;
+    border: 2px solid #33221a;
+    width: 30%;
+    border-radius: 10px;
+    text-align: center;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  #followerXBtn,
+  #followingXBtn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  #followerXBtn:hover,
+  #followerXBtn:focus,
+  #followingXBtn:hover,
+  #followingXBtn:focus {
+    color: red;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .modal-header h2 {
+    text-align: center;
+  }
+  /*scrollbar design*/
+  .followerContent::-webkit-scrollbar,
+  .followingContent::-webkit-scrollbar {
+    width: 12px;
+  }
+  .followerContent::-webkit-scrollbar-track,
+  .followerContent::-webkit-scrollbar-tracl {
+    background: #e6d6bc;
+    border-radius: 10px;
+    border: 2px solid #33221a;
+  }
+  /*thumb of the scrollbar*/
+  .followerContent::-webkit-scrollbar-thumb
+  .followingContent::-webkit-scrollbar-thumb {
+    background-color: #33221a;
+    border-radius: 10px;
+  }
+  /*thumb hover effect*/
+  .followerContent::-webkit-scrollbar-thumb:hover,
+  .followingContent::-webkit-scrollbar-thumb:hover {
+    background-color: #4e3727;
+  }
+
+  /*card design*/
+  .f_modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px; 
+  }
+  .f_container {
+    display: flex; /* Use flexbox to align avatar and names */
+    align-items: center; /* Vertically center the items */
+    margin: 10px; /* Space between items */
+    background-color: #fdeed8; /* Background color */
+    padding: 10px;
+    border: 2px solid #33221a;
+    border-radius: 10px;
+  }
+  .f_modal-body a {
+    min-width: 95%;
+    max-width: 95%;
+  }
+  .f_container img {
+    max-width: 50px; 
+    min-width: 50px;
+    min-height: 50px;
+    max-height: 50px;
+    border-radius: 50%;
+  }
+</style>
 
 {% if user.is_authenticated %}
 <div class="body">
@@ -16,11 +121,64 @@
     <div>
       <h1>{{ user.first_name }} {{ user.last_name }}</h1>
       
-        <!--show sa following-->
-        <p>
-          <a> {% include 'OnlyPans/modals/follower_modal.html' %} {{ number_of_follower }} follower{% if number_of_follower > 1 %}s{% endif %} </a> · 
-          {{ number_of_following }} following{% if number_of_following > 1 %}s{% endif %}
-        </p>
+        
+        <div class="follow_details">
+          <p>
+            <span id="followerModalBtn"> {{ number_of_follower }} follower{% if number_of_follower > 1 %}s{% endif %} </span> 
+            </p>
+            <!--follower modal-->
+            <div id="followerModal" class="modal">
+             <div class="followerContent">
+               <div class="modal-header">
+                 <span id="followerXBtn">&times;</span>
+                 <h2>Followers</h2>
+               </div>
+               <div class="f_modal-body">
+                 {% if follower %}
+                   {% for user in follower %}
+                   <a href="{% url 'profile' user.follower.username %}" style="text-decoration: none; color: inherit;">
+                   <div class="f_container">
+                     <img src="{{ user.follower.avatar.url }}">
+                     {{ user.follower.first_name }} {{ user.follower.last_name }}
+                   </div>
+                   </a>
+                   {% endfor %}
+                 {% else %}
+                   <p>No Follower</p>
+                 {% endif %}
+               </div>
+             </div>
+            </div>
+          <p class="dot">&#x2022;</p>
+            <p>
+           <span id="followingModalBtn"> {{ number_of_following }} following{% if number_of_following > 1 %}s{% endif %} </span>
+          </p>
+           <!--following modal-->
+           <div id="followingModal" class="modal">
+             <div class="followingContent">
+               <div class="modal-header">
+                 <span id="followingXBtn">&times;</span>
+                 <h2>Following</h2>
+               </div>
+               <div class="f_modal-body">
+                 {% if following %}
+                   {% for user in following %}
+                   <a href="{% url 'profile' user.followed.username %}" style="text-decoration: none; color: inherit;">
+                   <div class="f_container">
+                     <img src="{{ user.followed.avatar.url }}" alt="following profile">
+                     {{ user.followed.first_name }} {{ user.followed.last_name }}
+                   </div>
+                   </a>
+                   {% endfor %}
+                 {% else %}
+                   <p>No Following</p>
+                 {% endif %}
+               </div>
+             </div>
+           </div>
+         </p>
+        </div>
+
       <!--show sa following-->
       <div class="followers_avatar">
       {% if follower %}
@@ -135,4 +293,39 @@
   var username = "{{ user.username | escapejs }}";
 </script>
 <script src="{% static 'js/showposts.js' %}"></script>
+<!--script for follower and following modal-->
+<script>
+  //following modal js
+  const followingModal = document.getElementById("followingModal");
+  const openFollowingBtn = document.getElementById("followingModalBtn");
+  const followingXBtn = document.getElementById("followingXBtn");
+
+  const closeFollowingModal = () => (followingModal.style.display = "none");
+
+  openFollowingBtn.addEventListener("click", () => {
+    followingModal.style.display = "block";
+  });
+
+  followingXBtn.addEventListener("click", closeFollowingModal);
+  
+  //followers modal js
+  const followerModal = document.getElementById("followerModal")
+  const openFollowerBtn = document.getElementById("followerModalBtn")
+  const followerXBtn = document.getElementById("followerXBtn")
+
+  //close the modal
+  const closeFollowerModal = () => (followerModal.style.display = "none");
+
+  //open the modal
+  openFollowerBtn.addEventListener("click", () => {
+    followerModal.style.display = "block";
+  });
+
+  //close the modal when clicking the X button or outside the modal
+  followerXBtn.addEventListener("click", closeFollowerModal);
+  window.addEventListener("click", (event) => {
+    if (event.target === followerModal) closeFollowerModal();
+    else if (event.target === followingModal) closeFollowingModal();
+  });
+</script>
 {% endif %} {% endblock %}
