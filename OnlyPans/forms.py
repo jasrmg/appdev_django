@@ -90,7 +90,7 @@ class CreatePostForm(forms.ModelForm):
         widget=forms.Textarea(attrs={
             'placeholder': 'Describe your recipe. . .',
             'class': 'description-class',  # Add your custom class
-            'style': 'height: 100px; font-family: Poppins',  # Change the height here'
+            'style': 'height: 100px; font-family: Poppins; background: #fdeed8;',  # Change the height here'
         }), 
         required=True
     )
@@ -99,7 +99,7 @@ class CreatePostForm(forms.ModelForm):
         widget=forms.Textarea(attrs={
             'placeholder': 'List your ingredients (comma-separated)...',
             'class': 'ingredients-class',  # Add your custom class
-            'style': 'height: 80px; font-family: Poppins',  # Change the height here
+            'style': 'height: 80px; font-family: Poppins; background: #fdeed8;',  # Change the height here
         }), 
         required=True
     )
@@ -110,3 +110,8 @@ class EditPostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['title', 'category', 'description', 'ingredients']
+
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
+        widget=forms.Select(attrs={'id': 'editPostCategory'})
+    )

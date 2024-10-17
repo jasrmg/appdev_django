@@ -10,7 +10,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import JsonResponse
 
 
-from OnlyPans.models import Follow, Post, PostImage
+from OnlyPans.models import Category, Follow, Post, PostImage
 
 from .forms import EditBioForm, EditPostForm, EditProfileForm, CreatePostForm, SignupForm, LoginForm
 
@@ -156,6 +156,7 @@ def create_post(request, username):
 @login_required
 def edit_post(request, post_id):
   post = get_object_or_404(Post, post_id=post_id)
+  print('Post: ', post)
   if request.user != post.user:
      return redirect('home')
   
@@ -166,9 +167,11 @@ def edit_post(request, post_id):
       messages.success(request, 'Post updated!')
       return redirect('profile', post.user.username)
     else:
-       messages.error(request, 'Post update, failed')
+      messages.error(request, 'Post update, failed: ')
+      print('Errors Post: ', editpost_form.errors)
+      return redirect('profile', post.user.username) 
   else:
-    editpost_form = CreatePostForm(instance=post)
+    editpost_form = EditPostForm(instance=post)
   
   return render(request, 'OnlyPans/modals/editpost_modal.html', {'editpost_form':editpost_form})
 
@@ -185,7 +188,7 @@ def delete_post(request, post_id):
 @login_required
 def profile_view(request, username):
     user = get_object_or_404(User, username=username)
-
+    
     # Flags
     is_own_profile = request.user == user  # Check if the user is the authenticated user
     is_following = Follow.objects.filter(follower=request.user, followed=user).exists()  # Check if the visiting user is following the account
@@ -194,11 +197,19 @@ def profile_view(request, username):
     createpost_form = CreatePostForm()
     editprofile_form = EditProfileForm(instance=user)
     editbio_form = EditBioForm(instance=user)
-    editpost_form = EditPostForm()
+    
+    #check if there is a post to edit:
+    post_to_edit = None
+    if request.method == 'POST' and 'edit_post_id' in request.POST:
+      post_id = request.POST.get('edit_post_id')
+      post_to_edit = get_object_or_404(Post, pk=post_id, user=user)
+      editpost_form = EditPostForm(instance=post_to_edit)
+    else:
+      editpost_form = EditPostForm()
+
     # Fetch user posts and prefetch related fields
     posts = Post.objects.filter(user=user).order_by('-created_at').prefetch_related('images', 'comment_set')
-
-    # Process each post for random comments and its ingredients
+    
     for post in posts:
         comments = list(post.comment_set.all())
         # Fetch the first 3 ingredients
@@ -236,6 +247,7 @@ def profile_view(request, username):
     # for user in following:
     #    print(user.followed.username)
 
+    categories = Category.objects.all()
     context = {
         'title': 'OnlyPans | Profile',
         'user': user,
@@ -243,9 +255,13 @@ def profile_view(request, username):
         'editprofile_form': editprofile_form,
         'editbio_form': editbio_form,
         'editpost_form': editpost_form,
+        'post_to_edit': post_to_edit,
+        'categories': categories,
+
         'is_own_profile': is_own_profile,
         'is_following': is_following,
         'posts': page_obj,
+
         'follower': followers,
         'following': following,
         'number_of_follower': number_of_follower,

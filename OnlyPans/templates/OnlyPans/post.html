@@ -19,15 +19,9 @@
       <button
         class="edit_icon"
         title="Edit Post"
-        onclick="openEditPostModal('{{ post.post_id }}')"
+        onclick="openEditModal('{{ post.post_id }}', '{{ post.title }}', '{{ post.category.category_id|escapejs }}', '{{ post.description }}', '{{ post.ingredients }}')"
         data-post-id="{{ post.post_id }}"
-        style="
-          position: relative;
-          background: none;
-          border: none;
-          cursor: pointer;
-        "
-        id="editPostBtn"
+        style="background: none; border: none; cursor: pointer"
       >
         <i class="fa-solid fa-pencil-alt" style="color: #33221a"></i>
         <span class="tooltip">Edit</span>

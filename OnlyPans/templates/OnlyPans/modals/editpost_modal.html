@@ -1,9 +1,13 @@
 {% load static %}
+<!-- Style for edit post modal -->
 <style>
-  /* Style for edit post modal */
-  #editPost {
-    /* Same styles as the create post modal */
-    display: none; /* Hidden by default */
+  /* Apply Poppins font to the body */
+  body {
+    font-family: "Poppins", sans-serif; /* Use Poppins font */
+  }
+
+  .modal {
+    display: none;
     position: fixed;
     z-index: 1;
     left: 0;
@@ -24,8 +28,59 @@
     text-align: center;
   }
 
-  /* You can copy the rest of the CSS from your Create Post modal */
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: red;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .modal-header h2 {
+    text-align: center;
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Styling for input fields (description, ingredients, category) */
+  .form-field input,
+  .form-field select,
+  .form-field textarea {
+    background-color: #f3e4d7; /* Light background color similar to recipe name */
+    border: 1px solid #33221a; /* Border color */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px; /* Padding inside input fields */
+    width: 100%; /* Full width */
+    box-sizing: border-box; /* Include padding and border in element's total width */
+    margin-top: 5px; /* Spacing above the fields */
+  }
+
+  /* Center text in textareas */
+  .form-field textarea {
+    text-align: center; /* Center text */
+    height: 100px; /* Adjust height as needed */
+  }
+
+  .modal-footer input[type="submit"] {
+    padding: 10px 20px;
+    background-color: #33221a;
+    color: #fdeed8;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+  }
 </style>
+
 <!-- Edit Post Modal -->
 <div id="editPost" class="modal">
   <div class="editPostContent">
@@ -35,12 +90,47 @@
     </div>
     <div class="modal-body">
       <form
-        action="{% url 'edit_post' post.post_id %}"
+        action=""
         method="POST"
         enctype="multipart/form-data"
+        id="editPostForm"
       >
-        {% csrf_token %} {{ editpost_form.as_p }}
-        <!-- Render the form fields with pre-populated data -->
+        {% csrf_token %}
+
+        <div class="form-field">
+          <label for="editPostTitle">Title</label>
+          <input type="text" name="title" id="editPostTitle" />
+        </div>
+
+        <div class="form-field">
+          <label for="editPostCategory">Category</label>
+          <select name="category" id="editPostCategory">
+            {% for category in categories %}
+            <option value="{{ category.category_id }}">
+              {{ category.name }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="editPostDescription">Description</label>
+          <textarea
+            name="description"
+            id="editPostDescription"
+            style="font-family: Poppins"
+          ></textarea>
+        </div>
+
+        <div class="form-field">
+          <label for="editPostIngredients">Ingredients</label>
+          <textarea
+            name="ingredients"
+            id="editPostIngredients"
+            style="font-family: Poppins"
+          ></textarea>
+        </div>
+
         <div class="modal-footer">
           <input type="submit" value="Update" id="editPostSubmitbtn" />
         </div>
@@ -50,16 +140,101 @@
 </div>
 
 <script>
-  function openEditModal(postId) {
+  // Function to open the edit post modal and prefill fields
+  function openEditModal(
+    postId,
+    postTitle,
+    postCategory,
+    postDescription,
+    postIngredients
+  ) {
     const editPostModal = document.getElementById("editPost");
-    const formActionUrl = "{% url 'edit_post' 0 %}".replace("0", postId);
+    const form = document.getElementById("editPostForm");
+    const submitBtn = document.getElementById("editPostSubmitbtn");
 
     // Set the form action dynamically
-    document
-      .querySelector("#editPost form")
-      .setAttribute("action", formActionUrl);
+    const formActionUrl = "{% url 'edit_post' 0 %}".replace("0", postId);
+    form.setAttribute("action", formActionUrl);
 
-    // Open the modal
+    // Prefill form fields with post data
+    const titleInput = document.getElementById("editPostTitle");
+    const descriptionInput = document.getElementById("editPostDescription");
+    const ingredientsInput = document.getElementById("editPostIngredients");
+    const categorySelect = document.getElementById("editPostCategory");
+
+    titleInput.value = postTitle;
+    descriptionInput.value = postDescription;
+    ingredientsInput.value = postIngredients;
+
+    // Set the selected category
+    for (let i = 0; i < categorySelect.options.length; i++) {
+      if (
+        categorySelect.options[i].value.trim() == String(postCategory).trim()
+      ) {
+        categorySelect.selectedIndex = i; // Set the selected option
+        break;
+      }
+    }
+
+    // Show the modal
     editPostModal.style.display = "block";
+
+    // Store the initial values for comparison
+    const initialFormValues = {
+      title: titleInput.value.trim(),
+      description: descriptionInput.value.trim(),
+      ingredients: ingredientsInput.value.trim(),
+      category: categorySelect.value.trim(),
+    };
+
+    // Enable/disable submit button based on changes in form fields
+    const checkForChanges = () => {
+      const currentFormValues = {
+        title: titleInput.value.trim(),
+        description: descriptionInput.value.trim(),
+        ingredients: ingredientsInput.value.trim(),
+        category: categorySelect.value.trim(),
+      };
+
+      // Compare current values with initial values
+      const formChanged =
+        initialFormValues.title !== currentFormValues.title ||
+        initialFormValues.description !== currentFormValues.description ||
+        initialFormValues.ingredients !== currentFormValues.ingredients ||
+        initialFormValues.category !== currentFormValues.category;
+
+      // Enable/disable the submit button based on whether the form has changed
+      submitBtn.disabled = !formChanged;
+    };
+
+    // Attach event listeners to form fields to detect changes
+    titleInput.addEventListener("input", checkForChanges);
+    descriptionInput.addEventListener("input", checkForChanges);
+    ingredientsInput.addEventListener("input", checkForChanges);
+    categorySelect.addEventListener("change", checkForChanges);
+
+    // Disable the submit button initially (if no changes are made)
+    submitBtn.disabled = true;
   }
+
+  // Event listener for closing the modal
+  document.addEventListener("DOMContentLoaded", function () {
+    const editPostModal = document.getElementById("editPost");
+    const closeEditPostBtn = document.getElementById("editPostX");
+
+    // Function to close modal
+    const closeModal = () => {
+      editPostModal.style.display = "none";
+    };
+
+    // Close modal when clicking the 'X' button
+    closeEditPostBtn.addEventListener("click", closeModal);
+
+    // Close modal when clicking outside of it
+    window.addEventListener("click", (event) => {
+      if (event.target === editPostModal) {
+        closeModal();
+      }
+    });
+  });
 </script>
