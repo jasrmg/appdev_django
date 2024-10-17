@@ -1,12 +1,12 @@
 from django.contrib import admin
-from .models import User, Post, Category, Ingredient, PostImage, Comment, Follow
+from .models import User, Post, Category, PostImage, Comment, Follow
 
 # Register your models here.
 class UserAdmin(admin.ModelAdmin):
   list_display = ('id', 'username')
 
 class PostAdmin(admin.ModelAdmin):
-  list_display = ('get_user_name', 'title', 'display_image')
+  list_display = ('post_id', 'get_user_name', 'title', 'display_image')
 
   def get_user_name(self, obj):
     return obj.user.username
@@ -24,7 +24,6 @@ class PostAdmin(admin.ModelAdmin):
 admin.site.register(User, UserAdmin)
 admin.site.register(Post, PostAdmin)
 admin.site.register(Category)
-admin.site.register(Ingredient)
 # admin.site.register(PostImage)
 admin.site.register(Comment)
 admin.site.register(Follow) 

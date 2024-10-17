@@ -35,20 +35,13 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-# Ingredient Model:
-class Ingredient(models.Model):
-    name = models.CharField(max_length=500)
 
-    def __str__(self):
-        return self.name
-    
 # Posts Model
 class Post(models.Model):
     post_id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=100)
     description = models.TextField()
-    # ingredients = models.TextField(null=False, default='Bypass')
-    ingredients = models.ManyToManyField(Ingredient, related_name='post')
+    ingredients = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)  # Relationship to Category
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # Relationship to User (author of post)
     created_at = models.DateTimeField(auto_now_add=True)

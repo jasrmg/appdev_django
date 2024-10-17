@@ -35,34 +35,12 @@
     </div>
     <div class="modal-body">
       <form
-        action=""{# {% url 'edit_post' post.post_id %} #}
+        action="{% url 'edit_post' post.post_id %}"
         method="POST"
         enctype="multipart/form-data"
       >
-        {% csrf_token %}
-        <div class="form-group">
-          <div class="form-field">
-            {{ editpost_form.title.label }}<br />
-            {{ editpost_form.title }}
-          </div>
-          <div class="form-field">
-            {{ editpost_form.category.label }}<br />
-            {{ editpost_form.category }}
-          </div>
-        </div>
-        <div class="form-field">
-          {{ editpost_form.description.label }}<br />
-          {{ editpost_form.description }}
-        </div>
-        <div class="form-field">
-          {{ editpost_form.ingredients.label }}<br />
-          {{ editpost_form.ingredients }}
-        </div>
-        <div class="form-field">
-          {{ editpost_form.image.label }}<br />
-          {{ editpost_form.image }}
-        </div>
-        <input type="hidden" name="edit_post" />
+        {% csrf_token %} {{ editpost_form.as_p }}
+        <!-- Render the form fields with pre-populated data -->
         <div class="modal-footer">
           <input type="submit" value="Update" id="editPostSubmitbtn" />
         </div>
@@ -72,25 +50,16 @@
 </div>
 
 <script>
-  // JavaScript to handle edit post modal behavior
-  document.addEventListener("DOMContentLoaded", function () {
+  function openEditModal(postId) {
     const editPostModal = document.getElementById("editPost");
-    const openEditPostBtn = document.getElementById("editPostBtn"); // Button or input to open edit modal
-    const closeEditPostBtn = document.getElementById("editPostX");
+    const formActionUrl = "{% url 'edit_post' 0 %}".replace("0", postId);
 
-    // Function to close modal
-    const closeModal = () => (editPostModal.style.display = "none");
+    // Set the form action dynamically
+    document
+      .querySelector("#editPost form")
+      .setAttribute("action", formActionUrl);
 
-    // Open modal when clicking the button
-    openEditPostBtn.addEventListener("click", () => {
-      editPostModal.style.display = "block";
-    });
-
-    // Close modal when clicking the 'X' button or outside the modal
-    closeEditPostBtn.addEventListener("click", closeModal);
-
-    window.addEventListener("click", (event) => {
-      if (event.target === editPostModal) closeModal();
-    });
-  });
+    // Open the modal
+    editPostModal.style.display = "block";
+  }
 </script>

@@ -10,9 +10,9 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import JsonResponse
 
 
-from OnlyPans.models import Follow, Ingredient, Post, PostImage
+from OnlyPans.models import Follow, Post, PostImage
 
-from .forms import EditBioForm, EditProfileForm, CreatePostForm, SignupForm, LoginForm
+from .forms import EditBioForm, EditPostForm, EditProfileForm, CreatePostForm, SignupForm, LoginForm
 
 # Create your views here.
 def test(request):
@@ -110,6 +110,9 @@ def edit_bio(request, username):
         form.save()
         messages.success(request, '🥳 Ta-da! Your bio just got a glow-up! It’s now sizzling with personality! 🌟🍽️')
         return redirect('profile', username=username)
+     else:
+        messages.error(request, 'Bio update, failed. Please try again and make sure to use 150 letters only.')
+        return redirect('profile', username=username)
   else:
      form = EditProfileForm(instance=user) 
   return render(request, 'OnlyPans/modals/edit_bio.html', {'editbio_form': form})
@@ -129,11 +132,7 @@ def create_post(request, username):
           post.save()
 
           #ingredients handling
-          ingredients_name = form.cleaned_data['ingredients'].split(',')
-          for name in ingredients_name:
-            ingredient, created = Ingredient.objects.get_or_create(name=name.strip())
-            post.ingredients.add(ingredient)
-
+         
             #check if only one image is uploaded
           image = request.FILES.get('image')
           if image:
@@ -154,23 +153,25 @@ def create_post(request, username):
   print('outside if: ', form)
   return render(request, 'OnlyPans/modals/create_post.html', context)
 
-# def edit_post(request, post_id):
-#   post = get_object_or_404(Post, id=post_id)
+@login_required
+def edit_post(request, post_id):
+  post = get_object_or_404(Post, post_id=post_id)
+  if request.user != post.user:
+     return redirect('home')
+  
+  if request.method == 'POST':
+    editpost_form = EditPostForm(request.POST, instance=post)
+    if editpost_form.is_valid():
+      editpost_form.save()
+      messages.success(request, 'Post updated!')
+      return redirect('profile', post.user.username)
+    else:
+       messages.error(request, 'Post update, failed')
+  else:
+    editpost_form = CreatePostForm(instance=post)
+  
+  return render(request, 'OnlyPans/modals/editpost_modal.html', {'editpost_form':editpost_form})
 
-#   if request.method == 'POST':
-#     editpost_form = CreatePostForm(request.POST, request.FILES, instance=post)
-#     if editpost_form.is_valid():
-#       editpost_form.save()
-#       messages.success(request, 'Post successfully edited!')
-#       redirect_to = request.POST.get('redirect_to', 'profile')
-#       return redirect(redirect_to, username=request.user.username)
-#   else:
-#     editpost_form = CreatePostForm(instance=post)
-#   context = {
-#      'editpost_form': editpost_form,
-#      'post': post,
-#   }
-#   return render(request, 'OnlyPans/modals/editpost_modal.html', context)
 
 @login_required
 def delete_post(request, post_id):
@@ -193,15 +194,16 @@ def profile_view(request, username):
     createpost_form = CreatePostForm()
     editprofile_form = EditProfileForm(instance=user)
     editbio_form = EditBioForm(instance=user)
-    # editpost_form = EditPostForm()
+    editpost_form = EditPostForm()
     # Fetch user posts and prefetch related fields
-    posts = Post.objects.filter(user=user).order_by('-created_at').prefetch_related('images', 'comment_set', 'ingredients')
+    posts = Post.objects.filter(user=user).order_by('-created_at').prefetch_related('images', 'comment_set')
 
     # Process each post for random comments and its ingredients
     for post in posts:
         comments = list(post.comment_set.all())
         # Fetch the first 3 ingredients
-        post.ingredients_list = post.ingredients.all()[:3]
+        post.ingredients_list = [ingredient.strip() for ingredient in post.ingredients.split(',')]
+        post.ingredients_list = post.ingredients_list[:3]
         # 2 random comments
         post.random_comments = random.sample(comments, min(2, len(comments)))
 
@@ -240,6 +242,7 @@ def profile_view(request, username):
         'createpost_form': createpost_form,
         'editprofile_form': editprofile_form,
         'editbio_form': editbio_form,
+        'editpost_form': editpost_form,
         'is_own_profile': is_own_profile,
         'is_following': is_following,
         'posts': page_obj,
