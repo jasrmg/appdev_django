@@ -270,11 +270,11 @@
     <!--main content-->
     <div class="main_content">
       <!-- Create post modal -->
-      {% if is_own_profile  %}
+      {% if posts  %}
         {% include 'OnlyPans/modals/create_post.html' %}
       {% else %}
         <style>
-          .post { margin: 0;}
+          .post { margin: 0;} /*if way post i 0 ang margin para nice*/
         </style>
       {% endif %}
       <!-- Posts Container -->
