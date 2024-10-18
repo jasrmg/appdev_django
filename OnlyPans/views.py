@@ -92,9 +92,9 @@ def edit_profile(request, username):
         if request.method == 'POST':
             form = EditProfileForm(request.POST, request.FILES, instance=user)
             if form.is_valid():
-                form.save()
-                messages.success(request, 'Updated and ready to serve! Your profile is now the main course!')
-                return redirect('profile', username=user.username)
+              form.save()
+              messages.success(request, 'Updated and ready to serve! Your profile is now the main course!')
+              return redirect('profile', username=user.username)
         else:
             form = EditProfileForm(instance=user)
 
@@ -231,7 +231,7 @@ def profile_view(request, username):
     except PageNotAnInteger:
         page_obj = paginator.page(1)  # If the page is not an integer, return the first page
     except EmptyPage:
-        page_obj = []  # Return an empty list if the page is out of range
+        return HttpResponse('') #stop if there is no more post
     
     if page_obj:
       visible_posts_ids = [post.post_id for post in page_obj.object_list]
@@ -258,16 +258,6 @@ def profile_view(request, username):
     for follow in followers:
       print(follow.follower.username)
 
-    # print('following')
-    # for user in following:
-    #    print(user.followed.username)
-    lke = Like.objects.all()
-    # print('asdsa: ', lke.user)
-    # print('Like', lke)
-
-    # for user in lke:
-    #    print('User: ', user.user)
-    #    print('Post: ', user.post)
     categories = Category.objects.all()
     context = {
         'title': 'OnlyPans | Profile',
@@ -289,7 +279,6 @@ def profile_view(request, username):
         'number_of_following': number_of_following,
 
         'liked_posts': liked_posts,
-        'like': lke,
     }
     return render(request, 'OnlyPans/profile_view.html', context)
 

@@ -272,6 +272,9 @@ a {
 .stats i {
   margin-left: 10px;
 }
+.stats .fa-heart {
+  color: var(--red-color);
+}
 
 /* Comment input section */
 .comment_section {

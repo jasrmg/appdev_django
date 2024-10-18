@@ -27,20 +27,22 @@ cancelDeleteBtn.onclick = function () {
 
 // Confirm and submit delete request
 confirmDeleteBtn.onclick = function () {
+  var delcsrfToken = $('#csrf_form input[name="csrfmiddlewaretoken"]').val();
   // Create a form to submit the delete request
   const form = document.createElement("form");
   form.method = "POST";
-  form.action = "{% url 'delete_post' 0 %}".replace("0", postIdToDelete); // Replace 0 with postIdToDelete
+  form.action = deletePostUrl.replace("0", postIdToDelete); // Replace 0 with postIdToDelete
 
-  // Create CSRF token input
+  // Create a CSRF token input
   const csrfInput = document.createElement("input");
   csrfInput.type = "hidden";
-  csrfInput.name = "csrfmiddlewaretoken";
-  csrfInput.value = "{{ csrf_token }}"; // Use Django's CSRF token
-
+  csrfInput.name = "csrfmiddlewaretoken"; // Ensure CSRF token is sent
+  csrfInput.value = delcsrfToken; // Get CSRF token from Django template context
   form.appendChild(csrfInput);
+
+  // Append the form to the body and submit
   document.body.appendChild(form);
-  form.submit(); // Submit the form
+  form.submit();
 };
 
 // Function to open the edit post modal

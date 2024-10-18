@@ -15,14 +15,16 @@
   </div>
 </div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script>
   $(document).ready(function () {
     $("#myModal").modal("show");
     setTimeout(function () {
       $("#myModal").modal("hide");
     }, 2000);
+  });
+
+  $(document).ready(function () {
+    $("#myModal").modal("show"); // Ensure this line is executed after your messages are set
   });
 </script>
 {% endfor %} {% endif %}
