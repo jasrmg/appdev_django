@@ -1,81 +1,185 @@
 {% load static %}
-{% if user == request.user %}
-<!--styles for the modal-->
+
 <style>
-  .editprofilecontainer {
-    display: flex;
-    justify-content: center;
+  /* Modal overlay styles */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
   }
-  .btn {
-    padding: 3px 10px;
-    margin: 10px 0;
-  }`
-  /*modal content*/
-  .modal-content {
-    box-sizing: border-box;
-    background-color: #fefefe;
-    margin: auto;
-    padding: 30px;
-    border: 1px solid #000;
-    width: 40%;
-    border-radius: 8px;
-    text-align: center;
+
+  /* Edit Profile modal content */
+  .editProfilecontent {
+    background-color: #e6d4bc;
+    margin: 5.9% auto; /* Center modal vertically */
+    padding: 20px;
+    border: 2px solid #33221a;
+    width: 30%;
+    border-radius: 10px;
+    text-align: center; /* Center text inside */
   }
-  .modal-open {
-    overflow: hidden;
-  }
-  /*close btn*/
+
+  /* Close button styles */
   .close {
     color: #aaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
   }
+
   .close:hover,
   .close:focus {
     color: red;
     text-decoration: none;
     cursor: pointer;
   }
+
+  /* Header styles */
+  .modal-header h2 {
+    text-align: center;
+  }
+
+  /* Footer styles */
+  .modal-footer {
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Submit button styles */
+  #editProfileSubmitbtn {
+    font-weight: 500;
+    padding: 10px 20px;
+    background-color: #33221a;
+    color: #fdeed8;
+    border: 2px solid #33221a;
+    border-radius: 10px;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  #editProfileSubmitbtn:hover {
+    background-color: #fdeed8;
+    color: #33221a;
+    border: 2px solid #33221a;
+  }
+
+  /* Error message styles */
+  #errorMsg {
+    color: red;
+    text-align: center;
+    display: none; /* Initially hidden */
+  }
+
+  /* Form field styles */
+  .form-field input,
+  .form-field select,
+  .form-field textarea {
+    background-color: #fdeed8;
+    border: 1px solid #33221a;
+    border-radius: 5px;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 5px;
+  }
+
+  /* Center text in textareas */
+  .form-field textarea {
+    text-align: center; /* Center text */
+    height: 100px; /* Adjust height as needed */
+  }
+
+  /* Centering file input */
+  .form-field {
+    text-align: center; /* Center the content */
+  }
+
+  /* Margin for submit button */
+  #editProfileSubmitbtn {
+    margin-top: 20px; /* Add margin above the submit button */
+  }
+
+  .form-field input[type="file"] {
+    margin-bottom: 20px; /* Margin below the image upload input */
+  }
 </style>
-<!--Trigger Button-->
-<div class="editprofilecontainer">
-  <button id="openEditProfileModalBtn" class="btn">Edit Profile</button>
-  <!--Edit Profile Modal-->
-  <div id="editProfileModal" class="modal">
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <h5>Edit Profile</h5>
-        <form method="POST" enctype="multipart/form-data" action="{% url 'edit_profile' user.username %}">
-          {% csrf_token %}  
-          {{ editprofile_form.as_p }}
-          <button type="submit" class="btn">Save changes</button>
-        </form>
-      </div>
+
+<!-- Modal HTML -->
+<div id="editProfile" class="modal">
+  <div class="editProfilecontent">
+    <div class="modal-header">
+      <span class="close" id="editX">&times;</span>
+      <h2>Edit Profile</h2>
+    </div>
+    <div class="modal-body">
+      <form
+        action="{% url 'edit_profile' request.user.username %}"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+        {% csrf_token %}
+
+        <div class="form-field">{{ editprofile_form.as_p }}</div>
+
+        <div class="modal-footer">
+          <input
+            type="submit"
+            value="Submit"
+            id="editProfileSubmitbtn"
+            disabled
+          />
+          <!-- Initially disabled -->
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 
-
 <script>
-  var modal = document.getElementById('editProfileModal');
-  var btn = document.getElementById('openEditProfileModalBtn');
-  var span = document.getElementsByClassName('close')[0];
+  // JavaScript to handle form change and submission behavior
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("#editProfile form");
+    const submitButton = document.getElementById("editProfileSubmitbtn");
+    let formChanged = false;
 
-  btn.onclick = function () {
-    modal.style.display = "block";  
-    document.body.classList.add("modal-open");
-  }
+    // Enable submit button when form changes
+    form.addEventListener("change", () => {
+      formChanged = true;
+      submitButton.disabled = false;
+    });
 
-  span.onclick = function() {
-    modal.style.display = "none";
-    document.body.classList.remove("modal-open");
-  }
+    // Prevent submission if no changes are made
+    form.addEventListener("submit", (e) => {
+      if (!formChanged) {
+        e.preventDefault(); // Block submission if form is unchanged
+      }
+    });
 
-  window.onclick = function(event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
-      document.body.classList.remove("modal-open");
-    }
-  }
+    // Modal behavior for open/close
+    const editModal = document.getElementById("editProfile");
+    const openModalBtn = document.getElementById("editProfileBtn");
+    const closeModalBtn = document.getElementById("editX");
+
+    // Function to close modal
+    const closeModal = () => (editModal.style.display = "none");
+
+    // Open modal when clicking the button
+    openModalBtn.addEventListener("click", () => {
+      editModal.style.display = "block";
+    });
+
+    // Close modal when clicking the 'X' button or outside the modal
+    closeModalBtn.addEventListener("click", closeModal);
+
+    window.addEventListener("click", (event) => {
+      if (event.target === editModal) closeModal();
+    });
+  });
 </script>
-{% endif %}

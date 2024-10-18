@@ -1,59 +1,355 @@
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+/*profile header*/
 
-  /*===========VARIABLES=============*/
-  :root {
-    --bg-color: #fdeed8;
-    --nav-color: #33221a;
-    --button-color: #1c1b1b;
-  }
+body {
+  font-family: "Poppins", sans-serif;
+}
+.profile {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  color: var(--secondary-color);
+  background: var(--darker-primary-color);
+  padding: 20px;
+  width: 60vw;
+  border-radius: 5px; /* Added border-radius for a softer look */
+}
+.profile img {
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  margin-right: 20px;
+  border: 3px solid var(--secondary-color);
+}
+.profile h1 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: bold;
+  line-height: 20px;
+}
+.profile p {
+  margin: 5px 0;
+}
+a {
+  text-decoration: none;
+}
+.followers_avatar img {
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--secondary-color);
+  margin: 0;
+}
+.buttons {
+  margin-left: auto; /* Aligns buttons to the right */
+}
+.button {
+  padding: 10px 15px;
+  background: var(--accent-color);
+  border: none;
+  color: var(--primary-color);
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 10px; /* Space between buttons */
+  letter-spacing: 1.5px;
+}
+/*body below the profile*/
+.body_content {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  width: 60vw;
+}
+/*sidebar*/
+.sidebar {
+  flex: 1;
+  background-color: var(--darker-primary-color);
+  color: var(--secondary-color);
+  padding: 20px;
+  position: sticky;
+  top: 1px;
+  height: auto;
+  max-height: 100vh;
+  max-width: 406px;
+  min-width: 406px;
+  border-radius: 10px;
+  margin-right: 10px;
+}
+/*for icons in the sidebar*/
+.sidebar i {
+  margin: 10px 4px;
+}
 
-  * {
-    font-size: 16px;
-    margin: 0;
-    box-sizing: border-box;
-  }
+.intro {
+  font-weight: bold;
+  font-size: 20px;
+  color: var(--secondary-color);
+  margin-top: 10px;
+}
 
-  body {
-    font-family: Poppins, sans-serif;
-    background: var(--bg-color);
-  }
+.bio_container {
+  text-align: center;
+}
+.bio_text {
+  margin-top: 35px;
+  word-wrap: break-word; /*ensures long words break to the next line*/
+  overflow: hidden; /*ensures text stays in the container*/
+  max-width: 100%;
+  max-height: 120px;
+}
+.edit_bio {
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  color: var(--primary-color);
+  padding: 10px 100px;
+  border-radius: 5px;
 
-  .profile_details {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 15px;
-  }
+  background-color: var(--accent-color);
+  margin: 25px 0;
+}
+.info {
+  margin-bottom: 15px;
+}
+.follower_header {
+  margin-left: 10px;
+}
+.follower_title {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+.number_of_follower {
+  opacity: 80%;
+}
+.followers_container {
+  background-color: var(--accent-color);
+  color: var(--primary-color);
+  padding: 10px;
+  border-radius: 8px;
+}
+.follower_picture {
+  width: 102px;
+  height: 102px;
+  border-radius: 8px;
+}
+.followers {
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.follower_card p {
+  font-size: 12px;
+  font-weight: bold;
+  text-align: left;
+  padding-left: 5px;
+}
+/*main_content*/
+.main_content {
+  flex: 2;
+  min-height: 100vh;
+}
+/*CREATE POST CSS*/
+.createPost {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: var(--darker-primary-color);
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.avatar_post {
+  max-width: 40px;
+  max-height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  border: 1px solid var(--secondary-color);
+}
+.createPost input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid var(--accent-color);
+  border-radius: 20px;
+  background-color: var(--primary-color);
+  outline: none;
+  font-size: 14px;
+}
+.createPost input[type="text"]::placeholder {
+  color: #8d8d8d;
+}
+/*post*/
+/* Sample post styling */
+.post {
+  background-color: var(--darker-primary-color);
+  color: var(--secondary-color);
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
 
-  #profile_avatar {
-    width: 156px;
-    height: 155px;
-    border-radius: 50%;
-    border: 2px solid #1c1b1b;
-    margin-bottom: 15px;
-  }
+.post_header {
+  display: flex;
+  align-items: center;
+}
 
-  .name {
-    font-size: 2rem;
-    font-weight: bold;
-  }
+.post_info {
+  margin-left: 10px;
+}
 
-  .username {
-    font-size: 1rem;
-    font-weight: lighter;
-  }
+.post_info h3 {
+  margin: 0;
+  font-size: 16px;
+}
 
-  .bio {
-    text-align: center;
-    padding: 10px;
-  }
+.post_info p {
+  font-size: 12px;
+  color: gray;
+}
 
-  .break {
+.post_body {
+  margin-top: 10px;
+}
 
-    margin: auto;
-    width: 60vw;
-    border: 0.5px solid rgba(28, 27, 27, 0.3);
-  }
+.post_body p {
+  font-size: 14px;
+}
 
-  
+.post_image {
+  width: 100%;
+  height: auto;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+/* Center post footer buttons */
+.post_footer {
+  display: flex;
+  justify-content: center; /* Center the buttons */
+  gap: 80px; /* Space between the buttons */
+  margin-top: 10px;
+}
+
+.post_footer button {
+  background-color: var(--accent-color);
+  color: var(--primary-color);
+  border: 2px solid var(--accent-color);
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  letter-spacing: 1px;
+}
+.post_footer .like_button {
+  padding: 0 25px;
+}
+.post_footer button:hover {
+  background-color: var(--primary-color);
+  border: 2px solid var(--accent-color);
+  color: var(--accent-color);
+}
+/* .post_footer .like_form:hover {
+  color: var(--red-color);
+} */
+.post_footer button i {
+  margin-right: 10px;
+}
+
+/*stats*/
+.stats {
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+}
+.stats i {
+  margin-left: 10px;
+}
+.stats .fa-heart {
+  color: var(--red-color);
+}
+
+/* Comment input section */
+.comment_section {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.comment_section .avatar_post {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  border: 1px solid var(--secondary-color);
+}
+
+.comment_section input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid var(--accent-color);
+  border-radius: 20px;
+  background-color: var(--primary-color);
+  outline: none;
+  font-size: 14px;
+}
+
+.comment_section input[type="text"]::placeholder {
+  color: var(--secondary-color);
+}
+/*samplecomment*/
+.comment {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 10px;
+  background-color: var(--primary-color);
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.comment img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.comment_content {
+  display: flex;
+  flex-direction: column;
+}
+
+.comment_info {
+  margin-bottom: 5px; /* Space between name/time and comment */
+}
+
+.comment_info h4 {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1; /* To ensure it's on a single line */
+}
+
+.comment_info p {
+  margin: 2px 0;
+  font-size: 12px;
+  color: gray;
+}
+
+.comment p {
+  margin: 0;
+  font-size: 14px;
+}
+/*para sa loader*/
+#loading {
+  text-align: center;
+  padding: 10px;
+  font-size: 18px;
+}

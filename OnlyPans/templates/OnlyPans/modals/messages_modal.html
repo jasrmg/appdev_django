@@ -1,29 +1,83 @@
-{% if messages %}
-{% for message in messages %}
-<div class="modal bg-muted fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content" style="text-align: center;">
-            {% if message.tags == 'success' %}
-                <h5 class="modal-title" style="color: green;">Success!</h5>
-                <hr>
-                <p>{{ message }}</p>
-            {% elif message.tags == 'error' %}
-                <h5 class="modal-title" style="color: red;">Error!</h5>
-                <hr>
-                <p>{{ message }}</p>
-            {% endif %}
-        </div>
+{% load static %} {% if messages %} {% for message in messages %}
+<div class="modal fade success-error-modal" id="myModal" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content success-error-content">
+      {% if message.tags == 'success' %}
+      <h5 class="modal-title success-title">Success!</h5>
+      <hr />
+      <p>{{ message }}</p>
+      {% elif message.tags == 'error' %}
+      <h5 class="modal-title error-title">Error!</h5>
+      <hr />
+      <p>{{ message }}</p>
+      {% endif %}
     </div>
+  </div>
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
 <script>
-$(document).ready(function() {
+  $(document).ready(function () {
     $("#myModal").modal("show");
-    setTimeout(function() {
-        $('#myModal').modal('hide');
+    setTimeout(function () {
+      $("#myModal").modal("hide");
     }, 2000);
-});
+  });
+
+  $(document).ready(function () {
+    $("#myModal").modal("show"); // Ensure this line is executed after your messages are set
+  });
 </script>
-{% endfor %}
-{% endif %}
+{% endfor %} {% endif %}
+
+<!-- Add custom CSS for this modal -->
+<style>
+  /* Success/Error Modal */
+  .success-error-modal {
+    display: none;
+    position: fixed;
+    z-index: 1050; /* Higher than editProfile modal to avoid overlapping */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); /* Slightly transparent background */
+  }
+
+  .success-error-content {
+    background-color: var(--primary-color); /* Use defined color */
+    color: var(--secondary-color); /* Text color */
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    margin: 15% auto; /* Center the modal vertically */
+    width: 50%; /* Set a relative width */
+    max-width: 300px; /* Ensure the modal isn't too wide */
+    border: 2px solid var(--accent-color);
+  }
+
+  .modal-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .success-title {
+    color: green;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .error-title {
+    color: red;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  /* Modal Close Button */
+  .modal-header .close {
+    font-size: 1.5rem;
+    color: #333;
+    float: right;
+    cursor: pointer;
+  }
+</style>

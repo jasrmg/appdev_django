@@ -14,10 +14,15 @@ class User(AbstractUser):
 
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default='O')
 
-    bio = models.TextField(default='Welcome!')
+    bio = models.CharField(max_length=150, default='Edit your Bio')
     avatar = models.ImageField(null=True, blank=True, default='images/avatars/other.jpeg', upload_to='uploads/profile_pics/')
 
     USERNAME_FIELD = 'username'
+    #para required ang fname ug lname
+    def save(self, *args, **kwargs):
+        self.first_name = self.first_name.capitalize()
+        self.last_name = self.last_name.capitalize()
+        super(User, self).save(*args, **kwargs)
     def __str__(self):
         return self.get_full_name()
 
@@ -30,20 +35,13 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-# Ingredient Model:
-class Ingredient(models.Model):
-    name = models.CharField(max_length=500)
 
-    def __str__(self):
-        return self.name
-    
 # Posts Model
 class Post(models.Model):
     post_id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=100)
     description = models.TextField()
-    # ingredients = models.TextField(null=False, default='Bypass')
-    ingredients = models.ManyToManyField(Ingredient, related_name='post')
+    ingredients = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)  # Relationship to Category
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # Relationship to User (author of post)
     created_at = models.DateTimeField(auto_now_add=True)

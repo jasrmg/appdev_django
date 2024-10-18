@@ -1,0 +1,153 @@
+{% load static %} {% if posts %} {% for post in posts %}
+<div class="post">
+  <div
+    class="post_header"
+    style="display: flex; justify-content: space-between; align-items: center"
+  >
+    <div style="display: flex; align-items: center">
+      <img src="{{ post.user.avatar.url }}" alt="pp" class="avatar_post" />
+      <div class="post_info">
+        <h3>{{ post.user.first_name }} {{ post.user.last_name }}</h3>
+        <p>{{ post.created_at | timesince }} ago.</p>
+      </div>
+    </div>
+
+    <!-- Action icons -->
+    {% if request.user == post.user %}
+
+    <div class="post_actions">
+      <button
+        class="edit_icon"
+        title="Edit Post"
+        onclick="openEditModal('{{ post.post_id }}', '{{ post.title }}', '{{ post.category.category_id|escapejs }}', '{{ post.description }}', '{{ post.ingredients }}')"
+        data-post-id="{{ post.post_id }}"
+        style="background: none; border: none; cursor: pointer"
+      >
+        <i class="fa-solid fa-pencil-alt" style="color: #33221a"></i>
+        <span class="tooltip">Edit</span>
+      </button>
+
+      <!--edit post modal-->
+      {% include 'OnlyPans/modals/editpost_modal.html' %}
+
+      <button
+        class="delete_icon"
+        title="Delete Post"
+        onclick="confirmDelete('{{ post.post_id }}')"
+        style="
+          padding: 2px;
+          font-size: 20px;
+          font-weight: bold;
+          border-radius: 50%;
+          border: none;
+          width: 30px;
+          height: 30px;
+          color: #fdeed8;
+          background-color: #33221a;
+          cursor: pointer;
+        "
+      >
+        &times;
+      </button>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="post_body">
+    <h3 style="text-align: center">{{ post.title }}</h3>
+    <p style="text-align: justify">{{ post.description | truncatewords:50 }}</p>
+    <p style="font-weight: bold">Ingredients:</p>
+    <ul
+      class="ingredients_container"
+      style="padding: 10px 20px; font-size: 14px"
+    >
+      {% for ingredient in post.ingredients_list %}
+      <li>{{ ingredient }}</li>
+      {% endfor %}
+    </ul>
+    <!-- Loop through images related to the post -->
+    <div class="post_images">
+      {% for image in post.images.all %}
+      <img
+        src="{{ image.image.url }}"
+        alt="{{ post.title }}"
+        class="post_image"
+      />
+      {% endfor %}
+    </div>
+  </div>
+  <div class="stats">
+    <p id="like-count-{{ post.post_id }}">
+      {{ post.like_set.count }} <i class="fa-solid fa-heart"></i>
+    </p>
+    <p>10 <i class="fa-solid fa-comment"></i></p>
+  </div>
+  {% if user.is_authenticated %}
+  <form method="post" id="csrf_form">{% csrf_token %}</form>
+  <div class="post_footer">
+    <button
+      class="like_button"
+      id="like-btn-{{ post.post_id }}"
+      data-post-id="{{ post.post_id }}"
+    >
+      <i class="fa-solid fa-heart"></i>
+
+      {% if post.post_id in liked_posts %} Unlike {% else %} Like {% endif %}
+    </button>
+    <button class="comment_button">
+      <i class="fa-solid fa-comment"></i> Comment
+    </button>
+  </div>
+  {% endif %}
+
+  <!-- Comments Section -->
+  {% for comment in post.random_comments %}
+  <div class="comment">
+    <img src="{{ comment.user.avatar.url }}" alt="pp" class="avatar_post" />
+    <div class="comment_content">
+      <div class="comment_info">
+        <h4>{{ comment.user.first_name }} {{ comment.user.last_name }}</h4>
+        <p>{{ comment.created_at | timesince }} ago</p>
+      </div>
+      <p>{{ comment.message | truncatewords:40 }}</p>
+    </div>
+  </div>
+  {% endfor %}
+
+  <!-- Add Comment Section -->
+  <div class="comment_section">
+    <img src="{{ request.user.avatar.url }}" alt="pp" class="avatar_post" />
+    <input type="text" placeholder="Write a comment..." id="addComment" />
+  </div>
+</div>
+{% endfor %} {% else %}
+<div class="post" style="margin-top: 15px">
+  <p style="text-align: center; color: #8d8d8d">No post to show</p>
+</div>
+{% endif %} {% include 'OnlyPans/modals/delete_confirmation.html' %}
+<style>
+  /*edit button*/
+  .edit_icon {
+    margin-right: 10px;
+  }
+  .tooltip {
+    visibility: hidden;
+    width: 60px;
+    background-color: #33221a;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; /* Position the tooltip above the icon */
+    left: 50%;
+    margin-left: -50px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+</style>
+<!--ajax import for like unlike no refresh-->
+<!--gi comment kay na import na sa profile_view.html-->
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+<script src="{% static 'js/post.js' %}"></script>

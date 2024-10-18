@@ -9,6 +9,11 @@ class SignupForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'gender', 'password1', 'password2']  # No 'bio' or 'avatar'
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -31,27 +36,38 @@ class CustomClearableFileInput(ClearableFileInput):
 class EditProfileForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'bio', 'avatar']
+        fields = ['first_name', 'last_name', 'avatar']
     
     def __init__(self, *args, **kwargs):
         super(EditProfileForm, self).__init__(*args, **kwargs)
         
         # First name and last name fields
-        self.fields['first_name'].widget.attrs.update({'class': 'form-control', 'placeholder': 'First Name'})
-        self.fields['last_name'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Last Name'})
-        
-        # Bio field
-        self.fields['bio'].widget.attrs.update({
-            'class': 'form-control', 
-            'placeholder': 'Tell me something about yourself. . .',
-            'rows': 3,  # Set height
-            'cols': 40  # Set width
-        })
+        self.fields['first_name'].widget.attrs.update({'class': 'form-control', 'placeholder': 'First Name', 'style':'text-align: center;'}, required=True) 
+        self.fields['last_name'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Last Name', 'style':'text-align: center;'}, required=True)
+
         
         # Avatar field (use custom widget)
         self.fields['avatar'].widget = CustomClearableFileInput()
         self.fields['avatar'].label = 'Avatar'  # Label change
-        self.fields['avatar'].widget.attrs.update({'class': 'form-control-file'})
+        self.fields['avatar'].widget.attrs.update({
+            'class': 'form-control-file',
+            'id': 'uploadFileBtn',
+            })
+        
+class EditBioForm(forms.ModelForm):
+    bio = forms.CharField(
+        widget=forms.Textarea(attrs={'rows':2, 'cols':10, 'style': 'resize: none;padding: 10px;border-radius: 4px;text-align: center;overflow: hidden; font-family: Poppins;background-color: #fdeed8;border: 1px solid #33221a'}), required=False
+    )
+    class Meta:
+        model = User
+        fields = ['bio']
+
+    def __init__(self, *args, **kwargs):
+        super(EditBioForm, self).__init__(*args, **kwargs)
+        self.fields['bio'].label = ""  # Remove the label for bio
+
+
+        
 
 #CREATE POST FORM
 class CreatePostForm(forms.ModelForm):
@@ -62,7 +78,7 @@ class CreatePostForm(forms.ModelForm):
     title = forms.CharField(
         max_length=100, 
         required=True, 
-        widget=forms.TextInput(attrs={'placeholder': 'Name of your Recipe'})
+        widget=forms.TextInput(attrs={'placeholder': 'Name of your Recipe', 'style': 'font-family: Poppins, sans-serif;'})
     )
 
     category = forms.ModelChoiceField(
@@ -74,7 +90,7 @@ class CreatePostForm(forms.ModelForm):
         widget=forms.Textarea(attrs={
             'placeholder': 'Describe your recipe. . .',
             'class': 'description-class',  # Add your custom class
-            'style': 'height: 100px;',  # Change the height here'
+            'style': 'height: 100px; font-family: Poppins; background: #fdeed8;',  # Change the height here'
         }), 
         required=True
     )
@@ -83,21 +99,19 @@ class CreatePostForm(forms.ModelForm):
         widget=forms.Textarea(attrs={
             'placeholder': 'List your ingredients (comma-separated)...',
             'class': 'ingredients-class',  # Add your custom class
-            'style': 'height: 80px;',  # Change the height here
+            'style': 'height: 80px; font-family: Poppins; background: #fdeed8;',  # Change the height here
         }), 
         required=True
     )
 
     image = forms.ImageField(required=True)
-    #CUSTOM VALIDATION THAT THE INGREDIENT MUST BE COMMA-SEPARATED
-    def clean_ingredients(self):
-        ingredients = self.cleaned_data.get('ingredients')
-        #ensure that the input contains commas and is properly separated
-        if ',' not in ingredients:
-            raise forms.ValidationError('Please enter the ingredients separated by commas.')
-        
-        #check if there is at least two ingredients separated by commas
-        ingredients_list = ingredients.split(',')
-        if len(ingredients_list) < 2:
-            raise forms.ValidationError('You must provide at least two ingredients, separated by commas')
-        return ingredients
+
+class EditPostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'category', 'description', 'ingredients']
+
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
+        widget=forms.Select(attrs={'id': 'editPostCategory'})
+    )
