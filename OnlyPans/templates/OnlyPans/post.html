@@ -76,15 +76,29 @@
       {% endfor %}
     </div>
   </div>
-
+  <div class="stats">
+    <p id="like-count-{{ post.post_id }}">
+      {{ post.like_set.count }} <i class="fa-solid fa-heart"></i>
+    </p>
+    <p>10 <i class="fa-solid fa-comment"></i></p>
+  </div>
+  {% if user.is_authenticated %}
+  <form method="post" id="csrf_form">{% csrf_token %}</form>
   <div class="post_footer">
-    <button class="like_button">
-      <i class="fa-solid fa-heart"></i> Delicious
+    <button
+      class="like_button"
+      id="like-btn-{{ post.post_id }}"
+      data-post-id="{{ post.post_id }}"
+    >
+      <i class="fa-solid fa-heart"></i>
+
+      {% if post.post_id in liked_posts %} Unlike {% else %} Like {% endif %}
     </button>
     <button class="comment_button">
       <i class="fa-solid fa-comment"></i> Comment
     </button>
   </div>
+  {% endif %}
 
   <!-- Comments Section -->
   {% for comment in post.random_comments %}
@@ -107,7 +121,7 @@
   </div>
 </div>
 {% endfor %} {% else %}
-<div class="post">
+<div class="post" style="margin-top: 15px">
   <p style="text-align: center; color: #8d8d8d">No post to show</p>
 </div>
 {% endif %} {% include 'OnlyPans/modals/delete_confirmation.html' %}
@@ -133,73 +147,6 @@
     transition: opacity 0.3s;
   }
 </style>
-
-<script>
-  // Variables for delete post
-  let postIdToDelete = null; // Store the ID of the post to delete
-  const deleteModal = document.getElementById("deleteConfirmationModal");
-  const closeDeleteModalBtn = document.getElementById("closeDeleteModal");
-  const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
-  const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
-
-  // Variables for edit post
-  const editPostModal = document.getElementById("editPost");
-  const closeEditPostBtn = document.getElementById("editPostX");
-
-  // Function to confirm deletion of post
-  function confirmDelete(postId) {
-    postIdToDelete = postId; // Store the post ID
-    deleteModal.style.display = "block"; // Show the delete confirmation modal
-  }
-
-  // Close delete modal when 'X' or cancel button is clicked
-  closeDeleteModalBtn.onclick = function () {
-    deleteModal.style.display = "none"; // Close the delete modal
-  };
-
-  cancelDeleteBtn.onclick = function () {
-    deleteModal.style.display = "none"; // Close the delete modal
-  };
-
-  // Confirm and submit delete request
-  confirmDeleteBtn.onclick = function () {
-    // Create a form to submit the delete request
-    const form = document.createElement("form");
-    form.method = "POST";
-    form.action = "{% url 'delete_post' 0 %}".replace("0", postIdToDelete); // Replace 0 with postIdToDelete
-
-    // Create CSRF token input
-    const csrfInput = document.createElement("input");
-    csrfInput.type = "hidden";
-    csrfInput.name = "csrfmiddlewaretoken";
-    csrfInput.value = "{{ csrf_token }}"; // Use Django's CSRF token
-
-    form.appendChild(csrfInput);
-    document.body.appendChild(form);
-    form.submit(); // Submit the form
-  };
-
-  // Function to open the edit post modal
-  function openEditPostModal(postId) {
-    // Set the form action to target the correct post ID
-    const form = editPostModal.querySelector("form");
-    form.action = `/edit-post/${postId}/`; // Assuming the URL to edit the post
-
-    // Show the edit modal
-    editPostModal.style.display = "block";
-  }
-
-  // Close edit modal when 'X' is clicked
-  closeEditPostBtn.onclick = function () {
-    editPostModal.style.display = "none"; // Close the edit post modal
-  };
-
-  // Close either modal when clicking outside of it
-  window.onclick = function (event) {
-    if (event.target === deleteModal) {
-      deleteModal.style.display = "none"; // Close the delete modal
-    } else if (event.target === editPostModal) {
-      editPostModal.style.display = "none"; // Close the edit modal
-    }
-  };
-</script>
+<!--ajax import for like unlike no refresh-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'js/post.js' %}"></script>

@@ -195,17 +195,18 @@
     let formChanged = false;
 
     // Enable submit button when form changes
-    form.addEventListener("change", () => {
-      formChanged = true;
-      submitButton.disabled = false;
-    });
-
-    // Prevent submission if no changes are made
-    form.addEventListener("submit", (e) => {
-      if (!formChanged) {
-        e.preventDefault(); // Block submission if form is unchanged
-      }
-    });
+    if (form) {
+      form.addEventListener("change", () => {
+        formChanged = true;
+        submitButton.disabled = false;
+      });
+      // Prevent submission if no changes are made
+      form.addEventListener("submit", (e) => {
+        if (!formChanged) {
+          e.preventDefault(); // Block submission if form is unchanged
+        }
+      });
+    }
 
     // Modal behavior for open/close
     const createPostModal = document.getElementById("createPost");
@@ -220,8 +221,10 @@
       createPostModal.style.display = "block";
     });
 
-    // Close modal when clicking the 'X' button or outside the modal
-    closeCreatePostBtn.addEventListener("click", closeModal);
+    if (closeCreatePostBtn) {
+      // Close modal when clicking the 'X' button or outside the modal
+      closeCreatePostBtn.addEventListener("click", closeModal);
+    }
 
     window.addEventListener("click", (event) => {
       if (event.target === createPostModal) closeModal();

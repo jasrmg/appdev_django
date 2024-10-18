@@ -26,6 +26,8 @@ urlpatterns = [
 
   #follow unfollow
   path('follow/<str:username>/', views.follow_user, name='follow_user'),
+  #like unlike
+  path('like/<int:post_id>/', views.like_view, name='like'),
   #search test
   path('search/', views.search_view, name='search'),
 ]

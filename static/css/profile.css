@@ -231,24 +231,46 @@ a {
 .post_footer {
   display: flex;
   justify-content: center; /* Center the buttons */
-  gap: 10px; /* Space between the buttons */
+  gap: 80px; /* Space between the buttons */
   margin-top: 10px;
 }
 
 .post_footer button {
   background-color: var(--accent-color);
   color: var(--primary-color);
-  border: none;
+  border: 2px solid var(--accent-color);
   padding: 10px;
   border-radius: 5px;
   font-size: 14px;
   cursor: pointer;
   display: flex;
   align-items: center;
+  box-sizing: border-box;
+  letter-spacing: 1px;
+}
+.post_footer .like_button {
+  padding: 0 25px;
+}
+.post_footer button:hover {
+  background-color: var(--primary-color);
+  border: 2px solid var(--accent-color);
+  color: var(--accent-color);
+}
+/* .post_footer .like_form:hover {
+  color: var(--red-color);
+} */
+.post_footer button i {
+  margin-right: 10px;
 }
 
-.post_footer button i {
-  margin-right: 5px;
+/*stats*/
+.stats {
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+}
+.stats i {
+  margin-left: 10px;
 }
 
 /* Comment input section */

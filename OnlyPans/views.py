@@ -1,6 +1,6 @@
 import random
 from django.shortcuts import get_object_or_404, redirect, render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -8,9 +8,10 @@ from django.db.models import Q
 #for scrolling
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import JsonResponse
+from django.db.models import Prefetch
 
 
-from OnlyPans.models import Category, Follow, Post, PostImage
+from OnlyPans.models import Category, Follow, Like, Post, PostImage
 
 from .forms import EditBioForm, EditPostForm, EditProfileForm, CreatePostForm, SignupForm, LoginForm
 
@@ -208,7 +209,11 @@ def profile_view(request, username):
       editpost_form = EditPostForm()
 
     # Fetch user posts and prefetch related fields
-    posts = Post.objects.filter(user=user).order_by('-created_at').prefetch_related('images', 'comment_set')
+    posts = Post.objects.filter(user=user).order_by('-created_at').prefetch_related(
+    'images',
+    'comment_set',
+    # 'like_set'  # Prefetch likes for the current user
+)
     
     for post in posts:
         comments = list(post.comment_set.all())
@@ -219,7 +224,7 @@ def profile_view(request, username):
         post.random_comments = random.sample(comments, min(2, len(comments)))
 
     paginator = Paginator(posts, 1)  # Display one post per page
-    page_number = request.GET.get('page', 1)  # Get the current page number from the request
+    page_number = request.GET.get('page', 1)
 
     try:
         page_obj = paginator.page(page_number)
@@ -227,12 +232,22 @@ def profile_view(request, username):
         page_obj = paginator.page(1)  # If the page is not an integer, return the first page
     except EmptyPage:
         page_obj = []  # Return an empty list if the page is out of range
+    
+    if page_obj:
+      visible_posts_ids = [post.post_id for post in page_obj.object_list]
+    else:
+      visible_posts_ids = []
+
+    # Fetch the liked posts for the current user and the current page
+    visible_posts_ids = [post.post_id for post in page_obj.object_list]
+
+    liked_posts = Like.objects.filter(user=request.user, post_id__in=visible_posts_ids).values_list('post_id', flat=True)
 
     # Handle AJAX requests
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         if not page_obj:  # If there are no posts to show
             return HttpResponse('')  # Return an empty response for AJAX
-        return render(request, 'OnlyPans/post.html', {'posts': page_obj})
+        return render(request, 'OnlyPans/post.html', {'posts': page_obj, 'liked_posts': liked_posts})
 
     # Followers and following
     followers = user.followers.all()
@@ -241,12 +256,18 @@ def profile_view(request, username):
     number_of_following = following.count()
     print('followers:')
     for follow in followers:
-       print(follow.follower.username)
+      print(follow.follower.username)
 
     # print('following')
     # for user in following:
     #    print(user.followed.username)
+    lke = Like.objects.all()
+    # print('asdsa: ', lke.user)
+    # print('Like', lke)
 
+    # for user in lke:
+    #    print('User: ', user.user)
+    #    print('Post: ', user.post)
     categories = Category.objects.all()
     context = {
         'title': 'OnlyPans | Profile',
@@ -266,10 +287,37 @@ def profile_view(request, username):
         'following': following,
         'number_of_follower': number_of_follower,
         'number_of_following': number_of_following,
+
+        'liked_posts': liked_posts,
+        'like': lke,
     }
     return render(request, 'OnlyPans/profile_view.html', context)
 
+#like
+@login_required
+def like_view(request, post_id):
+  print('Request: ', request.POST)
+  post = get_object_or_404(Post, post_id=post_id)
+  user = request.user
 
+  existing_like = Like.objects.filter(post=post, user=user).first()
+  if existing_like:
+    existing_like.delete()
+    liked = False
+  else:
+    Like.objects.create(post=post, user=user)
+    liked = True
+
+  like_count = post.like_set.count()#number of likes
+
+  #kung asa i redirect home ba or profile.
+  # next_url = request.GET.get('next')
+  # if next_url:
+  #   return HttpResponseRedirect(next_url)
+  #default:
+  # return redirect('profile', username=request.user.username)
+  
+  return JsonResponse({'liked': liked, 'like_count': like_count})
 
 
 #search

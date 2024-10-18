@@ -270,12 +270,14 @@
     <!--main content-->
     <div class="main_content">
       <!-- Create post modal -->
+      
+      {% include 'OnlyPans/modals/create_post.html' %}
       {% if posts  %}
-        {% include 'OnlyPans/modals/create_post.html' %}
+
       {% else %}
-        <style>
-          .post { margin: 0;} /*if way post i 0 ang margin para nice*/
-        </style>
+      <style>
+        .post { margin: 0;} /*if way post i 0 ang margin para nice*/
+      </style>
       {% endif %}
       <!-- Posts Container -->
       <div id="post-container">
