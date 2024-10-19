@@ -276,7 +276,6 @@ a {
   color: var(--red-color);
 }
 
-/* Comment input section */
 .comment_section {
   display: flex;
   align-items: center;
@@ -291,12 +290,21 @@ a {
   border: 1px solid var(--secondary-color);
 }
 
-.comment_section input[type="text"] {
+.input-wrapper {
+  display: flex;
   flex: 1;
-  padding: 10px;
+  align-items: center;
   border: 1px solid var(--accent-color);
   border-radius: 20px;
   background-color: var(--primary-color);
+  padding-right: 10px;
+}
+
+.comment_section input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background-color: transparent;
   outline: none;
   font-size: 14px;
 }
@@ -304,6 +312,20 @@ a {
 .comment_section input[type="text"]::placeholder {
   color: var(--secondary-color);
 }
+
+.submit-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: var(--accent-color);
+  transform: rotate(25deg);
+}
+
+.submit-button:hover {
+  color: var(--secondary-color);
+}
+
 /*samplecomment*/
 .comment {
   display: flex;

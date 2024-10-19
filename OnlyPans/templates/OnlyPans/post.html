@@ -115,10 +115,22 @@
   {% endfor %}
 
   <!-- Add Comment Section -->
-  <div class="comment_section">
+  <form class="comment_section" method="post" action="">
+    {% csrf_token %}
     <img src="{{ request.user.avatar.url }}" alt="pp" class="avatar_post" />
-    <input type="text" placeholder="Write a comment..." id="addComment" />
-  </div>
+    <div class="input-wrapper">
+      <input
+        type="text"
+        placeholder="Write a comment..."
+        id="addComment"
+        name="message"
+        required
+      />
+      <button type="submit" class="submit-button">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </form>
 </div>
 {% endfor %} {% else %}
 <div class="post" style="margin-top: 15px">
