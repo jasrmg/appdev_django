@@ -8,10 +8,11 @@ from django.db.models import Q
 #for scrolling
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import JsonResponse
-from django.db.models import Prefetch
 
+#for comment submission no refresh
+from django.views.decorators.http import require_POST
 
-from OnlyPans.models import Category, Follow, Like, Post, PostImage
+from OnlyPans.models import Category, Follow, Like, Post, PostImage, Comment
 
 from .forms import EditBioForm, EditPostForm, EditProfileForm, CreatePostForm, SignupForm, LoginForm
 
@@ -199,6 +200,9 @@ def profile_view(request, username):
     editprofile_form = EditProfileForm(instance=user)
     editbio_form = EditBioForm(instance=user)
     
+    comments = Comment.objects.all()
+    for t in comments:
+      print('test: ', t.user.username)
     #check if there is a post to edit:
     post_to_edit = None
     if request.method == 'POST' and 'edit_post_id' in request.POST:
@@ -258,6 +262,7 @@ def profile_view(request, username):
     for follow in followers:
       print(follow.follower.username)
 
+    
     categories = Category.objects.all()
     context = {
         'title': 'OnlyPans | Profile',
@@ -299,15 +304,44 @@ def like_view(request, post_id):
 
   like_count = post.like_set.count()#number of likes
 
-  #kung asa i redirect home ba or profile.
-  # next_url = request.GET.get('next')
-  # if next_url:
-  #   return HttpResponseRedirect(next_url)
-  #default:
-  # return redirect('profile', username=request.user.username)
-  
   return JsonResponse({'liked': liked, 'like_count': like_count})
 
+#comment
+from django.utils.timesince import timesince
+@login_required
+def add_comment(request):
+    if request.method == 'POST':
+        post_id = request.POST.get('post_id')
+        message = request.POST.get('message')
+
+        # Get the post object
+        post = get_object_or_404(Post, pk=post_id)
+
+        # Create the comment
+        comment = Comment(post=post, user=request.user, message=message)
+        comment.save()
+        # messages.success(request, 'Comment added!')
+
+        # Prepare response data
+        response_data = {
+            'user_avatar': request.user.avatar.url,  # User avatar URL
+            'user_name': f"{request.user.first_name} {request.user.last_name}",
+            'created_at': timesince(comment.created_at),
+            'message': comment.message,
+            'comment_id': comment.comment_id
+        }
+
+        return JsonResponse({'success': True, **response_data})
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+#delete comment
+@login_required
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, comment_id=comment_id)
+    if request.method == 'POST' and comment.user == request.user:
+        comment.delete()
+        return JsonResponse({'status': 'success', 'response': 'YAWA KA BAI'})
+    return JsonResponse({'status': 'error'}, status=403)
 
 #search
 def search_view(request):

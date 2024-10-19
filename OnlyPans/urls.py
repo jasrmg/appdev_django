@@ -20,7 +20,7 @@ urlpatterns = [
   path('edit_profile/<str:username>/', views.edit_profile, name='edit_profile'),
   path('create_post/<str:username>/', views.create_post, name='create_post'),
 
-  # path('edit_post/<int:post_id>/', views.edit_post, name='edit_post'),
+  
   path('edit_bio/<str:username>/', views.edit_bio, name='edit_bio'),
   
 
@@ -28,6 +28,10 @@ urlpatterns = [
   path('follow/<str:username>/', views.follow_user, name='follow_user'),
   #like unlike
   path('like/<int:post_id>/', views.like_view, name='like'),
+
+  #comment
+  path('add_comment/', views.add_comment, name='add_comment'),
+  path('delete_comment/<int:comment_id>/', views.delete_comment, name='delete_comment'),
   #search test
   path('search/', views.search_view, name='search'),
 ]

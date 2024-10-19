@@ -19,12 +19,14 @@ class PostAdmin(admin.ModelAdmin):
   
   display_image.short_description = 'Image'
 
+class CommentAdmin(admin.ModelAdmin):
+  list_display = ['comment_id', 'user', 'message']
   
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Post, PostAdmin)
 admin.site.register(Category)
 # admin.site.register(PostImage)
-admin.site.register(Comment)
+admin.site.register(Comment, CommentAdmin)
 admin.site.register(Follow) 
 admin.site.register(Like)

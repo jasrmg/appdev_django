@@ -101,22 +101,42 @@
   {% endif %}
 
   <!-- Comments Section -->
-  {% for comment in post.random_comments %}
-  <div class="comment">
-    <img src="{{ comment.user.avatar.url }}" alt="pp" class="avatar_post" />
-    <div class="comment_content">
-      <div class="comment_info">
-        <h4>{{ comment.user.first_name }} {{ comment.user.last_name }}</h4>
-        <p>{{ comment.created_at | timesince }} ago</p>
+  <div class="comments_section">
+    {% for comment in post.random_comments %}
+    <div class="comment">
+      <img src="{{ comment.user.avatar.url }}" alt="pp" class="avatar_post" />
+      <div class="comment_content">
+        <div class="comment_info">
+          <h4>{{ comment.user.first_name }} {{ comment.user.last_name }}</h4>
+          <p>{{ comment.created_at | timesince }} ago</p>
+        </div>
+        <p>{{ comment.message | truncatewords:40 }}</p>
       </div>
-      <p>{{ comment.message | truncatewords:40 }}</p>
+      {% if comment.user == request.user %}
+      <div class="comment-controls">
+        <!-- Wrapper for the controls -->
+        <i class="fa-solid fa-pencil-alt pen-icon" style="color: #33221a"></i>
+        <button
+          class="close-button"
+          data-comment-id="{{ comment.comment_id }}"
+          onclick="openDeleteModal('{{ comment.comment_id }}')"
+        >
+          &times;
+        </button>
+        <!--modal for confirmation of delete comment-->
+      </div>
+      {% endif %}
     </div>
+
+    {% endfor %}
   </div>
-  {% endfor %}
+  {% include 'OnlyPans/modals/comment_delete_confirmation.html' %}
 
   <!-- Add Comment Section -->
-  <form class="comment_section" method="post" action="">
+  <form class="comment_section" method="post" action="" id="commentForm">
     {% csrf_token %}
+    <input type="hidden" name="csrfmiddlwaretoken" value="{{ csrf_token }}" />
+    <input type="hidden" name="post_id" value="{{ post.post_id }}" />
     <img src="{{ request.user.avatar.url }}" alt="pp" class="avatar_post" />
     <div class="input-wrapper">
       <textarea
@@ -137,7 +157,7 @@
 <div class="post" style="margin-top: 15px">
   <p style="text-align: center; color: #8d8d8d">No post to show</p>
 </div>
-{% endif %} {% include 'OnlyPans/modals/delete_confirmation.html' %}
+{% endif %} {% include 'OnlyPans/modals/post_delete_confirmation.html' %}
 <style>
   /*edit button*/
   .edit_icon {
@@ -164,3 +184,8 @@
 <!--gi comment kay na import na sa profile_view.html-->
 <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 <script src="{% static 'js/post.js' %}"></script>
+<!--script for comment-->
+<script>
+  window.addCommentUrl = "{% url 'add_comment' %}";
+</script>
+<script src="{% static 'js/comment.js' %}"></script>
