@@ -1,5 +1,4 @@
 /*profile header*/
-
 body {
   font-family: "Poppins", sans-serif;
 }
@@ -275,7 +274,7 @@ a {
 .stats .fa-heart {
   color: var(--red-color);
 }
-
+/*add comment*/
 .comment_section {
   display: flex;
   align-items: center;
@@ -300,17 +299,21 @@ a {
   padding-right: 10px;
 }
 
-.comment_section input[type="text"] {
-  flex: 1;
+.comment_section textarea {
+  flex: 1; /* Allow the textarea to take up the available space */
   padding: 10px;
   border: none;
   background-color: transparent;
   outline: none;
   font-size: 14px;
+  resize: none; /* Prevent manual resizing */
+  overflow: hidden; /* Hide scrollbar */
+  font-family: "Poppins", sans-serif;
 }
 
-.comment_section input[type="text"]::placeholder {
+.comment_section textarea::placeholder {
   color: var(--secondary-color);
+  font-family: "Poppins", sans-serif;
 }
 
 .submit-button {

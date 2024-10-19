@@ -119,13 +119,14 @@
     {% csrf_token %}
     <img src="{{ request.user.avatar.url }}" alt="pp" class="avatar_post" />
     <div class="input-wrapper">
-      <input
-        type="text"
+      <textarea
         placeholder="Write a comment..."
         id="addComment"
         name="message"
         required
-      />
+        rows="1"
+        oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px';"
+      ></textarea>
       <button type="submit" class="submit-button">
         <i class="fas fa-paper-plane"></i>
       </button>
