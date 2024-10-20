@@ -90,6 +90,18 @@ nav {
   color: pointer;
   font-size: 1.5em;
 }
+/*removing default styling for a tags*/
+a {
+  text-decoration: none; /* Remove underline */
+  color: inherit; /* Inherit color from parent element */
+  display: inline-block; /* Optional: makes it easier to manage spacing */
+}
+a.home-icon {
+  text-decoration: none; /* Remove underline */
+  color: inherit; /* Inherit color from parent element */
+  display: inline-block; /* Optional: makes it easier to manage spacing */
+}
+
 .right {
   display: flex;
   align-items: center;

@@ -1,8 +1,9 @@
+//delete, edit and like js
 // Variables for delete post
 let postIdToDelete = null; // Store the ID of the post to delete
 const deleteModal = document.getElementById("deleteConfirmationModal");
 const closeDeleteModalBtn = document.getElementById("closeDeleteModal");
-const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+const confirmDeleteBtn = document.getElementById("postConfirmDeleteBtn");
 const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
 
 // Variables for edit post
@@ -18,10 +19,12 @@ function confirmDelete(postId) {
 
 // Close delete modal when 'X' or cancel button is clicked
 closeDeleteModalBtn.onclick = function () {
+  console.log("close delete modal pressed")
   deleteModal.style.display = "none"; // Close the delete modal
 };
 
 cancelDeleteBtn.onclick = function () {
+  console.log("cancel delete modal pressed")
   deleteModal.style.display = "none"; // Close the delete modal
 };
 

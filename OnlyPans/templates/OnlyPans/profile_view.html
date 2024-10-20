@@ -29,7 +29,7 @@
   .followerContent,
   .followingContent {
     background-color: #e6d4bc;
-    margin: 6% auto;
+    margin: 4% auto;
     padding: 20px;
     border: 2px solid #33221a;
     width: 30%;
@@ -119,7 +119,7 @@
     <img src="{{ user.avatar.url }}" alt="Profile Picture" />
     {% endif %}
     <div>
-      <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+      <h1>{{ user.first_name  }} {{ user.last_name }}</h1>
       
         
         <div class="follow_details">
@@ -139,7 +139,7 @@
                    <a href="{% url 'profile' user.follower.username %}" style="text-decoration: none; color: inherit;">
                    <div class="f_container">
                      <img src="{{ user.follower.avatar.url }}">
-                     {{ user.follower.first_name }} {{ user.follower.last_name }}
+                     {{ user.follower.first_name  }} {{ user.follower.last_name  }}
                    </div>
                    </a>
                    {% endfor %}
@@ -166,7 +166,7 @@
                    <a href="{% url 'profile' user.followed.username %}" style="text-decoration: none; color: inherit;">
                    <div class="f_container">
                      <img src="{{ user.followed.avatar.url }}" alt="following profile">
-                     {{ user.followed.first_name }} {{ user.followed.last_name }}
+                     {{ user.followed.first_name  }} {{ user.followed.last_name }}
                    </div>
                    </a>
                    {% endfor %}
@@ -251,7 +251,7 @@
               class="follower_picture"
             />
           </a>
-            <p class="follower_name">{{ user.follower.last_name }}, {{ user.follower.first_name }}</p>           
+            <p class="follower_name">{{ user.follower.last_name  }}, {{ user.follower.first_name }}</p>           
           </div>
           {% endfor %}
           <div class="follower_card"></div>
@@ -270,13 +270,17 @@
     <!--main content-->
     <div class="main_content">
       <!-- Create post modal -->
-      
-      {% include 'OnlyPans/modals/create_post.html' %}
-      {% if posts  %}
-
+      {% if is_own_profile %}
+        {% include 'OnlyPans/modals/create_post.html' %}
+        {% if posts %}
+        {% else %}
+        <style>
+          .createPost { margin-bottom: 15px;} /*if way post i 0 ang margin para nice*/
+        </style>
+        {% endif %}
       {% else %}
       <style>
-        .post { margin: 0;} /*if way post i 0 ang margin para nice*/
+        .post:first-child { margin: 0;} /*if way post i 0 ang margin para nice*/
       </style>
       {% endif %}
       <!-- Posts Container -->

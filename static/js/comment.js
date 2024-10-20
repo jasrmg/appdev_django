@@ -1,23 +1,29 @@
-$(document).ready(function () {
-  $("#commentForm").on("submit", function (event) {
-    event.preventDefault();
-    //gather form data:
-    const message = $("#addComment").val();
-    const postId = $('input[name="post_id"]').val();
+$(document).on("submit", ".comment_section", function (event) {
+  event.preventDefault();
+  
+  // Store reference to `this` in a variable
+  const form = this; // Store the form reference
 
-    const commentcsrfToken = $("input[name='csrfmiddlewaretoken']").val();
-    $.ajax({
+  // Gather form data using class selectors
+  const message = $(form).find(".addComment").val(); // Use class selector
+  const postId = $(form).find('input[name="post_id"]').val();
+  const commentcsrfToken = $(form).find("input[name='csrfmiddlewaretoken']").val();
+
+  $.ajax({
       type: "POST",
       url: window.addCommentUrl,
       data: {
-        post_id: postId,
-        message: message,
-        csrfmiddlewaretoken: commentcsrfToken,
+          post_id: postId,
+          message: message,
+          csrfmiddlewaretoken: commentcsrfToken,
       },
       success: function (response) {
-        //clear the comment box
-        $("#addComment").val("");
-
+        // Clear the comment box
+        $(form).find(".addComment").val(""); // Clear using class selector
+    
+        // Use the postId already gathered
+        const commentsSection = $(`.comments_section[data-post-id="${postId}"]`);
+    
         const newComment = `
         <div class="comment">
           <img src="${response.user_avatar}" alt="pp" class="avatar_post"/>
@@ -34,27 +40,22 @@ $(document).ready(function () {
             </div>
           </div>
         `;
-        console.log("id added: ", response.comment_id);
 
-        //append the new comment:
-        $(".comments_section").append(newComment);
+        // Append the new comment to the correct post's comments section
+        commentsSection.append(newComment);
       },
+    
       error: function (xhr, status, error) {
-        console.error("Error: ", error);
+          console.error("Error: ", error);
       },
-    });
   });
 });
-//------------------DELETE------------------------\\
-document
-  .querySelector(".comments_section")
-  .addEventListener("click", function (event) {
-    // Check if the clicked element is a delete button
-    if (event.target.classList.contains("close-button")) {
-      const commentId = event.target.dataset.commentId; // Get the comment ID
-      openDeleteModal(commentId); // Open the modal with that comment ID
-    }
-  });
+
+// Delegate event listener to comments_section for delete buttons
+$(document).on("click", ".close-button", function (event) {
+  const commentId = $(this).data("comment-id"); // Get the comment ID
+  openDeleteModal(commentId); // Open the modal with that comment ID
+});
 
 // Open the delete confirmation modal
 function openDeleteModal(commentId) {
@@ -101,80 +102,3 @@ document.getElementById("confirmDeleteBtn").onclick = function () {
     },
   });
 };
-// let commentIdToDelete;
-// $(document).on("click", ".close-button", function () {
-//   commentIdToDelete = $(this).data("comment-id");
-//   console.log("ID to delete: ", commentIdToDelete);
-//   $(`#commentDeleteConfirmationModal-${commentIdToDelete}`).show();
-// });
-//close the modal when the close or cancel button is clicked
-// $(document).on("click", ".close, #cancelDeleteBtn", function () {
-//   $(`#commentDeleteConfirmationModal-${commentIdToDelete}`).hide();
-// });
-// $("#closeDeleteModal, #cancelDeleteBtn").on("click", function () {
-//   $(".modal").hide();
-// });
-//confirm delete
-// $(document).on("click", "[id^='confirmDeleteBtn-']", function () {
-//   const deleteCommentUrl = `/delete_comment/${commentIdToDelete}/`;
-//   console.log("url: ", deleteCommentUrl);
-//   $.ajax({
-//     type: "POST",
-//     url: deleteCommentUrl,
-//     data: {
-//       csrfmiddlewaretoken: $('input[name="csrfmiddlwaretoken"]').val(),
-//     },
-//     success: function (response) {
-//       console.log(response);
-//       if (response.status === "success") {
-//         const contentremoved = $(
-//           `button[data-comment-id="${commentIdToDelete}"]`
-//         ).closest(".comment");
-//         console.log("removed: ", contentremoved);
-//         $(`button[data-comment-id="${commentIdToDelete}]`).closest(".comment");
-//         console.log("outer html: ", contentremoved.prop("outerHTML"));
-//         if (contentremoved.length) {
-//           contentremoved.remove();
-//           console.log("comment removed");
-//         } else {
-//           console.log("Comment not found in DOM");
-//         }
-
-//         $(`#commentDeleteConfirmationModal-${commentIdToDelete}`).hide();
-//       } else {
-//         alert("Failed to delete comment");
-//       }
-//     },
-//     error: function (xhr, status, error) {
-//       console.error("Error: ", error);
-//       alert("there was an error");
-//     },
-//   });
-// });
-
-// $(`#confirmDeleteBtn-${commentIdToDelete}`).on("click", function () {
-//   const deleteCommentUrl = `/delete_comment/${commentIdToDelete}/`;
-//   console.log("url: ", deleteCommentUrl);
-//   $.ajax({
-//     type: "POST",
-//     url: deleteCommentUrl,
-//     data: {
-//       csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
-//     },
-//     success: function (response) {
-//       console.log(response);
-//       if (response.status === "success") {
-//         $(`button[data-comment-id="${commentIdToDelete}"]`)
-//           .closest(".comment")
-//           .remove();
-//         $("#commentDeleteConfirmationModal").hide();
-//       } else {
-//         alert("Failed to delete comment");
-//       }
-//     },
-//     error: function (xhr, status, error) {
-//       console.error("Error: ", error);
-//       alert("There was an error");
-//     },
-//   });
-// });

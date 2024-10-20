@@ -23,14 +23,20 @@ def test(request):
 def home(request):
   context = {
     'title': 'OnlyPans | Home',
+    'sample_text': 'Hello World | OnlyPans Home',
   }
   return render(request, 'OnlyPans/home_test.html', context)
+
+#for capitalizing the first letter of the name:
+# def to_title_case(name):
+#   return ' '.join(word.capitalize() for word in name.split())  
 
 def signup_view(request):
   if request.method == 'POST':
     form = SignupForm(request.POST)
     if form.is_valid():
       user = form.save(commit=False)
+      
       if user.gender == 'M':
         male_avatars = [
           'uploads/profile_pics/male.jpeg',
@@ -53,8 +59,9 @@ def signup_view(request):
         user.avatar = 'uploads/profile_pics/other.jpeg'
       user.save()
       print(user.id, user.username, user.gender, user.bio, user.avatar) #i check ang mga inputs na g process pag register sa acc
+      
       login(request, user)
-      return redirect('home')
+      return redirect('profile', username=user.username)
   else:
     form = SignupForm()
   context = {
@@ -90,14 +97,18 @@ def edit_profile(request, username):
     form = None
 
     if request.user == user:
-        if request.method == 'POST':
-            form = EditProfileForm(request.POST, request.FILES, instance=user)
-            if form.is_valid():
-              form.save()
-              messages.success(request, 'Updated and ready to serve! Your profile is now the main course!')
-              return redirect('profile', username=user.username)
+      if request.method == 'POST':
+        form = EditProfileForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+          user.first_name = form.cleaned_data['first_name']
+          user.last_name = form.cleaned_data['last_name'] 
+          print(f'LNAME: {user.last_name}')            
+          form.save()              
+          print(f'Saved First Name: {user.first_name} Last Name: {user.last_name}')
+          messages.success(request, 'Updated and ready to serve! Your profile is now the main course!')
+          return redirect('profile', username=user.username)
         else:
-            form = EditProfileForm(instance=user)
+          form = EditProfileForm(instance=user)
 
     context = {
         'form': form,
@@ -201,8 +212,7 @@ def profile_view(request, username):
     editbio_form = EditBioForm(instance=user)
     
     comments = Comment.objects.all()
-    for t in comments:
-      print('test: ', t.user.username)
+
     #check if there is a post to edit:
     post_to_edit = None
     if request.method == 'POST' and 'edit_post_id' in request.POST:
@@ -249,6 +259,8 @@ def profile_view(request, username):
 
     # Handle AJAX requests
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+        print("visible posts ids: ", visible_posts_ids)
+        print("page obj: ", page_obj)
         if not page_obj:  # If there are no posts to show
             return HttpResponse('')  # Return an empty response for AJAX
         return render(request, 'OnlyPans/post.html', {'posts': page_obj, 'liked_posts': liked_posts})

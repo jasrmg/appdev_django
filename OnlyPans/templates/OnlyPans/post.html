@@ -52,7 +52,7 @@
     </div>
     {% endif %}
   </div>
-
+  {% include 'OnlyPans/modals/post_delete_confirmation.html' %}
   <div class="post_body">
     <h3 style="text-align: center">{{ post.title }}</h3>
     <p style="text-align: justify">{{ post.description | truncatewords:50 }}</p>
@@ -101,13 +101,13 @@
   {% endif %}
 
   <!-- Comments Section -->
-  <div class="comments_section">
+  <div class="comments_section" data-post-id="{{ post.post_id }}">
     {% for comment in post.random_comments %}
     <div class="comment">
       <img src="{{ comment.user.avatar.url }}" alt="pp" class="avatar_post" />
       <div class="comment_content">
         <div class="comment_info">
-          <h4>{{ comment.user.first_name }} {{ comment.user.last_name }}</h4>
+          <h4>{{comment.user.first_name}} {{comment.user.last_name}}</h4>
           <p>{{ comment.created_at | timesince }} ago</p>
         </div>
         <p>{{ comment.message | truncatewords:40 }}</p>
@@ -137,11 +137,17 @@
     {% csrf_token %}
     <input type="hidden" name="csrfmiddlwaretoken" value="{{ csrf_token }}" />
     <input type="hidden" name="post_id" value="{{ post.post_id }}" />
-    <img src="{{ request.user.avatar.url }}" alt="pp" class="avatar_post" />
+    <img
+      src="{{ request.user.avatar.url }}"
+      alt="pp"
+      class="avatar_post"
+      style="object-fit: cover"
+    />
     <div class="input-wrapper">
+      <!--gi ilisan nako ang id ug class-->
       <textarea
         placeholder="Write a comment..."
-        id="addComment"
+        class="addComment"
         name="message"
         required
         rows="1"
@@ -154,10 +160,10 @@
   </form>
 </div>
 {% endfor %} {% else %}
-<div class="post" style="margin-top: 15px">
+<div class="post">
   <p style="text-align: center; color: #8d8d8d">No post to show</p>
 </div>
-{% endif %} {% include 'OnlyPans/modals/post_delete_confirmation.html' %}
+{% endif %}
 <style>
   /*edit button*/
   .edit_icon {

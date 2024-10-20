@@ -18,11 +18,7 @@ class User(AbstractUser):
     avatar = models.ImageField(null=True, blank=True, default='images/avatars/other.jpeg', upload_to='uploads/profile_pics/')
 
     USERNAME_FIELD = 'username'
-    #para required ang fname ug lname
-    def save(self, *args, **kwargs):
-        self.first_name = self.first_name.capitalize()
-        self.last_name = self.last_name.capitalize()
-        super(User, self).save(*args, **kwargs)
+
     def __str__(self):
         return self.get_full_name()
 

@@ -1,3 +1,4 @@
+//for scroll and like
 let currentPage = 1; // Initialize the current page
 const postContainer = document.getElementById("post-container"); // Container for your posts
 let loading = false; // Prevent multiple requests while loading
@@ -18,6 +19,7 @@ window.addEventListener("scroll", () => {
       },
     })
       .then((response) => {
+        
         if (response.ok) {
           return response.text(); // Get the HTML content
         }
@@ -25,6 +27,7 @@ window.addEventListener("scroll", () => {
       })
       .then((html) => {
         // Check if the HTML returned contains any posts
+        // console.log("fetched html: ", html)
         if (html.trim().length === 0) {
           window.removeEventListener("scroll", this); // No more posts, remove the listener
         } else {
