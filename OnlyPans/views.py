@@ -33,6 +33,7 @@ def home(request):
 
 def signup_view(request):
   if request.method == 'POST':
+    
     form = SignupForm(request.POST)
     if form.is_valid():
       user = form.save(commit=False)
@@ -57,15 +58,23 @@ def signup_view(request):
         user.avatar = random.choice(female_avatars)
       else:
         user.avatar = 'uploads/profile_pics/other.jpeg'
+
+      user.set_password(form.cleaned_data['password']) #bag o
       user.save()
-      print(user.id, user.username, user.gender, user.bio, user.avatar) #i check ang mga inputs na g process pag register sa acc
-      
+      print('check: ', user.id, user.username, user.gender, user.bio, user.avatar) #i check ang mga inputs na g process pag register sa acc
       login(request, user)
       return redirect('profile', username=user.username)
   else:
-    form = SignupForm()
+    form = SignupForm(request.POST)
+  error_messages = ''
+  if request.method == 'POST':
+    #all error messages:
+    error_messages = form.errors.as_text() if form.errors else ''
+
+  print('error: ',error_messages)
   context = {
     'form': form,
+    'error_messages': error_messages,
   }
   return render(request, 'OnlyPans/signup.html', context)
 
