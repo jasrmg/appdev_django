@@ -5,6 +5,7 @@ from django.contrib.auth import login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
+from django.contrib.auth.forms import AuthenticationForm
 #for scrolling
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import JsonResponse
@@ -59,7 +60,7 @@ def signup_view(request):
       else:
         user.avatar = 'uploads/profile_pics/other.jpeg'
 
-      user.set_password(form.cleaned_data['password']) #bag o
+      user.set_password(form.cleaned_data['password1']) #bag o
       user.save()
       print('check: ', user.id, user.username, user.gender, user.bio, user.avatar) #i check ang mga inputs na g process pag register sa acc
       login(request, user)
@@ -75,23 +76,46 @@ def signup_view(request):
   context = {
     'form': form,
     'error_messages': error_messages,
+    'title': 'OnlyPans | Sign Up',
   }
   return render(request, 'OnlyPans/signup.html', context)
 
 def login_view(request):
-  if request.method == 'POST':
-    form = LoginForm(request, data=request.POST)
-    if form.is_valid():
-      user = form.get_user()
-      print(user.id, user.username)#i check ang na retrieve na user
-      login(request, user)
-      return redirect('home')
-  else:
-    form = LoginForm()
-  context = {
-    'form': form,
-  }
-  return render(request, 'OnlyPans/login.html', context)
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)  # Use Django's built-in AuthenticationForm
+        
+        # Extract username and password from the form
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        # Check if the user exists
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            user = None  # User does not exist
+
+        if form.is_valid():
+            # If the form is valid, log in the user
+            user = form.get_user()  # This will only run if the form is valid
+            login(request, user)
+            return redirect('home')
+        else:
+            # Handle invalid login (e.g., user doesn't exist or password is incorrect)
+            if user is None:
+              messages.error(request, "Invalid username!")  # User does not exist
+              print('messages: ', messages)
+            elif password != user.password:
+              messages.error(request, "Invalid password!")  # Password is incorrect
+              print('elif messages: ', messages)
+
+    else:
+        form = AuthenticationForm()  # Initialize the form
+
+    context = {
+        'form': form,
+        'title': 'OnlyPans | Login'
+    }
+    return render(request, 'OnlyPans/login.html', context)
 
 def logout_view(request):
   logout(request)
@@ -276,14 +300,13 @@ def profile_view(request, username):
 
     # Followers and following
     followers = user.followers.all()
+    random_followers = random.sample(list(followers), min(len(followers), 6))
+    print(random_followers)
     following = user.following.all()
+
     number_of_follower = followers.count()
     number_of_following = following.count()
-    print('followers:')
-    for follow in followers:
-      print(follow.follower.username)
 
-    
     categories = Category.objects.all()
     context = {
         'title': 'OnlyPans | Profile',
@@ -303,7 +326,7 @@ def profile_view(request, username):
         'following': following,
         'number_of_follower': number_of_follower,
         'number_of_following': number_of_following,
-
+        'random_follower': random_followers,
         'liked_posts': liked_posts,
     }
     return render(request, 'OnlyPans/profile_view.html', context)

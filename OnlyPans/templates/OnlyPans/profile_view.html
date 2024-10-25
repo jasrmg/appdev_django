@@ -238,10 +238,10 @@
           <p class="follower_title">Follower{% if number_of_follower > 1 %}s{% endif %}</p>
           <p class="number_of_follower">{{ number_of_follower }} follower{% if number_of_follower > 1 %}s{% endif %}</p>
         </div>
-        {% if follower %}
+        {% if random_follower %}
         
         <div class="followers">
-          {% for user in follower %}
+          {% for user in random_follower %}
           <div class="follower_card">
             
             <a href="{% url 'profile' user.follower.username %}">
