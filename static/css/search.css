@@ -1,0 +1,124 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--primary-color);
+}
+
+main {
+  display: flex;
+}
+
+aside {
+  width: 22vw;
+  background-color: var(--darker-primary-color);
+  padding: 10px;
+  height: 89.8vh;
+}
+aside h2 {
+  margin: 15px 0;
+  color: var(--secondary-color);
+}
+aside hr {
+  margin-bottom: 15px;
+  border: 1px solid var(--secondary-color);
+  opacity: .2;
+}
+.filters a {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  text-align: left;
+  text-decoration: none;
+  color: var(--secondary-color);
+  border-radius: 5px;
+  cursor: pointer;
+}
+.filters a i {
+  margin-right: 10px;
+}
+
+.filters a:hover {
+  background: var(--primary-color);
+  color: var(--accent-color);
+}
+
+.result-container {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  margin: 20px; /* Adds whitespace around the container */
+}
+
+section.results {
+  width: 50vw;
+  max-width: 600px;
+  background-color: var(--darker-primary-color);
+  padding: 20px;
+  border-radius: 10px;
+  max-height: 54vh;
+}
+
+.results h2 {
+  margin-bottom: 15px;
+  font-size: 20px;
+}
+
+.person {
+  display: flex;
+  align-items: center;
+  background-color: var(--primary-color);
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.person img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.person div {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.person div a {
+  font-size: 17px;
+  font-weight: bold;
+  text-decoration: none;
+  color: var(--secondary-color);
+}
+.person div span {
+  font-size: 15px;
+  opacity: .65;
+}
+
+
+.follow-btn, .see-all-btn {
+  background-color: var(--accent-color);
+  color: #fdeed8;
+  padding: 5px 10px;
+  border: 2px solid var(--accent-color);
+  border-radius: 5px;
+  cursor: pointer;
+}
+.see-all-btn {
+  width: 100%;
+  font-size: 15px;
+  padding: 10px;
+  transition: background-color .2s ease;
+}
+
+.follow-btn:hover, .see-all-btn:hover {
+  background-color: #fdeed8;
+  color: #1c1b1b;
+  border: 2px solid #1c1b1b;
+}

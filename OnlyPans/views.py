@@ -388,6 +388,8 @@ def delete_comment(request, comment_id):
     return JsonResponse({'status': 'error'}, status=403)
 
 #search
+def search_test(request):
+  return render(request, 'OnlyPans/search.html') 
 def search_view(request):
   query = request.GET.get('q')
   post = []
