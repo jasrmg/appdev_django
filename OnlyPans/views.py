@@ -378,6 +378,23 @@ def add_comment(request):
         return JsonResponse({'success': True, **response_data})
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
+@login_required
+def save_comment(request):#wa na giapil ang id kay apil na siya sa post body
+  if request.method == 'POST':
+    comment_id = request.POST.get('comment_id')
+    updated_comment = request.POST.get('updated_comment')
+    print('id save: ', comment_id)
+    if not comment_id or not updated_comment:
+      return JsonResponse({'status': 'error', 'message': 'Comment ID or updated comment not provided!'}, status=400)
+        
+    try:
+      comment = Comment.objects.get(comment_id=comment_id)
+      comment.message = updated_comment
+      comment.save()
+      return JsonResponse({'status': 'success', 'message': 'Comment updated successfully!'})
+    except Comment.DoesNotExist:
+      return JsonResponse({'status': 'error', 'message': 'Comment ID not found!'}, status=404)
+  return JsonResponse({'status': 'error', 'message': 'Comment id not found!'}, status=404)
 #delete comment
 @login_required
 def delete_comment(request, comment_id):

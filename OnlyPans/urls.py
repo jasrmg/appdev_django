@@ -32,6 +32,9 @@ urlpatterns = [
   #comment
   path('add_comment/', views.add_comment, name='add_comment'),
   path('delete_comment/<int:comment_id>/', views.delete_comment, name='delete_comment'),
+  #d ra i apil ang pk sa pag save sa comment kay naapil nag pasa sa post request
+  path('save_comment/', views.save_comment, name='save_comment'),
+  
   #search test
   path('search/', views.search_view, name='search'),
 ]
