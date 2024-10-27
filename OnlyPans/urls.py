@@ -34,6 +34,4 @@ urlpatterns = [
   path('delete_comment/<int:comment_id>/', views.delete_comment, name='delete_comment'),
   #search test
   path('search/', views.search_view, name='search'),
-  #search template
-  path('search_template/', views.search_test),
 ]
