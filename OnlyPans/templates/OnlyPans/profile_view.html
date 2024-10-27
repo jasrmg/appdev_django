@@ -299,39 +299,5 @@
   var username = "{{ user.username | escapejs }}";
 </script>
 <script src="{% static 'js/showposts.js' %}"></script>
-<!--script for follower and following modal-->
-<script>
-  //following modal js
-  const followingModal = document.getElementById("followingModal");
-  const openFollowingBtn = document.getElementById("followingModalBtn");
-  const followingXBtn = document.getElementById("followingXBtn");
 
-  const closeFollowingModal = () => (followingModal.style.display = "none");
-
-  openFollowingBtn.addEventListener("click", () => {
-    followingModal.style.display = "block";
-  });
-
-  followingXBtn.addEventListener("click", closeFollowingModal);
-  
-  //followers modal js
-  const followerModal = document.getElementById("followerModal")
-  const openFollowerBtn = document.getElementById("followerModalBtn")
-  const followerXBtn = document.getElementById("followerXBtn")
-
-  //close the modal
-  const closeFollowerModal = () => (followerModal.style.display = "none");
-
-  //open the modal
-  openFollowerBtn.addEventListener("click", () => {
-    followerModal.style.display = "block";
-  });
-
-  //close the modal when clicking the X button or outside the modal
-  followerXBtn.addEventListener("click", closeFollowerModal);
-  window.addEventListener("click", (event) => {
-    if (event.target === followerModal) closeFollowerModal();
-    else if (event.target === followingModal) closeFollowingModal();
-  });
-</script>
 {% endif %} {% endblock %}

@@ -18,9 +18,12 @@
     <div class="post_actions">
       <button
         class="edit_icon"
-        title="Edit Post"
-        onclick="openEditModal('{{ post.post_id }}', '{{ post.title }}', '{{ post.category.category_id|escapejs }}', '{{ post.description }}', '{{ post.ingredients }}')"
+        title="{{ post.title | escapejs }}"
+        id="openEditPostModalBtn"
         data-post-id="{{ post.post_id }}"
+        data-post-category="{{ post.category.category_id | escapejs }}"
+        data-post-description="{{ post.description | escapejs }}"
+        data-post-ingredients="{{ post.ingredients | escapejs }}"
         style="background: none; border: none; cursor: pointer"
       >
         <i class="fa-solid fa-pencil-alt" style="color: #33221a"></i>
@@ -33,7 +36,8 @@
       <button
         class="delete_icon"
         title="Delete Post"
-        onclick="confirmDelete('{{ post.post_id }}')"
+        id="deletePostModalBtn"
+        data-post-id='{{ post.post_id }}'
         style="
           padding: 2px;
           font-size: 20px;
