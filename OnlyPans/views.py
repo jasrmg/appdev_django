@@ -435,9 +435,27 @@ def follow_user(request, username):
 
   #check if the logged user is already following the target user
   follow, created = Follow.objects.get_or_create(follower=request.user, followed=target_user)
-
   if not created:
     follow.delete()
+    following = False
+  else:
+    following = True
+  #return json response if its an ajax request
+  if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+    follower_count = Follow.objects.filter(followed=target_user).count()
+    following_count = Follow.objects.filter(follower=request.user).count()
+    new_follower = {
+      'username': request.user.username,
+      'avatar_url': request.user.avatar.url,
+      'first_name': request.user.first_name,
+      'last_name': request.user.last_name,
+    } if following else None
+
+    return JsonResponse({
+      'following':following, 
+      'follower_count':follower_count, 
+      'following_count':following_count,
+      'new_follower':new_follower, })
   
   return redirect('profile', username=target_user.username)
 

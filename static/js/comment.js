@@ -1,30 +1,32 @@
 $(document).on("submit", ".comment_section", function (event) {
   event.preventDefault();
-  
+
   // Store reference to `this` in a variable
-  const form = this; // Store the form reference
+  const form = this; // Stoe the form reference
 
   // Gather form data using class selectors
   const message = $(form).find(".addComment").val(); // Use class selector
   const postId = $(form).find('input[name="post_id"]').val();
-  const commentcsrfToken = $(form).find("input[name='csrfmiddlewaretoken']").val();
+  const commentcsrfToken = $(form)
+    .find("input[name='csrfmiddlewaretoken']")
+    .val();
 
   $.ajax({
-      type: "POST",
-      url: window.addCommentUrl,
-      data: {
-          post_id: postId,
-          message: message,
-          csrfmiddlewaretoken: commentcsrfToken,
-      },
-      success: function (response) {
-        // Clear the comment box
-        $(form).find(".addComment").val(""); // Clear using class selector
-    
-        // Use the postId already gathered
-        const commentsSection = $(`.comments_section[data-post-id="${postId}"]`);
-    
-        const newComment = `
+    type: "POST",
+    url: window.addCommentUrl,
+    data: {
+      post_id: postId,
+      message: message,
+      csrfmiddlewaretoken: commentcsrfToken,
+    },
+    success: function (response) {
+      // Clear the comment box
+      $(form).find(".addComment").val(""); // Clear using class selector
+
+      // Use the postId already gathered
+      const commentsSection = $(`.comments_section[data-post-id="${postId}"]`);
+
+      const newComment = `
         <div class="comment">
           <img src="${response.user_avatar}" alt="pp" class="avatar_post"/>
           <div class="comment_content">
@@ -41,13 +43,13 @@ $(document).on("submit", ".comment_section", function (event) {
           </div>
         `;
 
-        // Append the new comment to the correct post's comments section
-        commentsSection.append(newComment);
-      },
-    
-      error: function (xhr, status, error) {
-          console.error("Error: ", error);
-      },
+      // Append the new comment to the correct post's comments section
+      commentsSection.append(newComment);
+    },
+
+    error: function (xhr, status, error) {
+      console.error("Error: ", error);
+    },
   });
 });
 

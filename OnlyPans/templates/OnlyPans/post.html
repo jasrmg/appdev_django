@@ -37,7 +37,7 @@
         class="delete_icon"
         title="Delete Post"
         id="deletePostModalBtn"
-        data-post-id='{{ post.post_id }}'
+        data-post-id="{{ post.post_id }}"
         style="
           padding: 2px;
           font-size: 20px;
@@ -114,72 +114,87 @@
           <h4>{{ comment.user.first_name }} {{ comment.user.last_name }}</h4>
           <p>{{ comment.created_at | timesince }} ago</p>
         </div>
-        <div contenteditable="false" id="comment-text-{{ comment.comment_id }}">{{ comment.message | truncatewords:40 }}</div>
+        <div contenteditable="false" id="comment-text-{{ comment.comment_id }}">
+          {{ comment.message | truncatewords:40 }}
+        </div>
       </div>
       {% if comment.user == request.user %}
       <div class="comment-controls">
-        <i class="fa-solid fa-pencil-alt pen-icon" style="color: #33221a" id="editCommentBtn-{{ comment.comment_id }}" onclick="toggleEdit('{{ comment.comment_id }}')"></i>
-        
-        <button class="close-button" data-comment-id="{{ comment.comment_id }}" onclick="openDeleteModal('{{ comment.comment_id }}')">
+        <i
+          class="fa-solid fa-pencil-alt pen-icon"
+          style="color: #33221a"
+          id="editCommentBtn-{{ comment.comment_id }}"
+          onclick="toggleEdit('{{ comment.comment_id }}')"
+        ></i>
+
+        <button
+          class="close-button"
+          data-comment-id="{{ comment.comment_id }}"
+          onclick="openDeleteModal('{{ comment.comment_id }}')"
+        >
           &times;
         </button>
       </div>
       {% endif %}
     </div>
     {% endfor %}
-    
     <script>
+      //COMMENTS:
+      let originalCommentText = "";
       function toggleEdit(commentId) {
-        const commentText = document.getElementById(`comment-text-${commentId}`);
-        const button = document.getElementById(`editCommentBtn-${commentId}`);
-        
-        // Check the current state of contentEditable
-        if (commentText.contentEditable === "false") {
-          commentText.contentEditable = "true"; // Enable editing
-          commentText.focus(); // Focus on the text area
-          // Change the icon to checkmark
-          button.classList.remove('fa-pencil-alt');
-          button.classList.add('fa-check'); // Use Font Awesome class for check icon
+        const $commentText = $(`#comment-text-${commentId}`);
+        const $button = $(`#editCommentBtn-${commentId}`);
+        // console.log(commentId);
+        //check the current state:
+        if ($commentText.attr("contenteditable") === "false") {
+          originalCommentText = $commentText.text();
+          $commentText.attr("contenteditable", "true").focus();
+          $button.removeClass("fa-pencil-alt").addClass("fa-check");
+
+          $(document).on("click", handleOutsideClick);
+          function handleOutsideClick(event) {
+            if (
+              !$commentText.is(event.target) &&
+              !$commentText.has(event.target).length &&
+              !$button.is(event.target) &&
+              !$button.has(event.target).length
+            ) {
+              //cancel edit if user clicks outside:
+              $commentText
+                .attr("contenteditable", "false")
+                .text(originalCommentText);
+              $button.removeClass("fa-check").addClass("fa-pencil-alt");
+              $(document).off("click", handleOutsideClick);
+            }
+          }
         } else {
-          commentText.contentEditable = "false"; // Disable editing
-          // Change the icon back to pencil
-          button.classList.remove('fa-check');
-          button.classList.add('fa-pencil-alt'); // Use Font Awesome class for pencil icon
-          
-          // Call saveComment to save changes
+          $commentText.attr("contenteditable", "false");
+          $button.removeClass("fa-check").addClass("fa-pencil-alt");
           saveComment(commentId);
+          $(document).off("click", handleOutsideClick);
         }
       }
-    
-      // AJAX function to save the comment
       function saveComment(commentId) {
-        const saveUrl = "{% url 'save_comment' %}"
-        const commentText = document.getElementById(`comment-text-${commentId}`);
-        const updatedComment = commentText.textContent;
-        console.log('{{ csrf_token }}')
-        console.log('id to be edited: ', commentId)
-        console.log('url: ', saveUrl)
-        // AJAX request to save the updated content
+        const $commentText = $(`#comment-text-${commentId}`);
+        const updatedComment = $commentText.text();
         $.ajax({
-          type: 'POST',
-          url: '/save_comment/',
+          type: "POST",
+          url: "/save_comment/",
           data: {
-            'comment_id': commentId,
-            'updated_comment': updatedComment,
-            'csrfmiddlewaretoken': '{{ csrf_token }}'
+            comment_id: commentId,
+            updated_comment: updatedComment,
+            csrfmiddlewaretoken: "{{ csrf_token }}",
           },
-          success: function(response) {
-            alert('Comment saved successfully');
-            commentText.contentEditable = "false"; // Disable editing again
+          success: function (response) {
+            $commentText.attr("contenteditable", "false");
           },
-          error: function(xhr, status, error) {
-            alert('An error occurred');
-            console.log('Error: ', error);
-          }
+          error: function (xhr, status, error) {
+            console.log("Error: ", error);
+          },
         });
       }
     </script>
-      </div>
+  </div>
   {% include 'OnlyPans/modals/comment_delete_confirmation.html' %}
 
   <!-- Add Comment Section -->
