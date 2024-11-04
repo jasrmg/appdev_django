@@ -198,7 +198,13 @@
   {% include 'OnlyPans/modals/comment_delete_confirmation.html' %}
 
   <!-- Add Comment Section -->
-  <form class="comment_section" method="post" action="" id="commentForm">
+  <form
+    class="comment_section commentForm"
+    method="post"
+    action=""
+    id="commentForm"
+    style="display: none"
+  >
     {% csrf_token %}
     <input type="hidden" name="csrfmiddlwaretoken" value="{{ csrf_token }}" />
     <input type="hidden" name="post_id" value="{{ post.post_id }}" />
@@ -252,8 +258,6 @@
   }
 </style>
 <!--ajax import for like unlike no refresh-->
-<!--gi comment kay na import na sa profile_view.html-->
-<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 <script src="{% static 'js/post.js' %}"></script>
 <!--script for comment-->
 <script>

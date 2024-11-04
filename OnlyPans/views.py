@@ -301,7 +301,7 @@ def profile_view(request, username):
     # Followers and following
     followers = user.followers.all()
     random_followers = random.sample(list(followers), min(len(followers), 6))
-    print(random_followers)
+    
     following = user.following.all()
 
     number_of_follower = followers.count()
@@ -425,6 +425,7 @@ def search_view(request):
     'query': query,
     'posts': posts,
     'users': users,
+    
   }
   return render(request, 'OnlyPans/search.html', context)
     
@@ -451,11 +452,25 @@ def follow_user(request, username):
       'last_name': request.user.last_name,
     } if following else None
 
+    #replacement follower if unfollowing and there are more than 6 followers:
+    replacement_follower = None
+    if not following and follower_count >= 6:
+      extra_follower = Follow.objects.filter(followed=target_user).exclude(follower=request.user).first()
+      if extra_follower:
+        replacement_follower = {
+          'username': extra_follower.follower.username,
+          'avatar_url': extra_follower.follower.avatar.url,
+          'first_name': extra_follower.follower.first_name,
+          'last_name': extra_follower.follower.last_name,
+        }
+
     return JsonResponse({
       'following':following, 
       'follower_count':follower_count, 
       'following_count':following_count,
-      'new_follower':new_follower, })
+      'new_follower':new_follower,
+      'replacement_follower':replacement_follower,
+      })
   
   return redirect('profile', username=target_user.username)
 

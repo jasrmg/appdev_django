@@ -284,6 +284,10 @@ $(document).ready(function () {
     });
   });
   //comment na js naa sa post.html line 141
+  //para show sa comment form:
+  $(document).on("click", ".comment_button", function () {
+    $(this).closest(".post").find(".commentForm").slideToggle(400);
+  });
 
   //FOLLOW:
   $("#followBtn").on("click", function (e) {
@@ -298,42 +302,124 @@ $(document).ready(function () {
         csrfmiddlewaretoken: csrfToken,
       },
       success: function (response) {
+        //FOLLOWING OR NAKA FOLLOW
         if (response.following) {
           $button.text("Unfollow");
 
-          //add the followers avatar:
+          //sa name dapit ni nga mga avatar
+          const avatarCount = $("#followersAvatarContainer a").length;
           const avatarHtml = `
-        <a href="/profile/${response.new_follower.username}">
-        <img
-          src="${response.new_follower.avatar_url}"
-          alt="${response.new_follower.username}"
-          class="follow_avatar"
-          />
-          </a>`;
-          const followerHtml = `<div class="follower_card" data-username="${response.new_follower.username}">
-            
-            <a href="{% url 'profile' user.follower.username %}">
+          <a href="/profile/${response.new_follower.username}">
             <img
               src="${response.new_follower.avatar_url}"
               alt="${response.new_follower.username}"
-              class="follower_picture"
+              class="follow_avatar"
             />
-          </a>
-            <p class="follower_name">${response.new_follower.last_name}, ${response.new_follower.first_name}</p>           
-          </div>`;
-          $("#followersAvatarContainer").append(avatarHtml);
-          $("#followers-container").append(followerHtml);
+          </a>`;
+          console.log("avatar count: ", avatarCount);
+          if (avatarCount < 6) {
+            //add the followers avatar:
+            $("#followersAvatarContainer").append(avatarHtml);
+          }
+          //sa modal:
+          const followerModalHtml = `
+          <a href="/profile/${response.new_follower.username}" style="text-decoration: none; color: inherit;" id="modalFollower-${response.new_follower.username}">
+            <div class="f_container">
+              <img src="${response.new_follower.avatar_url}" alt="${response.new_follower.username}">
+              ${response.new_follower.first_name} ${response.new_follower.last_name}
+            </div>
+          </a>`;
+          //remove no follower text:
+          $("#noFollowerMessage").hide();
+          //add follower to the modal:
+          $("#followerModalBody").append(followerModalHtml);
+          //sa sidebar na avatar sa followers:
+          const followerCardCount = $(
+            "#followers-container .follower_card"
+          ).length;
+          console.log("follower card:", followerCardCount);
+          if (followerCardCount < 6) {
+            const followerCardHtml = `<div class="follower_card" data-username="${response.new_follower.username}">
+              <a href="{% url 'profile' user.follower.username %}">
+                <img
+                  src="${response.new_follower.avatar_url}"
+                  alt="${response.new_follower.username}"
+                  class="follower_picture"
+                />
+              </a>
+              <p class="follower_name">${response.new_follower.last_name}, ${response.new_follower.first_name}</p>           
+            </div>`;
+            $("#followers-container").append(followerCardHtml);
+          }
         } else {
+          //UNFOLLOW OR WLAA NAKA FOLLOW
           $button.text("Follow");
           const loggedUser = $button.data("logged-in-username");
-          console.log(`Removing avatar for: `, loggedUser);
+          console.log(
+            `Checking and Removing avatar and follower card for: `,
+            loggedUser
+          );
+          //check if the logged users avatar is in the displayed avatar:
+          const avatarSelector = `#followersAvatarContainer a[href^="/profile/${loggedUser}"]`;
+          console.log("avatar selector: ", avatarSelector);
+          if ($(avatarSelector).length > 0) {
+            console.log("avatar is found");
+            $(avatarSelector).remove();
+          } else {
+            console.log("avatar not found");
+          }
+          //check if its in the sidebar follower cards:
+          const cardSelector = `.follower_card[data-username="${loggedUser}"]`;
+          console.log("card selector: ", cardSelector);
+          if ($(cardSelector).length > 0) {
+            console.log("follower card found");
+            $(cardSelector).remove();
+          } else {
+            console.log("card selector not found");
+          }
+          // Remove follower from the modal
+          const modalSelector = `.f_modal-body a[href^="/profile/${loggedUser}"]`;
+          if ($(modalSelector).length > 0) {
+            $(modalSelector).remove();
+          }
+          const zeroFollowerHtml = $("<p>").text("No Follower");
+          if ($("#followerModalBody a").length === 0) {
+            $("#followerModalBody").append(zeroFollowerHtml);
+          } else {
+          }
 
-          //remove the unfollowed users avatar
-          $(
-            `#followersAvatarContainer a[href="/profile/${loggedUser}"]`
-          ).remove();
-          $(`.follower_card[data-username="${loggedUser}"]`).remove();
+          if (response.replacement_follower) {
+            //check for replacement:
+            const replacementFollower = response.replacement_follower;
+            //create html for the replacement follower
+            const replacementFollowerCardHtml = `
+            <div class="follower_card" data-username="${replacementFollower.username}">
+              <a href="/profile/${replacementFollower.username}">
+                <img src="${replacementFollower.avatar_url}" alt="${replacementFollower.username}" class="follower_picture"/>
+              </a>
+              <p class="follower_name">${replacementFollower.last_name}, ${replacementFollower.first_name}</p>
+            </div>`;
+            const followerCardCount = $(
+              "#followers-container .follower_card"
+            ).length;
+            if (followerCardCount < 6) {
+              $("#followers-container").append(replacementFollowerCardHtml);
+            }
+          }
         }
+
+        //update follower count:
+        const followerCount = response.follower_count;
+        let followerText;
+        if (followerCount === 0) {
+          followerText = "No Follower";
+        } else if (followerCount === 1) {
+          $("#noFollowerMessage").remove();
+          followerText = "1 Follower";
+        } else {
+          followerText = `${followerCount} followers`;
+        }
+        $(".number_of_follower").text(followerText);
         //update the follower count:
         $("#followerCount").text(response.follower_count);
         //update the follower count in the #followerModalBtn

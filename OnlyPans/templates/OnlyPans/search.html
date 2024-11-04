@@ -1,58 +1,64 @@
-{% load static %}
-{% include 'base.html' %}
-<link rel="stylesheet" href="{% static 'css/search.css' %}">
+{% load static %} {% include 'base.html' %}
+<link rel="stylesheet" href="{% static 'css/search.css' %}" />
 {% block content %}
 
-  <main>
-    <aside>
-      <h2>Search results</h2>
-      <hr>
-      <div class="filters">
-        <a href="#"><i class="fas fa-th"></i> All</a>
-        <a href="#"><i class="fas fa-newspaper"></i> Posts</a>
-        <a href="#"><i class="fas fa-users"></i> People</a>
-        <a href="#"><i class="fas fa-hamburger"></i> Meat</a>
-        <a href="#"><i class="fas fa-drumstick-bite"></i> Chicken</a>
-        <a href="#"><i class="fas fa-fish"></i> Seafood</a>
-        <a href="#"><i class="fas fa-carrot"></i> Veggies</a>
-        <a href="#"><i class="fas fa-ice-cream"></i> Dessert</a>
-        <a href="#"><i class="fas fa-cookie"></i> Snack</a>
-        <a href="#"><i class="fas fa-coffee"></i> Beverage</a>
+<main>
+  <aside>
+    <h2>Search results</h2>
+    <hr />
+    <div class="filters">
+      <a href="#"><i class="fas fa-th"></i> All</a>
+      <a href="#"><i class="fas fa-newspaper"></i> Posts</a>
+      <a href="#"><i class="fas fa-users"></i> People</a>
+      <a href="#"><i class="fas fa-hamburger"></i> Meat</a>
+      <a href="#"><i class="fas fa-drumstick-bite"></i> Chicken</a>
+      <a href="#"><i class="fas fa-fish"></i> Seafood</a>
+      <a href="#"><i class="fas fa-carrot"></i> Veggies</a>
+      <a href="#"><i class="fas fa-ice-cream"></i> Dessert</a>
+      <a href="#"><i class="fas fa-cookie"></i> Snack</a>
+      <a href="#"><i class="fas fa-coffee"></i> Beverage</a>
     </div>
-      
-    </aside>
-    <div class="result-container">    
-      <section class="results">
-        <h2>People</h2>
-        <div class="person">
-          <img src="https://media.wired.com/photos/598e35fb99d76447c4eb1f28/master/pass/phonepicutres-TA.jpg" alt="avatar">
-          <div>
-            <a href="">Jayzon Caol-Olan</a>
-            <span>5 followers</span>
-          </div>
-          <button class="follow-btn">Follow</button>
+  </aside>
+  <div class="result-container">
+    <section class="results">
+      <h2>People</h2>
+      <div class="person">
+        <img
+          src="https://media.wired.com/photos/598e35fb99d76447c4eb1f28/master/pass/phonepicutres-TA.jpg"
+          alt="avatar"
+        />
+        <div>
+          <a href="">Ethan Acasio</a>
+          <span>5 followers</span>
         </div>
-        <div class="person">
-          <img src="https://static.vecteezy.com/system/resources/thumbnails/009/273/280/small/concept-of-loneliness-and-disappointment-in-love-sad-man-sitting-element-of-the-picture-is-decorated-by-nasa-free-photo.jpg" alt="avatar">
-          <div>
-            <a href="">Jayzon Caol-Olan</a>
+        <button class="follow-btn">Follow</button>
+      </div>
+      <div class="person">
+        <img
+          src="https://static.vecteezy.com/system/resources/thumbnails/009/273/280/small/concept-of-loneliness-and-disappointment-in-love-sad-man-sitting-element-of-the-picture-is-decorated-by-nasa-free-photo.jpg"
+          alt="avatar"
+        />
+        <div>
+          <a href="">Jeño Flores</a>
 
-            <span>5 followers</span>
-          </div>
-          <button class="follow-btn">Follow</button>
+          <span>5 followers</span>
         </div>
-        <div class="person">
-          <img src="https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_640.jpg" alt="avatar">
-          <div>
-            <a href="">Jayzon Caol-Olan</a>
+        <button class="follow-btn">Follow</button>
+      </div>
+      <div class="person">
+        <img
+          src="https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_640.jpg"
+          alt="avatar"
+        />
+        <div>
+          <a href="">Shane Dela Torre</a>
 
-            <span>5 followers</span>
-          </div>
-          <button class="follow-btn">Follow</button>
+          <span>5 followers</span>
         </div>
-        <button class="see-all-btn">See all</button>
-      </section>
-    </div>
-
-  </main>
-  {% endblock %}
+        <button class="follow-btn">Follow</button>
+      </div>
+      <button class="see-all-btn">See all</button>
+    </section>
+  </div>
+</main>
+{% endblock %}
