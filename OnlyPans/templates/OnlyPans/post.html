@@ -84,7 +84,12 @@
     <p id="like-count-{{ post.post_id }}">
       {{ post.like_set.count }} <i class="fa-solid fa-heart"></i>
     </p>
-    <p><span id="noOfComments">10</span> <i class="fa-solid fa-comment"></i></p>
+    <p>
+      <span id="commentCount-{{ post.post_id | escapejs }}"
+        >{{ post.comment_count }}
+      </span>
+      <i class="fa-solid fa-comment"></i>
+    </p>
   </div>
   {% if user.is_authenticated %}
   <form method="post" id="csrf_form">{% csrf_token %}</form>
@@ -107,7 +112,7 @@
   <!-- Comments Section -->
   <div class="comments_section" data-post-id="{{ post.post_id }}">
     {% for comment in post.random_comments %}
-    <div class="comment">
+    <div class="comment" data-post-id="{{post.post_id|escapejs}}">
       <img src="{{ comment.user.avatar.url }}" alt="pp" class="avatar_post" />
       <div class="comment_content">
         <div class="comment_info">
@@ -137,9 +142,14 @@
       </div>
       {% endif %}
     </div>
-    {% endfor %}
+    {% endfor %} {% if comment_count > 2 %}
+
+    <span id="seeMore" style="font-size: 14px; font-weight: lighter"
+      >Load more. . .</span
+    >
+    {% endif %}
     <script>
-      //COMMENTS:
+      //EDIT COMMENTS:
       let originalCommentText = "";
       function toggleEdit(commentId) {
         const $commentText = $(`#comment-text-${commentId}`);

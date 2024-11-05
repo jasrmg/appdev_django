@@ -283,11 +283,13 @@ $(document).ready(function () {
       },
     });
   });
-  //comment na js naa sa post.html line 141
+  //EDIT comment na js naa sa post.html line 141
+  //CREATE COMMENT NAA SA COMMENT.JS
   //para show sa comment form:
   $(document).on("click", ".comment_button", function () {
     $(this).closest(".post").find(".commentForm").slideToggle(400);
   });
+  
 
   //FOLLOW:
   $("#followBtn").on("click", function (e) {

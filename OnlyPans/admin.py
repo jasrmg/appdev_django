@@ -20,7 +20,7 @@ class PostAdmin(admin.ModelAdmin):
   display_image.short_description = 'Image'
 
 class CommentAdmin(admin.ModelAdmin):
-  list_display = ['comment_id', 'user', 'message']
+  list_display = ['comment_id', 'post_id', 'user', 'message']
   
 
 admin.site.register(User, UserAdmin)

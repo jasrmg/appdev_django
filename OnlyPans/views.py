@@ -264,6 +264,7 @@ def profile_view(request, username):
     
     for post in posts:
         comments = list(post.comment_set.all())
+        post.comment_count = post.comment_set.count()
         # Fetch the first 3 ingredients
         post.ingredients_list = [ingredient.strip() for ingredient in post.ingredients.split(',')]
         post.ingredients_list = post.ingredients_list[:3]
@@ -367,8 +368,8 @@ def add_comment(request):
         # messages.success(request, 'Comment added!')
 
         #get all comment of that post:
-        # comments = Comment.objects.filter(post=post).order_by('-created_at')
-        # comment_count = comment.count()
+        comments = Comment.objects.filter(post=post).order_by('-created_at')
+        comment_count = comments.count()
 
         # Prepare response data
         response_data = {
@@ -377,12 +378,13 @@ def add_comment(request):
             'created_at': timesince(comment.created_at),
             'message': comment.message,
             'comment_id': comment.comment_id,
-            # 'comment_count': comment_count,
+            'comment_count': comment_count,
             # 'comments': [
             #    {
             #       'user_avatar': c.user.avatar_url,
             #       'user_name': f"{c.user.first_name} {c.user.last_name}",
-            #       'created_at': c.message,
+            #       'message': c.message,
+            #       'created_at': timesince(c.created_at),
             #       'comment_id': c.comment_id,
             #    } for c in comments
             # ]
@@ -416,6 +418,24 @@ def delete_comment(request, comment_id):
         comment.delete()
         return JsonResponse({'status': 'success', 'response': 'YAWA KA BAI'})
     return JsonResponse({'status': 'error'}, status=403)
+#LOAD MORE COMMENTS:
+def load_more_comments(request, post_id):
+    offset = int(request.GET.get('offset', 0))
+    limit = int(request.GET.get('limit', 2))
+    comments = Comment.objects.filter(post_id=post_id).order_by('-created_at')[offset:offset + limit]
+
+    comments_data = []
+    for comment in comments:
+        comments_data.append({
+            'comment_id': comment.comment_id,
+            'post_id': comment.post_id,
+            'user_avatar': comment.user.avatar.url,
+            'user_name': f"{comment.user.first_name} {comment.user.last_name}",
+            'created_at': comment.created_at.strftime("%Y-%m-%d %H:%M:%S"),  # Format as needed
+            'message': comment.message,
+        })
+
+    return JsonResponse({'comments': comments_data})
 
 #search
 
