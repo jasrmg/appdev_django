@@ -351,8 +351,11 @@ $(document).ready(function () {
             </div>`;
             $("#followers-container").append(followerCardHtml);
           }
+          if ($("#followerModalBody a").length !== 0) {
+            $("#zeroFollower").remove();
+          }
         } else {
-          //UNFOLLOW OR WLAA NAKA FOLLOW
+          //WLAA NAKA FOLLOW
           $button.text("Follow");
           const loggedUser = $button.data("logged-in-username");
           console.log(
@@ -378,14 +381,17 @@ $(document).ready(function () {
             console.log("card selector not found");
           }
           // Remove follower from the modal
-          const modalSelector = `.f_modal-body a[href^="/profile/${loggedUser}"]`;
+          const modalSelector = `#followerModalBody a[href^="/profile/${loggedUser}"]`;
           if ($(modalSelector).length > 0) {
             $(modalSelector).remove();
           }
-          const zeroFollowerHtml = $("<p>").text("No Follower");
+          const zeroFollowerHtml = $("<p>")
+            .text("No Follower")
+            .attr("id", "zeroFollower");
           if ($("#followerModalBody a").length === 0) {
-            $("#followerModalBody").append(zeroFollowerHtml);
-          } else {
+            if (!$("#zeroFollower").length) {
+              $("#followerModalBody").append(zeroFollowerHtml);
+            }
           }
 
           if (response.replacement_follower) {

@@ -366,13 +366,26 @@ def add_comment(request):
         comment.save()
         # messages.success(request, 'Comment added!')
 
+        #get all comment of that post:
+        # comments = Comment.objects.filter(post=post).order_by('-created_at')
+        # comment_count = comment.count()
+
         # Prepare response data
         response_data = {
             'user_avatar': request.user.avatar.url,  # User avatar URL
             'user_name': f"{request.user.first_name} {request.user.last_name}",
             'created_at': timesince(comment.created_at),
             'message': comment.message,
-            'comment_id': comment.comment_id
+            'comment_id': comment.comment_id,
+            # 'comment_count': comment_count,
+            # 'comments': [
+            #    {
+            #       'user_avatar': c.user.avatar_url,
+            #       'user_name': f"{c.user.first_name} {c.user.last_name}",
+            #       'created_at': c.message,
+            #       'comment_id': c.comment_id,
+            #    } for c in comments
+            # ]
         }
 
         return JsonResponse({'success': True, **response_data})

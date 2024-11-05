@@ -84,7 +84,7 @@
     <p id="like-count-{{ post.post_id }}">
       {{ post.like_set.count }} <i class="fa-solid fa-heart"></i>
     </p>
-    <p>10 <i class="fa-solid fa-comment"></i></p>
+    <p><span id="noOfComments">10</span> <i class="fa-solid fa-comment"></i></p>
   </div>
   {% if user.is_authenticated %}
   <form method="post" id="csrf_form">{% csrf_token %}</form>
