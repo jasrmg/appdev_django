@@ -469,37 +469,26 @@ def load_more_comments(request, post_id):
     print('LEN COMMENTS: ', len(comments))
     print('LIMIT: ', limit)
     print('T OR F: ', len(comments) == limit)
-    # has_more = len(comments) == limit  # True if there are more comments
+    
     has_more = (offset + limit) < total_comments
     return JsonResponse({'comments': comments_data, 'has_more': has_more, 'total_comments':total_comments})
 
-# from django.utils.timezone import now
-# #time since
-# def time_since(created_at):
-#   delta = now() - created_at
-#   hours = delta.days * 24 + delta.seconds // 3600
-#   minutes = (delta.seconds % 3600) // 60
-#   if hours > 0:
-#     hour_label = "hours" if hours > 1 else "hour"
-#     minute_label = "minutes" if minutes > 1 else "minute"
-#     return f'{hours} {hour_label}, {minutes} {minute_label}'
-#   else:
-#     minute_label = "minutes" if minutes > 1 else "minute"
-#     return f'{minutes} {minute_label}'
-from django.utils import timezone
+
 from django.utils.timesince import timesince
+from django.utils import timezone
 
 def time_since(created_at):
     now = timezone.now()  # Get the current time with timezone awareness
     delta = now - created_at
     # Use Django's timesince to get the time difference as a string
     time_diff = timesince(created_at)
+    
+    # Check if the time difference is less than 1 minute
+    if delta.total_seconds() < 60:
+        return "Just now"
+    
     # Split the time difference into parts (e.g., "2 weeks", "3 days")
     time_parts = time_diff.split()
-
-    # Check for "just now" case
-    if 'just' in time_parts:
-        return "Just now"
     
     # Define the possible time units in order of priority
     time_units = ["month", "week", "day", "hour", "minute"]
@@ -513,7 +502,7 @@ def time_since(created_at):
         for unit_name in time_units:
             if unit_name in unit:
                 # Return the first (highest) unit found
-                return f"{number} {unit_name}" + ("s" if number > 1 else "")
+                return f"{number} {unit_name}" + ("s" if number > 1 else "") + " ago"
     
     # Fallback if no unit is found
     return time_diff

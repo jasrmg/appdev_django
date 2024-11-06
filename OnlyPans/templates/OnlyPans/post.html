@@ -158,13 +158,13 @@
     <span
       id="seeMore"
       data-offset="2"
-      style="font-size: 14px; font-weight: lighter"
+      style="font-size: 14px; font-weight: lighter; cursor: pointer"
       >Load more. . .</span
     >
     {% endif %}
     <!--style for editing the comment-->
     <script>
-      //EDIT COMMENTS:
+      //EDIT COMMENT:
       let originalCommentText = "";
       function toggleEdit(commentId) {
         const $commentText = $(`#comment-text-${commentId}`);

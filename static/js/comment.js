@@ -1,3 +1,4 @@
+//ADD COMMENT, EDIT COMMENT NAA SA POST.HTML
 $(document).on("submit", ".comment_section", function (event) {
   event.preventDefault();
 
@@ -26,25 +27,64 @@ $(document).on("submit", ".comment_section", function (event) {
       // Use the postId already gathered
       const commentsSection = $(`.comments_section[data-post-id="${postId}"]`);
       console.log("new comment id: ", postId);
+
+      //function para sa just now or sa time ig append:
+      const timeAgo = (createdAt) => {
+        const now = new Date();
+        const createdTime = new Date(createdAt); // Make sure `createdAt` is a proper date string
+        const delta = now - createdTime; // Get the difference in milliseconds
+
+        if (delta < 60 * 1000) {
+          return "Just now";
+        }
+
+        const seconds = Math.floor(delta / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+        const months = Math.floor(days / 30);
+        const years = Math.floor(days / 365);
+
+        if (years > 0) {
+          return `${years} year${years > 1 ? "s" : ""} ago`;
+        }
+        if (months > 0) {
+          return `${months} month${months > 1 ? "s" : ""} ago`;
+        }
+        if (days > 0) {
+          return `${days} day${days > 1 ? "s" : ""} ago`;
+        }
+        if (hours > 0) {
+          return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+        }
+        if (minutes > 0) {
+          return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+        }
+        return "Just now"; // Should not reach here
+      };
       const newComment = `
         <div class="comment" data-post-id="${postId}">
           <img src="${response.user_avatar}" alt="pp" class="avatar_post"/>
           <div class="comment_content">
             <div class="comment_info">
               <h4>${response.user_name}</h4>
-              <p>${response.created_at} ago</p>
+              <p>${timeAgo(response.created_at)}</p>
             </div>
               <p>${response.message}</p>
             </div>
             <div class="comment-controls">
               <i class="fa-solid fa-pencil-alt pen-icon" style="color: #33221a"></i>
-              <button class="close-button" data-comment-id=${response.comment_id}>&times;</button>
+              <button class="close-button" data-comment-id=${
+                response.comment_id
+              }>&times;</button>
             </div>
           </div>
         `;
 
       // Append the new comment to the correct post's comments section
       commentsSection.append(newComment);
+      const seeMoreButton = $("#seeMore");
+      commentsSection.append(seeMoreButton); // Append it below the new comment
       //count sa comments:
       const commentPostId = "{{ post.post_id }}";
       console.log("Comment Post ID: ", commentPostId);
@@ -60,7 +100,7 @@ $(document).on("submit", ".comment_section", function (event) {
     },
   });
 });
-
+//DELETE COMMENT
 let commentIdToDelete;
 let postIdToUpdate;
 $(document).on("click", ".close-button", function (event) {
@@ -129,6 +169,23 @@ const LIMIT = 2; // Number of comments to load each time
 $("#seeMore").on("click", function () {
   const postId = $(this).closest(".comments_section").data("post-id");
 
+  // Check if we are in "See Less" mode
+  if ($(this).text().trim() === "See Less") {
+    // Reset to initial state: hide all but the first two comments
+    offset = LIMIT; // Reset offset to initial value
+
+    // Fade out extra comments and remove them after animation
+    $(`.comments_section[data-post-id="${postId}"] .comment`)
+      .slice(LIMIT)
+      .fadeOut(500, function () {
+        $(this).remove(); // Remove the comments after fade-out completes
+      });
+
+    $(this).text("Load more...").data("offset", LIMIT); // Change text back to "Load more..." and reset data-offset
+    return;
+  }
+
+  // Proceed with loading more comments
   $.ajax({
     url: `/load_more_comments/${postId}/`,
     data: {
@@ -137,74 +194,73 @@ $("#seeMore").on("click", function () {
     },
     type: "GET",
     success: function (data) {
-      // Append the new comments
       const comments = data.comments;
       const $commentsContainer = $(
         `.comments_section[data-post-id="${postId}"]`
       );
 
-      // Iterate over the returned comments and append them
-
+      // Append each new comment with a fade-in effect
       comments.forEach(function (comment) {
-        var loggedInUsername = $(`#commentsSection-${comment.post_id}`).data(
+        const loggedInUsername = $(`#commentsSection-${comment.post_id}`).data(
           "loggedUserName"
         );
-        console.log("user: ", loggedInUsername);
         const isSameUser = comment.user_name === loggedInUsername;
-        console.log(comment.user_name);
-        console.log(isSameUser);
-        const newComment = `
-        <div class="comment" data-post-id="${comment.post_id}">
-            <img src="${
-              comment.user_avatar
-            }" alt="Avatar" class="avatar_post" />
-            <div class="comment_content">
-                <div class="comment_info">
-                    <h4>${comment.user_name}</h4>
-                    <p>${comment.created_at} ago</p>
-                </div>
-                <div contenteditable="false" id="comment-text-${
-                  comment.comment_id
-                }">
-                    ${comment.message}
-                </div>
-            </div>
-            ${
-              isSameUser
-                ? `
-            <div class="comment-controls">
-                <i class="fa-solid fa-pencil-alt pen-icon" style="color: #33221a" 
-                   id="editCommentBtn-${comment.comment_id}" 
-                   onclick="toggleEdit('${comment.comment_id}')"></i>
-    
-                <button class="close-button" 
-                        data-comment-id="${comment.comment_id}" 
-                        onclick="openDeleteModal('${comment.comment_id}')">
-                    &times;
-                </button>
-            </div>
-            `
-                : ""
-            }
-        </div>
-    `;
-        $commentsContainer.append(newComment);
-      });
 
-      console.log("offset: ", offset);
+        const newComment = $(`
+          <div class="comment" data-post-id="${comment.post_id}">
+              <img src="${
+                comment.user_avatar
+              }" alt="Avatar" class="avatar_post" />
+              <div class="comment_content">
+                  <div class="comment_info">
+                      <h4>${comment.user_name}</h4>
+                      <p>${comment.created_at}</p>
+                  </div>
+                  <div contenteditable="false" id="comment-text-${
+                    comment.comment_id
+                  }">
+                      ${comment.message}
+                  </div>
+              </div>
+              ${
+                isSameUser
+                  ? `
+                <div class="comment-controls">
+                    <i class="fa-solid fa-pencil-alt pen-icon" style="color: #33221a" 
+                       id="editCommentBtn-${comment.comment_id}" 
+                       onclick="toggleEdit('${comment.comment_id}')"></i>
+                    <button class="close-button" 
+                            data-comment-id="${comment.comment_id}" 
+                            onclick="openDeleteModal('${comment.comment_id}')">
+                        &times;
+                    </button>
+                </div>
+              `
+                  : ""
+              }
+          </div>
+        `).hide(); // Hide initially for fade-in effect
+
+        $commentsContainer.append(newComment);
+        newComment.fadeIn(500); // Fade in the new comment
+      });
 
       // Update the offset
       offset += comments.length; // Increment offset by the number of loaded comments
-      console.log("offset after: ", offset);
-      console.log("comments length: ", comments.length);
 
       // Check if there are more comments to load
       if (!data.has_more) {
-        $("#seeMore").remove(); // Remove the Load More button if no more comments
+        $("#seeMore").text("See Less"); // Change to "See Less" if no more comments
       } else {
-        // Move the Load More button below the new comments
+        // Move the "Load More" button to the bottom
         const seeMoreButton = $("#seeMore").detach(); // Detach to move
         $commentsContainer.append(seeMoreButton); // Append it again
+      }
+
+      // Move "See Less" below all added comments
+      if ($("#seeMore").text() === "See Less") {
+        const seeLessButton = $("#seeMore").detach();
+        $commentsContainer.append(seeLessButton);
       }
     },
     error: function () {

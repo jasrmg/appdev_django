@@ -122,13 +122,13 @@ $(document).ready(function () {
   });
 
   //POST
-  //DELETE
+  //DELETE POST
   let postIdToDelete;
   const $deletePostModal = $("#deleteConfirmationModal");
   const $closePostModalDelBtn = $("#closeDeletePostModal");
   const $confirmPostDeleteBtn = $("#postConfirmDeleteBtn");
   const $cancelPostDeleteBtn = $("#cancelDeleteBtn");
-  const $openDeleteModal = $("#deletePostModalBtn");
+  // const $openDeleteModal = $(".delete_icon");
   //close delete modal:
   $closePostModalDelBtn.on("click", () => {
     toggleModal($deletePostModal, false);
@@ -143,9 +143,10 @@ $(document).ready(function () {
     postIdToDelete = postIdDel;
     $deletePostModal.show();
   }
-  $openDeleteModal.on("click", function () {
-    postIdToDelete = $(this).data("post-id");
-    confirmDelete(postIdToDelete);
+  // Event delegation for dynamically created delete buttons:
+  $(document).on("click", "#deletePostModalBtn", function () {
+    postIdToDelete = $(this).data("post-id"); // Get the post ID from the button's data attribute
+    confirmDelete(postIdToDelete); // Open the delete confirmation modal
   });
 
   //confirm and submit the deletion:
@@ -169,9 +170,10 @@ $(document).ready(function () {
     $deletePostForm.submit();
   });
 
-  //EDIT POST
+  // Reference to the edit post modal
   const $editPostModal = $("#editPost");
-  //function to prefill the edit post modal fields
+
+  // Function to prefill the edit post modal fields
   function openEditModal(
     editPostId,
     postTitle,
@@ -179,13 +181,15 @@ $(document).ready(function () {
     postDescription,
     postIngredients
   ) {
-    const $editPostModal = $("#editPost");
     const $editPostForm = $("#editPostForm");
     const $submitEditPostBtn = $("#editPostSubmitbtn");
-    //set the form action dynamically
+
+    // Set the form action dynamically based on editPostId
     const editPostActionUrl = editPostUrl.replace("0", editPostId);
     console.log(editPostActionUrl);
     $editPostForm.attr("action", editPostActionUrl);
+
+    // Prefill the form fields
     const $titleInput = $("#editPostTitle");
     const $descriptionInput = $("#editPostDescription");
     const $ingredientsInput = $("#editPostIngredients");
@@ -196,7 +200,10 @@ $(document).ready(function () {
     $descriptionInput.val(postDescription);
     $categorySelect.val(postCategory);
 
+    // Show the edit modal
     $editPostModal.show();
+
+    // Save the initial form values to detect changes
     const initialFormValues = {
       title: $titleInput.val().trim(),
       category: $categorySelect.val().trim(),
@@ -204,7 +211,7 @@ $(document).ready(function () {
       ingredients: $ingredientsInput.val().trim(),
     };
 
-    //enable disable submit button based on changes in the form fields:
+    // Function to enable/disable submit button based on form changes
     const checkForChanges = () => {
       const currentFormValues = {
         title: $titleInput.val().trim(),
@@ -212,7 +219,8 @@ $(document).ready(function () {
         description: $descriptionInput.val().trim(),
         ingredients: $ingredientsInput.val().trim(),
       };
-      // Compare current values with initial values
+
+      // Check if any value has changed
       const formChanged =
         initialFormValues.title !== currentFormValues.title ||
         initialFormValues.description !== currentFormValues.description ||
@@ -222,24 +230,25 @@ $(document).ready(function () {
       // Enable/disable the submit button based on whether the form has changed
       $submitEditPostBtn.prop("disabled", !formChanged);
     };
+
     // Attach event listeners to form fields to detect changes
     $titleInput.on("input", checkForChanges);
     $descriptionInput.on("input", checkForChanges);
     $ingredientsInput.on("input", checkForChanges);
     $categorySelect.on("change", checkForChanges);
 
-    // Disable the submit button initially (if no changes are made)
+    // Disable the submit button initially if no changes are made
     $submitEditPostBtn.prop("disabled", true);
 
-    //event listener for closing the modal:
+    // Event listener for closing the modal
     const $closeEditPostBtn = $("#editPostX");
     $closeEditPostBtn.on("click", () => {
       toggleModal($editPostModal, false);
     });
   }
-  //edit post button trigger:
-  const $openEditPostModalBtn = $("#openEditPostModalBtn");
-  $openEditPostModalBtn.on("click", function () {
+
+  // Attach event listener for the edit post button using event delegation
+  $(document).on("click", "#openEditPostModalBtn", function () {
     const edtpostId = $(this).data("post-id");
     const postTitle = $(this).attr("title");
     const postCategory = $(this).data("post-category");
@@ -269,7 +278,7 @@ $(document).ready(function () {
       },
       success: function (data) {
         if (data.liked) {
-          $button.html('<i class="fa-solid fa-heart"></i> Unlike');
+          $button.html('<i class="fa-solid fa-heart"></i> Liked');
         } else {
           $button.html('<i class="fa-solid fa-heart"></i> Like');
         }
@@ -290,7 +299,7 @@ $(document).ready(function () {
     $(this)
       .closest(".post")
       .find(".commentForm")
-      .slideToggle(400, function () {
+      .slideToggle(500, function () {
         const $textarea = $(this).find("textarea");
         if ($textarea.is(":visible")) {
           $textarea.focus();
@@ -325,7 +334,7 @@ $(document).ready(function () {
               class="follow_avatar"
             />
           </a>`;
-          console.log("avatar count: ", avatarCount);
+          // console.log("avatar count: ", avatarCount);
           if (avatarCount < 6) {
             //add the followers avatar:
             $("#followersAvatarContainer").append(avatarHtml);
@@ -346,9 +355,8 @@ $(document).ready(function () {
           const followerCardCount = $(
             "#followers-container .follower_card"
           ).length;
-          console.log("follower card:", followerCardCount);
-          if (followerCardCount < 6) {
-            const followerCardHtml = `<div class="follower_card" data-username="${response.new_follower.username}">
+          // console.log("follower card:", followerCardCount);
+          const followerCardHtml = `<div class="follower_card" data-username="${response.new_follower.username}" style="display:none;">
               <a href="{% url 'profile' user.follower.username %}">
                 <img
                   src="${response.new_follower.avatar_url}"
@@ -358,7 +366,10 @@ $(document).ready(function () {
               </a>
               <p class="follower_name">${response.new_follower.last_name}, ${response.new_follower.first_name}</p>           
             </div>`;
+          if (followerCardCount < 6) {
             $("#followers-container").append(followerCardHtml);
+            // followerCardHtml.fadeIn(300);
+            $("#followers-container .follower_card:last-child").fadeIn(500);
           }
           if ($("#followerModalBody a").length !== 0) {
             $("#zeroFollower").remove();
@@ -408,7 +419,7 @@ $(document).ready(function () {
             const replacementFollower = response.replacement_follower;
             //create html for the replacement follower
             const replacementFollowerCardHtml = `
-            <div class="follower_card" data-username="${replacementFollower.username}">
+            <div class="follower_card" data-username="${replacementFollower.username}" style="display:none;">
               <a href="/profile/${replacementFollower.username}">
                 <img src="${replacementFollower.avatar_url}" alt="${replacementFollower.username}" class="follower_picture"/>
               </a>
@@ -419,6 +430,8 @@ $(document).ready(function () {
             ).length;
             if (followerCardCount < 6) {
               $("#followers-container").append(replacementFollowerCardHtml);
+              // replacementFollowerCardHtml.fadeIn(500);
+              $("#followers-container .follower_card:last-child").fadeIn(500);
             }
           }
         }
