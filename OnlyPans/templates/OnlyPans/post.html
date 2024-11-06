@@ -1,4 +1,4 @@
-{% load static %} {% if posts %} {% for post in posts %}
+{% load static %} {% load custom_timesince %}{% if posts %}{%for post in posts%}
 <div class="post">
   <div
     class="post_header"
@@ -8,7 +8,7 @@
       <img src="{{ post.user.avatar.url }}" alt="pp" class="avatar_post" />
       <div class="post_info">
         <h3>{{ post.user.first_name }} {{ post.user.last_name }}</h3>
-        <p>{{ post.created_at | timesince }} ago.</p>
+        <p>{{ post.created_at | custom_timesince }} ago.</p>
       </div>
     </div>
 
@@ -110,16 +110,27 @@
   {% endif %}
 
   <!-- Comments Section -->
-  <div class="comments_section" data-post-id="{{ post.post_id }}">
-    {% for comment in post.random_comments %}
+
+  <div
+    class="comments_section"
+    data-post-id="{{ post.post_id }}"
+    id="commentsSection-{{ post.post_id }}"
+    data-total-comments="{{ post.comment_count }}"
+    data-logged-user-name="{{ request.user.first_name }} {{ request.user.last_name }}"
+  >
+    {% for comment in post.initial_comments %}
     <div class="comment" data-post-id="{{post.post_id|escapejs}}">
       <img src="{{ comment.user.avatar.url }}" alt="pp" class="avatar_post" />
       <div class="comment_content">
         <div class="comment_info">
           <h4>{{ comment.user.first_name }} {{ comment.user.last_name }}</h4>
-          <p>{{ comment.created_at | timesince }} ago</p>
+          <p>{{ comment.created_at | custom_timesince }} ago</p>
         </div>
-        <div contenteditable="false" id="comment-text-{{ comment.comment_id }}">
+        <div
+          class="edit-comment"
+          contenteditable="false"
+          id="comment-text-{{ comment.comment_id }}"
+        >
           {{ comment.message | truncatewords:40 }}
         </div>
       </div>
@@ -142,12 +153,16 @@
       </div>
       {% endif %}
     </div>
-    {% endfor %} {% if comment_count > 2 %}
+    {% endfor %} {% if post.comment_count > initial_comment_limit %}
 
-    <span id="seeMore" style="font-size: 14px; font-weight: lighter"
+    <span
+      id="seeMore"
+      data-offset="2"
+      style="font-size: 14px; font-weight: lighter"
       >Load more. . .</span
     >
     {% endif %}
+    <!--style for editing the comment-->
     <script>
       //EDIT COMMENTS:
       let originalCommentText = "";
@@ -159,6 +174,13 @@
         if ($commentText.attr("contenteditable") === "false") {
           originalCommentText = $commentText.text();
           $commentText.attr("contenteditable", "true").focus();
+
+          //style ig edit comment:
+          $commentText.css({
+            padding: "10px",
+            "border-radius": "50px",
+          });
+
           $button.removeClass("fa-pencil-alt").addClass("fa-check");
 
           $(document).on("click", handleOutsideClick);
@@ -173,6 +195,9 @@
               $commentText
                 .attr("contenteditable", "false")
                 .text(originalCommentText);
+              $commentText.css({
+                padding: "0",
+              });
               $button.removeClass("fa-check").addClass("fa-pencil-alt");
               $(document).off("click", handleOutsideClick);
             }
@@ -180,6 +205,9 @@
         } else {
           $commentText.attr("contenteditable", "false");
           $button.removeClass("fa-check").addClass("fa-pencil-alt");
+          $commentText.css({
+            padding: "0",
+          });
           saveComment(commentId);
           $(document).off("click", handleOutsideClick);
         }
@@ -265,6 +293,10 @@
     margin-left: -50px;
     opacity: 0;
     transition: opacity 0.3s;
+  }
+  .comment_info p {
+    font-size: 12px;
+    color: var(--secondary-text-color);
   }
 </style>
 <!--ajax import for like unlike no refresh-->

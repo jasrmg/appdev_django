@@ -68,7 +68,7 @@ class Comment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Comment by {self.user.username} on {self.post.title}"
+        return f"{self.user.username}: {self.message}"
 
 
 # Likes Model

@@ -287,9 +287,16 @@ $(document).ready(function () {
   //CREATE COMMENT NAA SA COMMENT.JS
   //para show sa comment form:
   $(document).on("click", ".comment_button", function () {
-    $(this).closest(".post").find(".commentForm").slideToggle(400);
+    $(this)
+      .closest(".post")
+      .find(".commentForm")
+      .slideToggle(400, function () {
+        const $textarea = $(this).find("textarea");
+        if ($textarea.is(":visible")) {
+          $textarea.focus();
+        }
+      });
   });
-  
 
   //FOLLOW:
   $("#followBtn").on("click", function (e) {

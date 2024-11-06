@@ -261,15 +261,34 @@ def profile_view(request, username):
     'comment_set',
     # 'like_set'  # Prefetch likes for the current user
 )
-    
+
+    initial_comment_limit = 2   
     for post in posts:
         comments = list(post.comment_set.all())
         post.comment_count = post.comment_set.count()
+        # post.initial_comments = comments[:initial_comment_limit]
+        # post.remaining_comments = comments[initial_comment_limit:]
+
+        post.initial_comments = comments[:initial_comment_limit]
+        post.remaining_comments = comments[initial_comment_limit:]
+        print('INITIAL COMMENTS: ', comments[:initial_comment_limit])
+        print('REMAINING COMMENTS: ', comments[initial_comment_limit:])
+
         # Fetch the first 3 ingredients
         post.ingredients_list = [ingredient.strip() for ingredient in post.ingredients.split(',')]
         post.ingredients_list = post.ingredients_list[:3]
         # 2 random comments
         post.random_comments = random.sample(comments, min(2, len(comments)))
+
+    #AJAX REQUEST FOR LOAD MORE:
+    # if request.META.get('HTTP:_X_REQUESTED_WITH') == 'XMLHttpRequest':
+    #   if 'load_more_comments' in request.POST:
+    #     post_id = request.POST.get('post_id')
+    #     post = get_object_or_404(Post, pk=post_id) 
+        # remaining_comments = post.remaining_comments[:2]
+        # post.remaining_comments = post.remaining_comments[2:]
+        # comments_data = [{'content': comment.content} for comment in remaining_comments]
+        # return JsonResponse({'comments': comments_data, 'post_id': post_id})
 
     paginator = Paginator(posts, 1)  # Display one post per page
     page_number = request.GET.get('page', 1)
@@ -329,6 +348,10 @@ def profile_view(request, username):
         'number_of_following': number_of_following,
         'random_follower': random_followers,
         'liked_posts': liked_posts,
+
+        'initial_comment_limit': initial_comment_limit,
+        'comment_counts': {post.post_id: post.comment_count for post in posts},
+        
     }
     return render(request, 'OnlyPans/profile_view.html', context)
 
@@ -418,11 +441,17 @@ def delete_comment(request, comment_id):
         comment.delete()
         return JsonResponse({'status': 'success', 'response': 'YAWA KA BAI'})
     return JsonResponse({'status': 'error'}, status=403)
-#LOAD MORE COMMENTS:
+# LOAD MORE COMMENTS VIEW
 def load_more_comments(request, post_id):
-    offset = int(request.GET.get('offset', 0))
-    limit = int(request.GET.get('limit', 2))
-    comments = Comment.objects.filter(post_id=post_id).order_by('-created_at')[offset:offset + limit]
+    print(int(request.GET.get('offset')))
+    offset = int(request.GET.get('offset', 2))
+    print(offset)
+    limit = int(request.GET.get('LIMIT', 2))
+
+    total_comments = Comment.objects.filter(post_id=post_id).count()
+
+    comments = Comment.objects.filter(post_id=post_id).order_by('created_at')[offset: offset + limit]
+    print('comments: ', Comment.objects.filter(post_id=post_id).order_by('-created_at')[2:4])
 
     comments_data = []
     for comment in comments:
@@ -431,11 +460,65 @@ def load_more_comments(request, post_id):
             'post_id': comment.post_id,
             'user_avatar': comment.user.avatar.url,
             'user_name': f"{comment.user.first_name} {comment.user.last_name}",
-            'created_at': comment.created_at.strftime("%Y-%m-%d %H:%M:%S"),  # Format as needed
+            'created_at': time_since(comment.created_at), 
             'message': comment.message,
         })
+    print('DATA:')
+    for comment in comments_data:
+      print(comment['message'])
+    print('LEN COMMENTS: ', len(comments))
+    print('LIMIT: ', limit)
+    print('T OR F: ', len(comments) == limit)
+    # has_more = len(comments) == limit  # True if there are more comments
+    has_more = (offset + limit) < total_comments
+    return JsonResponse({'comments': comments_data, 'has_more': has_more, 'total_comments':total_comments})
 
-    return JsonResponse({'comments': comments_data})
+# from django.utils.timezone import now
+# #time since
+# def time_since(created_at):
+#   delta = now() - created_at
+#   hours = delta.days * 24 + delta.seconds // 3600
+#   minutes = (delta.seconds % 3600) // 60
+#   if hours > 0:
+#     hour_label = "hours" if hours > 1 else "hour"
+#     minute_label = "minutes" if minutes > 1 else "minute"
+#     return f'{hours} {hour_label}, {minutes} {minute_label}'
+#   else:
+#     minute_label = "minutes" if minutes > 1 else "minute"
+#     return f'{minutes} {minute_label}'
+from django.utils import timezone
+from django.utils.timesince import timesince
+
+def time_since(created_at):
+    now = timezone.now()  # Get the current time with timezone awareness
+    delta = now - created_at
+    # Use Django's timesince to get the time difference as a string
+    time_diff = timesince(created_at)
+    # Split the time difference into parts (e.g., "2 weeks", "3 days")
+    time_parts = time_diff.split()
+
+    # Check for "just now" case
+    if 'just' in time_parts:
+        return "Just now"
+    
+    # Define the possible time units in order of priority
+    time_units = ["month", "week", "day", "hour", "minute"]
+    
+    # Iterate over the time_parts and check which time unit is present
+    for i in range(0, len(time_parts), 2):  # The number is always at index 0, unit at index 1
+        number = int(time_parts[i])  # The number part of the time (e.g., 2, 3, 18)
+        unit = time_parts[i + 1]  # The time unit (e.g., month, weeks, days, etc.)
+        
+        # Check if the current unit is one of the time units we're looking for
+        for unit_name in time_units:
+            if unit_name in unit:
+                # Return the first (highest) unit found
+                return f"{number} {unit_name}" + ("s" if number > 1 else "")
+    
+    # Fallback if no unit is found
+    return time_diff
+
+
 
 #search
 

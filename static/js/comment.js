@@ -123,50 +123,92 @@ $("#confirmDeleteBtn").on("click", function () {
 });
 
 //--------------------------LOAD MORE--------------------------\\
-$(document).on("click", "#seeMore", function () {
-  const postId = $(this).closest(".comments_section").data("post-id"); // Get post ID from the closest parent
-  console.log("Post ID: ", postId); // Debugging: check postId
+let offset = 2; // Start with the initial comments loaded
+const LIMIT = 2; // Number of comments to load each time
 
-  const currentCount = $(".comment").length; // Get the current number of comments displayed
-  console.log("Current Comment Count: ", currentCount); // Debugging: check the current count
+$("#seeMore").on("click", function () {
+  const postId = $(this).closest(".comments_section").data("post-id");
 
   $.ajax({
-    type: "GET",
-    url: `/load_more_comments/${postId}/`, // Use the postId
+    url: `/load_more_comments/${postId}/`,
     data: {
-      offset: currentCount, // Send the current number of comments as offset
-      limit: 2, // Load 2 more comments
+      offset: offset, // Use the current offset
+      limit: LIMIT, // Ensure 'limit' is lowercase
     },
-    success: function (response) {
-      if (response.comments.length > 0) {
-        response.comments.forEach((comment) => {
-          const newComment = `
-                      <div class="comment" data-post-id="${comment.post_id}">
-                          <img src="${comment.user_avatar}" alt="pp" class="avatar_post" />
-                          <div class="comment_content">
-                              <div class="comment_info">
-                                  <h4>${comment.user_name}</h4>
-                                  <p>${comment.created_at} ago</p>
-                              </div>
-                              <div contenteditable="false" id="comment-text-${comment.comment_id}">
-                                  ${comment.message}
-                              </div>
-                          </div>
-                          <div class="comment-controls">
-                              <i class="fa-solid fa-pencil-alt pen-icon" style="color: #33221a"></i>
-                              <button class="close-button" data-comment-id="${comment.comment_id}">&times;</button>
-                          </div>
-                      </div>
-                  `;
-          $(".comments_section").append(newComment); // Append the new comment
-        });
+    type: "GET",
+    success: function (data) {
+      // Append the new comments
+      const comments = data.comments;
+      const $commentsContainer = $(
+        `.comments_section[data-post-id="${postId}"]`
+      );
+
+      // Iterate over the returned comments and append them
+
+      comments.forEach(function (comment) {
+        var loggedInUsername = $(`#commentsSection-${comment.post_id}`).data(
+          "loggedUserName"
+        );
+        console.log("user: ", loggedInUsername);
+        const isSameUser = comment.user_name === loggedInUsername;
+        console.log(comment.user_name);
+        console.log(isSameUser);
+        const newComment = `
+        <div class="comment" data-post-id="${comment.post_id}">
+            <img src="${
+              comment.user_avatar
+            }" alt="Avatar" class="avatar_post" />
+            <div class="comment_content">
+                <div class="comment_info">
+                    <h4>${comment.user_name}</h4>
+                    <p>${comment.created_at} ago</p>
+                </div>
+                <div contenteditable="false" id="comment-text-${
+                  comment.comment_id
+                }">
+                    ${comment.message}
+                </div>
+            </div>
+            ${
+              isSameUser
+                ? `
+            <div class="comment-controls">
+                <i class="fa-solid fa-pencil-alt pen-icon" style="color: #33221a" 
+                   id="editCommentBtn-${comment.comment_id}" 
+                   onclick="toggleEdit('${comment.comment_id}')"></i>
+    
+                <button class="close-button" 
+                        data-comment-id="${comment.comment_id}" 
+                        onclick="openDeleteModal('${comment.comment_id}')">
+                    &times;
+                </button>
+            </div>
+            `
+                : ""
+            }
+        </div>
+    `;
+        $commentsContainer.append(newComment);
+      });
+
+      console.log("offset: ", offset);
+
+      // Update the offset
+      offset += comments.length; // Increment offset by the number of loaded comments
+      console.log("offset after: ", offset);
+      console.log("comments length: ", comments.length);
+
+      // Check if there are more comments to load
+      if (!data.has_more) {
+        $("#seeMore").remove(); // Remove the Load More button if no more comments
       } else {
-        $("#seeMore").hide(); // Hide the load more button if no more comments
+        // Move the Load More button below the new comments
+        const seeMoreButton = $("#seeMore").detach(); // Detach to move
+        $commentsContainer.append(seeMoreButton); // Append it again
       }
     },
-    error: function (xhr, status, error) {
-      console.error("Error loading more comments: ", error);
-      alert("There was an error loading more comments.");
+    error: function () {
+      console.error("Error loading more comments");
     },
   });
 });
