@@ -123,6 +123,10 @@ $(document).on("click", ".close", function () {
   const modal = document.getElementById("commentDeleteConfirmationModal");
   modal.style.display = "none";
 });
+$(document).on("click", ".cancel-delete-button", function () {
+  const modal = document.getElementById("commentDeleteConfirmationModal");
+  modal.style.display = "none";
+});
 
 // Confirm deletion and make AJAX call
 $("#confirmDeleteBtn").on("click", function () {

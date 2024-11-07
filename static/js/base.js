@@ -306,6 +306,7 @@ $(document).ready(function () {
         }
       });
   });
+  const $deleteCommentModal = $("#commentDeleteConfirmationModal");
 
   //FOLLOW:
   $("#followBtn").on("click", function (e) {
@@ -479,6 +480,8 @@ $(document).ready(function () {
       toggleModal($deletePostModal, false);
     else if ($(event.target).is($editPostModal))
       toggleModal($editPostModal, false);
+    else if ($(event.target).is($deleteCommentModal))
+      toggleModal($deleteCommentModal, false);
   });
 });
 //----------------OUTSIDE THE $(document).ready(function())--------------------------\\
