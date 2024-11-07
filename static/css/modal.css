@@ -1,0 +1,335 @@
+/*GLOBAL FOR MODALS*/
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: red;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-header h2 {
+  text-align: center;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: center;
+}
+
+/*FOR CREATE POST EDIT POST(FORM FIELDS)*/
+/* Styling for input fields (description, ingredients, category) */
+.form-field input,
+.form-field select,
+.form-field textarea {
+  background-color: #fdeed8;
+  border: 1px solid #33221a;
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 5px;
+  text-align: center;
+}
+
+/*EDIT_PROFILE.HTML*/
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+/* Edit Profile modal content */
+.editProfilecontent {
+  background-color: #e6d4bc;
+  margin: 5.9% auto;
+  /* Center modal vertically */
+  padding: 20px;
+  border: 2px solid #33221a;
+  width: 30%;
+  border-radius: 10px;
+  text-align: center;
+  /* Center text inside */
+}
+
+/* Close button styles */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: red;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+/* Submit button styles */
+#editProfileSubmitbtn {
+  font-weight: 500;
+  padding: 10px 20px;
+  background-color: #33221a;
+  color: #fdeed8;
+  border: 2px solid #33221a;
+  border-radius: 10px;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#editProfileSubmitbtn:hover {
+  background-color: #fdeed8;
+  color: #33221a;
+  border: 2px solid #33221a;
+}
+
+/* Error message styles */
+#errorMsg {
+  color: red;
+  text-align: center;
+  display: none;
+  /* Initially hidden */
+}
+
+.form-field input[type="file"] {
+  margin-bottom: 20px;
+  /* Margin below the image upload input */
+}
+
+/*CREATE_POST.HTML*/
+.createPostContent {
+  background-color: #e6d4bc;
+  margin: 2.85% auto;
+  padding: 20px;
+  border: 2px solid #33221a;
+  width: 50%;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.createPost input[type="text"] {
+  border-radius: 10px;
+}
+
+#createPostSubmitbtn {
+  padding: 8px 18px;
+  background-color: #33221a;
+  color: #fdeed8;
+  border: 2px solid #33221a;
+  border-radius: 10px;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#createPostSubmitbtn:hover {
+  background-color: #fdeed8;
+  color: #33221a;
+  border: 2px solid #33221a;
+}
+
+/* Error message styling */
+#errorMsg {
+  color: red;
+  text-align: center;
+  display: none;
+  /* Initially hidden */
+}
+
+/* Centering the image upload input */
+.form-field {
+  text-align: center;
+  /* Center the content */
+}
+
+.form-field input[type="file"] {
+  margin-bottom: 20px;
+  /* Margin below the image upload input */
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  outline: none;
+  /* Remove default outline */
+  border-color: #1c1b1b;
+  /* Change border color on focus */
+  box-shadow: 0 0 5px rgba(28, 27, 27, 0.5);
+  /* Optional shadow on focus */
+}
+
+/*EDITPOST_MODAL.HTML*/
+.editPostContent {
+  background-color: #e6d4bc;
+  margin: 2.85% auto;
+  padding: 20px;
+  border: 2px solid #33221a;
+  width: 50%;
+  border-radius: 10px;
+  text-align: center;
+}
+
+/*Update button styles*/
+#editPostSubmitbtn {
+  font-weight: 500;
+  padding: 10px 20px;
+  background-color: #33221a;
+  color: #fdeed8;
+  border: 2px solid #33221a;
+  border-radius: 10px;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#editPostSubmitbtn:hover {
+  background-color: #fdeed8;
+  color: #33221a;
+  border: 2px solid #33221a;
+}
+
+
+
+/* Center text in textareas */
+.form-field textarea {
+  height: 100px;
+  font-family: Poppins;
+}
+
+.modal-footer input[type="submit"] {
+  padding: 10px 20px;
+  background-color: #33221a;
+  color: #fdeed8;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+}
+
+
+/*COMMENT_DELETE_CONFIRMATION.HTML*/
+.modal-content {
+  background-color: #e6d4bc;
+  margin: 15% auto;
+  padding: 20px;
+  border: 2px solid #33221a;
+  width: 30%;
+  border-radius: 10px;
+}
+
+.modal-body p {
+  text-align: center;
+}
+
+.edit_icon:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.confirm-delete-button,
+.cancel-delete-button {
+  margin-top: 10px;
+  font-weight: 500;
+  padding: 10px 20px;
+  background-color: #33221a;
+  color: #fdeed8;
+  border: 2px solid #33221a;
+  border-radius: 10px;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.confirm-delete-button:hover,
+.cancel-delete-button:hover {
+  background-color: #f6e3d1;
+  color: #33221a;
+  border: 2px solid #33221a;
+}
+
+/*EDIT_BIO.HTML*/
+.editBiocontent {
+  background-color: #e6d4bc;
+  margin: 15% auto;
+  padding: 20px;
+  border: 2px solid #33221a;
+  width: 30%;
+  border-radius: 10px;
+}
+
+/* Submit button styling */
+#editBioSubmitbtn {
+  padding: 10px 20px;
+  background-color: #33221a;
+  color: #fdeed8;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+}
+
+textarea {
+  padding: 0;
+  margin: 0;
+  border: none;
+  outline: none;
+  resize: none;
+  text-indent: 0;
+  line-height: normal;
+  overflow: auto;
+  width: 80%;
+  box-sizing: border-box;
+}
+
+#editBioSubmitbtn {
+  margin-top: 10px;
+  font-weight: 500;
+  padding: 10px 20px;
+  background-color: #33221a;
+  color: #fdeed8;
+  border: 2px solid #33221a;
+  border-radius: 10px;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#editBioSubmitbtn:hover {
+  background-color: #f6e3d1;
+  /* Lighter background on hover */
+  color: #33221a;
+  /* Change text color on hover */
+  border: 2px solid #33221a;
+}

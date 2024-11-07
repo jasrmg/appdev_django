@@ -1,116 +1,5 @@
 {% load static %}
 
-<style>
-  /* Modal overlay styles */
-  .modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.6);
-  }
-
-  /* Edit Profile modal content */
-  .editProfilecontent {
-    background-color: #e6d4bc;
-    margin: 5.9% auto; /* Center modal vertically */
-    padding: 20px;
-    border: 2px solid #33221a;
-    width: 30%;
-    border-radius: 10px;
-    text-align: center; /* Center text inside */
-  }
-
-  /* Close button styles */
-  .close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-  }
-
-  .close:hover,
-  .close:focus {
-    color: red;
-    text-decoration: none;
-    cursor: pointer;
-  }
-
-  /* Header styles */
-  .modal-header h2 {
-    text-align: center;
-  }
-
-  /* Footer styles */
-  .modal-footer {
-    display: flex;
-    justify-content: center;
-  }
-
-  /* Submit button styles */
-  #editProfileSubmitbtn {
-    font-weight: 500;
-    padding: 10px 20px;
-    background-color: #33221a;
-    color: #fdeed8;
-    border: 2px solid #33221a;
-    border-radius: 10px;
-    font-size: 14px;
-    letter-spacing: 1.5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  #editProfileSubmitbtn:hover {
-    background-color: #fdeed8;
-    color: #33221a;
-    border: 2px solid #33221a;
-  }
-
-  /* Error message styles */
-  #errorMsg {
-    color: red;
-    text-align: center;
-    display: none; /* Initially hidden */
-  }
-
-  /* Form field styles */
-  .form-field input,
-  .form-field select,
-  .form-field textarea {
-    background-color: #fdeed8;
-    border: 1px solid #33221a;
-    border-radius: 5px;
-    padding: 10px;
-    width: 100%;
-    box-sizing: border-box;
-    margin-top: 5px;
-  }
-
-  /* Center text in textareas */
-  .form-field textarea {
-    text-align: center; /* Center text */
-    height: 100px; /* Adjust height as needed */
-  }
-
-  /* Centering file input */
-  .form-field {
-    text-align: center; /* Center the content */
-  }
-
-  /* Margin for submit button */
-  #editProfileSubmitbtn {
-    margin-top: 20px; /* Add margin above the submit button */
-  }
-
-  .form-field input[type="file"] {
-    margin-bottom: 20px; /* Margin below the image upload input */
-  }
-</style>
-
 <!-- Modal HTML -->
 <div id="editProfile" class="modal">
   <div class="editProfilecontent">
@@ -119,26 +8,16 @@
       <h2>Edit Profile</h2>
     </div>
     <div class="modal-body">
-      <form
-        action="{% url 'edit_profile' request.user.username %}"
-        method="POST"
-        enctype="multipart/form-data"
-      >
+      <form action="{% url 'edit_profile' request.user.username %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
 
         <div class="form-field">{{ editprofile_form.as_p }}</div>
 
         <div class="modal-footer">
-          <input
-            type="submit"
-            value="Submit"
-            id="editProfileSubmitbtn"
-            disabled
-          />
+          <input type="submit" value="Submit" id="editProfileSubmitbtn" disabled />
           <!-- Initially disabled -->
         </div>
       </form>
     </div>
   </div>
 </div>
-

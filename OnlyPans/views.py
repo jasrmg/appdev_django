@@ -231,6 +231,7 @@ def delete_post(request, post_id):
     return redirect('profile', username=request.user.username)
 
 #profile view main code
+import re
 @login_required
 def profile_view(request, username):
     user = get_object_or_404(User, username=username)
@@ -263,6 +264,7 @@ def profile_view(request, username):
 )
 
     initial_comment_limit = 2   
+    posts_with_word_count = []
     for post in posts:
         comments = list(post.comment_set.all())
         post.comment_count = post.comment_set.count()
@@ -271,14 +273,18 @@ def profile_view(request, username):
 
         post.initial_comments = comments[:initial_comment_limit]
         post.remaining_comments = comments[initial_comment_limit:]
-        print('INITIAL COMMENTS: ', comments[:initial_comment_limit])
-        print('REMAINING COMMENTS: ', comments[initial_comment_limit:])
+        # print('INITIAL COMMENTS: ', comments[:initial_comment_limit])
+        # print('REMAINING COMMENTS: ', comments[initial_comment_limit:])
 
-        # Fetch the first 3 ingredients
-        post.ingredients_list = [ingredient.strip() for ingredient in post.ingredients.split(',')]
-        post.ingredients_list = post.ingredients_list[:3]
+        # split the comments based on comma, wont strip it if its within ()
+        post.ingredients_list = [ingredient.strip() for ingredient in re.split(r',\s*(?![^()]*\))', post.ingredients)]
+        post.ingredients_list = post.ingredients_list[::]
         # 2 random comments
         post.random_comments = random.sample(comments, min(2, len(comments)))
+
+        #count sa # of words sa post:
+        post.word_count = post.word_count()
+        posts_with_word_count.append(post)
 
     #AJAX REQUEST FOR LOAD MORE:
     # if request.META.get('HTTP:_X_REQUESTED_WITH') == 'XMLHttpRequest':
@@ -312,8 +318,8 @@ def profile_view(request, username):
 
     # Handle AJAX requests
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-        print("visible posts ids: ", visible_posts_ids)
-        print("page obj: ", page_obj)
+        # print("visible posts ids: ", visible_posts_ids)
+        # print("page obj: ", page_obj)
         if not page_obj:  # If there are no posts to show
             return HttpResponse('')  # Return an empty response for AJAX
         return render(request, 'OnlyPans/post.html', {'posts': page_obj, 'liked_posts': liked_posts})
@@ -351,6 +357,7 @@ def profile_view(request, username):
 
         'initial_comment_limit': initial_comment_limit,
         'comment_counts': {post.post_id: post.comment_count for post in posts},
+        'post_word_count': posts_with_word_count, 
         
     }
     return render(request, 'OnlyPans/profile_view.html', context)
