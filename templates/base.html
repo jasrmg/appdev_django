@@ -1,85 +1,130 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      {% block title %} {% if title %} {{ title }} {% else %} {{ query }} -
-      Search Results | OnlyPans {% endif %} {% endblock %}
-    </title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-    <!--icon cdn-->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
 
-    <!--browser icon-->
-    <link
-      rel="icon"
-      href="{% static 'images/icons/logo onlypans.ico' %}"
-      type="image/x-icon"
-    />
-  </head>
-  <body>
-    <!--NAVBAR-->
-    <nav>
-      <div class="left_side">
-        <img
-          src="{% static 'images/onlypans_logo.png' %}"
-          alt="OnlyPans Logo"
-          class="logo"
-        />
-        <p class="title">OnlyPans</p>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>
+    {% block title %} {% if title %} {{ title }} {% else %} {{ query }} -
+    Search Results | OnlyPans {% endif %} {% endblock %}
+  </title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/changepassword.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/modal.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/navbar.css' %}" />
+  <!--icon cdn-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!--browser icon-->
+  <link rel="icon" href="{% static 'images/icons/logo onlypans.ico' %}" type="image/x-icon" />
+</head>
+
+<body>
+  <!--NAVBAR-->
+  <nav>
+    <div class="left_side">
+      <img src="{% static 'images/onlypans_logo.png' %}" alt="OnlyPans Logo" class="logo" />
+      <p class="title">OnlyPans</p>
+    </div>
+
+    <div class="mid">
+      <div class="search-container">
+        <form action="{% url 'search' %}" method="GET">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" name="q" placeholder="Search..." class="searchbar" value="{{ query }}" />
+        </form>
       </div>
+      <a href="{% url 'home' %}">
+        <i class="icon fas fa-home icon home-icon"></i>
+      </a>
 
-      <div class="mid">
-        <div class="search-container">
-          <form action="{% url 'search' %}" method="GET">
-            <i class="fas fa-search search-icon"></i>
-            <input
-              type="text"
-              name="q"
-              placeholder="Search..."
-              class="searchbar"
-              value="{{ query }}"
-            />
-          </form>
-        </div>
-        <a href="{% url 'home' %}">
-          <i class="fas fa-home icon home-icon"></i>
-        </a>
-
-        <i class="fas fa-utensils icon food-icon"></i>
-
-        <!-- <i class="fas fa-bell icon notification-icon"></i> -->
-      </div>
-
-      <div class="right">
-        <div class="user-avatar">
-          <a href="{% url 'profile' request.user.username %}">
-            <img
-              src="{{ request.user.avatar.url }}"
-              alt="User Avatar"
-              class="avatar"
-            />
-          </a>
-          <span class="drop-down-arrow" onclick="toggleDropdown(event)">
-            <i class="fas fa-chevron-down"></i>
-          </span>
-          <div class="dropdown-content" id="userDropdown">
-            <a href="#">Change Password</a>
-            <!--CHANGE PASSWORD MODAL-->
-            <a href="{% url 'logout' %}">Logout</a>
+      <div class="food-dropdown-container">
+        <span id="foodDropdownButton">
+          <i class="fas fa-utensils icon food-icon"></i>
+        </span>
+        <div class="food-dropdown" id="foodDropdown">
+          <div class="food-column">
+            <a>Meat</a>
+            <a>Chicken</a>
+            <a>Seafood</a>
+            <a>Veggies</a>
+            <a>Dessert</a>
+            <a>Snack</a>
+            <a>Beverages</a>
           </div>
         </div>
       </div>
-    </nav>
 
-    {% block content %} {% endblock %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <script src="{% static 'js/base.js' %}"></script>
-  </body>
+    </div>
+
+    <div class="right">
+      <div class="user-avatar">
+        <a href="{% url 'profile' request.user.username %}">
+          <img src="{{ request.user.avatar.url }}" alt="User Avatar" class="avatar" />
+        </a>
+        <span class="drop-down-arrow" id="userDropdownButton">
+          <i class="fas fa-chevron-down"></i>
+        </span>
+        <div class="dropdown-content" id="userDropdown">
+          <a onclick="openModal()">Change Password</a>
+          <!--CHANGE PASSWORD MODAL-->
+          <div id="changePasswordModal" class="modal">
+            <div id="change-password-modal-content">
+              <div class="change-password-modal-header">
+                <span class="close" id="closeChangePasswordModal">&times;</span>
+                <h2>Change Password</h2>
+              </div>
+              <div class="change-password-modal-body">
+                <form method="POST" action="{% url 'change_password' request.user.username %}">
+                  {% csrf_token %}
+                  <div class="form-field">
+                    <label for="old_password">Old Password</label>
+                    <div class="password-wrapper">
+                      <input type="password" id="id_old_password" name="old_password" required>
+                      <i class="fas fa-eye-slash" onclick="togglePassword('id_old_password')"></i>
+                    </div>
+                  </div>
+                  <div class="form-field">
+                    <label for="new_password1">New Password</label>
+                    <div class="password-wrapper">
+                      <input type="password" id="id_new_password1" name="new_password1" required>
+                      <i class="fas fa-eye-slash" onclick="togglePassword('id_new_password1')"></i>
+                    </div>
+                  </div>
+                  <div class="form-field">
+                    <label for="new_password2">Confirm New Password</label>
+                    <div class="password-wrapper">
+                      <input type="password" id="id_new_password2" name="new_password2" required>
+                      <i class="fas fa-eye-slash" onclick="togglePassword('id_new_password2')"></i>
+                    </div>
+                  </div>
+                  <div class="errors">
+                    {% if messages %}
+                    {% for message in messages %}
+                    <span>{{ message }}</span>
+                    {% endfor %}
+                    {% endif %}
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit">Submit</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <a href="{% url 'logout' %}">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  {% block content %} {% endblock %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="{% static 'js/base.js' %}"></script>
+  <script src="{% static 'js/changepassword.js' %}"></script>
+  <script src="{% static 'js/navbar.js' %}"></script>
+</body>
+
 </html>

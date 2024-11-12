@@ -1,12 +1,14 @@
 from django.urls import path
 from . import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
   path('', views.test),
   path('signin/', views.login_view, name='login'),#login
   path('signup/', views.signup_view, name='signup'),#register
   path('logout/', views.logout_view, name='logout'),
-  
+  #change password
+  path('change-password/<str:username>/', views.changepassword_view, name='change_password'),
 
   #logged in user:
   path('profile/<str:username>/', views.profile_view, name='profile'),

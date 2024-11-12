@@ -1,15 +1,5 @@
 $(document).ready(function () {
-  //close the dropdown if u click somewhere else:
-  $(document).on("click", function (event) {
-    var $dropdown = $("#userDropdown");
-    if (
-      $dropdown.hasClass("show") &&
-      !$dropdown.is(event.target) &&
-      $dropdown.has(event.target).length === 0
-    ) {
-      $dropdown.removeClass("show");
-    }
-  });
+  
 
   //EDITPROFILE:
   const $editProfileForm = $("#editProfile form");
@@ -485,11 +475,7 @@ $(document).ready(function () {
   });
 });
 //----------------OUTSIDE THE $(document).ready(function())--------------------------\\
-//NAVBAR DROPDOWN SETTINGS:
-function toggleDropdown(event) {
-  event.stopPropagation();
-  document.getElementById("userDropdown").classList.toggle("show");
-}
+
 
 /* sa like nako// Variables for delete post
 let postIdToDelete = null; // Store the ID of the post to delete

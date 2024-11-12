@@ -11,20 +11,6 @@
   background-color: rgba(0, 0, 0, 0.8);
 }
 
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: red;
-  text-decoration: none;
-  cursor: pointer;
-}
-
 .modal-header h2 {
   text-align: center;
 }
@@ -32,6 +18,26 @@
 .modal-footer {
   display: flex;
   justify-content: center;
+  gap: 40px;
+  margin-top: 10px;
+}
+
+#closeDeletePostModal:hover,
+#closeDeletePostModal:focus,
+#editPostX:hover,
+#editPostX:focus,
+#closeDeleteModal:hover,
+#closeDeleteModal:focus,
+#editX:hover,
+#editX:focus,
+#createPostX:hover,
+#createPostX:focus,
+#bioClose:hover,
+#bioClose:focus {
+  color: var(--red-color);
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 24px;
 }
 
 /*FOR CREATE POST EDIT POST(FORM FIELDS)*/
@@ -75,20 +81,11 @@
   /* Center text inside */
 }
 
-/* Close button styles */
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
+.form-field label {
+  color: #1c1b1b;
 }
 
-.close:hover,
-.close:focus {
-  color: red;
-  text-decoration: none;
-  cursor: pointer;
-}
+
 
 
 /* Submit button styles */
@@ -333,3 +330,5 @@ textarea {
   /* Change text color on hover */
   border: 2px solid #33221a;
 }
+
+/*POST_DELETE_CONFIRMATION.HTML*/

@@ -1,7 +1,7 @@
 import random
 from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth import login, logout, get_user_model
+from django.contrib.auth import login, logout, get_user_model, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
@@ -12,14 +12,35 @@ from django.http import JsonResponse
 
 #for comment submission no refresh
 from django.views.decorators.http import require_POST
-
 from OnlyPans.models import Category, Follow, Like, Post, PostImage, Comment
-
 from .forms import EditBioForm, EditPostForm, EditProfileForm, CreatePostForm, SignupForm, LoginForm
+#change password
+from django.contrib.auth.forms import PasswordChangeForm
+from urllib.parse import unquote
 
 # Create your views here.
 def test(request):
   return HttpResponse('Hello World!')
+
+@login_required
+def changepassword_view(request, username):
+  if request.method == 'POST':
+    form = PasswordChangeForm(user=request.user, data=request.POST)
+    if form.is_valid():
+      user = form.save()
+      update_session_auth_hash(request, user)  # Keeps the user logged in after password change
+      messages.success(request, 'Password Changed Successfully!')
+      return redirect('profile', username=unquote(username))
+    else:
+      # If the form is invalid, capture specific error messages
+      for field, errors in form.errors.items():
+        for error in errors:
+          messages.error(request, f"{error}")
+          return redirect('profile', username=unquote(username))
+  else:
+    form = PasswordChangeForm(user=request.user)
+    
+  return render(request, 'OnlyPans/profile_view.html', {'form': form})
 
 def home(request):
   context = {
@@ -27,10 +48,6 @@ def home(request):
     'sample_text': 'Hello World | OnlyPans Home',
   }
   return render(request, 'OnlyPans/home_test.html', context)
-
-#for capitalizing the first letter of the name:
-# def to_title_case(name):
-#   return ' '.join(word.capitalize() for word in name.split())  
 
 def signup_view(request):
   if request.method == 'POST':
@@ -235,7 +252,8 @@ import re
 @login_required
 def profile_view(request, username):
     user = get_object_or_404(User, username=username)
-    
+    print('USER: ', user)
+    print('USERNAME: ', username)
     # Flags
     is_own_profile = request.user == user  # Check if the user is the authenticated user
     is_following = Follow.objects.filter(follower=request.user, followed=user).exists()  # Check if the visiting user is following the account

@@ -1,0 +1,217 @@
+/*NAVBAR*/
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 80px;
+  background-color: var(--accent-color);
+  color: var(--primary-color);
+}
+
+.left_side {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  margin: 0 20px;
+  border-radius: 60%;
+  background-color: var(--primary-color);
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.mid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 100px;
+}
+
+.search-container {
+  position: relative;
+}
+
+.searchbar {
+  padding: 5px 10px;
+  border: 1px solid var(--secondary-color);
+  border-radius: 20px;
+  width: 250px;
+  height: 30px;
+  outline: none;
+}
+
+.searchbar::placeholder {
+  color: var(--secondary-color);
+  font-size: 14px;
+}
+
+.search-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--accent-color);
+}
+
+.icon {
+  margin: 0 10px;
+  font-size: 1.5em;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  display: inline-block;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.user-avatar,
+.food-dropdown-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background-color: var(--secondary-color);
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  border-radius: 5px;
+}
+
+.dropdown-content a,
+.food-dropdown a {
+  color: var(--primary-color);
+  padding: 12px 16px;
+  display: block;
+}
+
+.dropdown-content a:hover,
+.food-dropdown a:hover {
+  background-color: var(--accent-color);
+}
+
+.drop-down-arrow,
+#foodDropdownButton {
+  cursor: pointer;
+  color: var(--primary-color);
+  margin-left: 5px;
+}
+
+
+
+/*categories dropdown*/
+.food-dropdown {
+  display: none;
+  position: absolute;
+  top: 30px;
+  left: 0;
+  background-color: var(--secondary-color);
+  border: 1px solid var(--accent-color);
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  width: 200px;
+  z-index: 1;
+}
+
+
+.show {
+  display: block;
+}
+
+
+
+/* Tablet view */
+@media (max-width: 768px) {
+  nav {
+    padding: 10px 40px;
+  }
+
+  .title {
+    font-size: 1.2rem;
+  }
+
+  .mid {
+    gap: 20px;
+  }
+
+  .searchbar {
+    width: 200px;
+    font-size: 13px;
+  }
+
+  .icon {
+    font-size: 1.2em;
+  }
+}
+
+/* Mobile view */
+@media (max-width: 480px) {
+  nav {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 20px;
+  }
+
+  .left_side,
+  .mid,
+  .right {
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .title {
+    font-size: 1rem;
+  }
+
+  .mid {
+    gap: 10px;
+  }
+
+  .searchbar {
+    width: 150px;
+    font-size: 12px;
+  }
+
+  .icon {
+    font-size: 1.1em;
+  }
+
+  .avatar {
+    width: 30px;
+    height: 30px;
+  }
+}
