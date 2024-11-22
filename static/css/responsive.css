@@ -1,0 +1,35 @@
+/* Media query for screens smaller than 921px */
+@media screen and (max-width: 922px) {
+
+  /* Stack the profile, sidebar, and main content vertically */
+  .profile,
+  .body_content,
+  .sidebar,
+  .main_content {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .body_content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .sidebar {
+    width: 505px;
+  }
+
+  .post {
+    margin: 15px auto;
+    width: 100%;
+    max-width: 505px;
+    padding: 20px;
+  }
+
+  .main_content,
+  .sidebar {
+    flex: 0 0 auto;
+    margin-top: 15px;
+    position: static;
+  }
+}

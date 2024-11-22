@@ -2,6 +2,7 @@
 body {
   font-family: "Poppins", sans-serif;
 }
+
 .profile {
   margin-top: 10px;
   display: flex;
@@ -9,9 +10,11 @@ body {
   color: var(--secondary-color);
   background: var(--darker-primary-color);
   padding: 20px;
-  width: 60vw;
-  border-radius: 5px; /* Added border-radius for a softer look */
+  width: 921px;
+  border-radius: 5px;
+  /* Added border-radius for a softer look */
 }
+
 .profile img {
   border-radius: 50%;
   width: 120px;
@@ -19,27 +22,34 @@ body {
   margin-right: 20px;
   border: 3px solid var(--secondary-color);
 }
+
 .profile h1 {
   margin: 0;
   font-size: 30px;
   font-weight: bold;
   line-height: 20px;
 }
+
 .profile p {
   margin: 5px 0;
 }
+
 a {
   text-decoration: none;
 }
+
 .followers_avatar img {
   width: 30px;
   height: 30px;
   border: 2px solid var(--secondary-color);
   margin: 0;
 }
+
 .buttons {
-  margin-left: auto; /* Aligns buttons to the right */
+  margin-left: auto;
+  /* Aligns buttons to the right */
 }
+
 .button {
   padding: 10px 15px;
   background: var(--accent-color);
@@ -48,16 +58,19 @@ a {
   border-radius: 5px;
   font-weight: bold;
   cursor: pointer;
-  margin-left: 10px; /* Space between buttons */
+  margin-left: 10px;
+  /* Space between buttons */
   letter-spacing: 1.5px;
 }
+
 /*body below the profile*/
 .body_content {
   margin-top: 15px;
   display: flex;
   justify-content: space-between;
-  width: 60vw;
+  width: 921px;
 }
+
 /*sidebar*/
 .sidebar {
   flex: 1;
@@ -68,11 +81,11 @@ a {
   top: 1px;
   height: auto;
   max-height: 100vh;
-  max-width: 406px;
-  min-width: 406px;
+  width: 406px;
   border-radius: 10px;
   margin-right: 10px;
 }
+
 /*for icons in the sidebar*/
 .sidebar i {
   margin: 10px 4px;
@@ -88,13 +101,17 @@ a {
 .bio_container {
   text-align: center;
 }
+
 .bio_text {
   margin-top: 35px;
-  word-wrap: break-word; /*ensures long words break to the next line*/
-  overflow: hidden; /*ensures text stays in the container*/
+  word-wrap: break-word;
+  /*ensures long words break to the next line*/
+  overflow: hidden;
+  /*ensures text stays in the container*/
   max-width: 100%;
   max-height: 120px;
 }
+
 .edit_bio {
   font-size: 14px;
   font-weight: bold;
@@ -106,48 +123,58 @@ a {
   background-color: var(--accent-color);
   margin: 25px 0;
 }
+
 .info {
   margin-bottom: 15px;
 }
+
 .follower_header {
   margin-left: 10px;
 }
+
 .follower_title {
   font-weight: bold;
   font-size: 18px;
   margin-bottom: 5px;
 }
+
 .number_of_follower {
   opacity: 80%;
 }
+
 .followers_container {
   background-color: var(--accent-color);
   color: var(--primary-color);
   padding: 10px;
   border-radius: 8px;
 }
+
 .follower_picture {
   width: 102px;
   height: 102px;
   border-radius: 8px;
 }
+
 .followers {
   padding: 10px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
+
 .follower_card p {
   font-size: 12px;
   font-weight: bold;
   text-align: left;
   padding-left: 5px;
 }
+
 /*main_content*/
 .main_content {
   flex: 2;
   min-height: 100vh;
 }
+
 /*CREATE POST CSS*/
 .createPost {
   display: flex;
@@ -156,10 +183,10 @@ a {
   background-color: var(--darker-primary-color);
   border-radius: 8px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 600px;
+  width: 505.6px;
   margin: 0 auto;
 }
+
 .avatar_post {
   max-width: 40px;
   max-height: 40px;
@@ -169,6 +196,7 @@ a {
   margin-right: 10px;
   border: 1px solid var(--secondary-color);
 }
+
 .createPost input[type="text"] {
   flex: 1;
   padding: 10px;
@@ -178,9 +206,11 @@ a {
   outline: none;
   font-size: 14px;
 }
+
 .createPost input[type="text"]::placeholder {
   color: #8d8d8d;
 }
+
 /*post*/
 /* Sample post styling */
 .post {
@@ -190,7 +220,7 @@ a {
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  max-width: 505.6px;
+  width: 505.6px;
 }
 
 .post_header {
@@ -230,8 +260,10 @@ a {
 /* Center post footer buttons */
 .post_footer {
   display: flex;
-  justify-content: center; /* Center the buttons */
-  gap: 80px; /* Space between the buttons */
+  justify-content: center;
+  /* Center the buttons */
+  gap: 80px;
+  /* Space between the buttons */
   margin-top: 10px;
 }
 
@@ -248,14 +280,17 @@ a {
   box-sizing: border-box;
   letter-spacing: 1px;
 }
+
 .post_footer .like_button {
   padding: 0 25px;
 }
+
 .post_footer button:hover {
   background-color: var(--primary-color);
   border: 2px solid var(--accent-color);
   color: var(--accent-color);
 }
+
 /* .post_footer .like_form:hover {
   color: var(--red-color);
 } */
@@ -269,12 +304,15 @@ a {
   display: flex;
   justify-content: space-between;
 }
+
 .stats i {
   margin-left: 10px;
 }
+
 .stats .fa-heart {
   color: var(--red-color);
 }
+
 /*add comment*/
 .comment_section {
   display: flex;
@@ -301,14 +339,17 @@ a {
 }
 
 .comment_section textarea {
-  flex: 1; /* Allow the textarea to take up the available space */
+  flex: 1;
+  /* Allow the textarea to take up the available space */
   padding: 10px;
   border: none;
   background-color: transparent;
   outline: none;
   font-size: 14px;
-  resize: none; /* Prevent manual resizing */
-  overflow: hidden; /* Hide scrollbar */
+  resize: none;
+  /* Prevent manual resizing */
+  overflow: hidden;
+  /* Hide scrollbar */
   font-family: "Poppins", sans-serif;
 }
 
@@ -347,23 +388,27 @@ a {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  margin-right: 10px; /* Space between avatar and content */
+  margin-right: 10px;
+  /* Space between avatar and content */
 }
 
 .comment_content {
-  flex: 1; /* Take up remaining space */
+  flex: 1;
+  /* Take up remaining space */
   display: flex;
   flex-direction: column;
 }
 
 .comment-info {
-  margin-bottom: 5px; /* Space between name/time and comment */
+  margin-bottom: 5px;
+  /* Space between name/time and comment */
 }
 
 .comment-info h4 {
   margin: 0;
   font-size: 14px;
-  line-height: 1; /* To ensure it's on a single line */
+  line-height: 1;
+  /* To ensure it's on a single line */
 }
 
 .comment-info {
@@ -378,17 +423,24 @@ a {
 }
 
 .comment-controls {
-  display: flex; /* Align controls horizontally */
-  align-items: center; /* Center them vertically */
-  margin-left: auto; /* Push controls to the right */
+  display: flex;
+  /* Align controls horizontally */
+  align-items: center;
+  /* Center them vertically */
+  margin-left: auto;
+  /* Push controls to the right */
 }
 
 .pen-icon {
-  font-size: 10px; /* Same size as close button */
-  margin-right: 5px; /* Space between pen icon and close button */
-  cursor: pointer; /* Pointer cursor for better UX */
+  font-size: 10px;
+  /* Same size as close button */
+  margin-right: 5px;
+  /* Space between pen icon and close button */
+  cursor: pointer;
+  /* Pointer cursor for better UX */
   transition: transform 0.2s;
 }
+
 .pen-icon:hover {
   transform: scale(1.2);
 }
