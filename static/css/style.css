@@ -23,6 +23,12 @@
   padding: 0;
 }
 
+*,
+*:before,
+*:after {
+  border: 2px solid red;
+}
+
 body {
   font-family: Poppins, sans-serif;
 }
