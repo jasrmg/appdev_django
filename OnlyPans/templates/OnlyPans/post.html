@@ -45,6 +45,14 @@
   <div class="post_body">
     <h3 style="text-align: center">{{ post.title }}</h3>
     <!--DESCRIPTION-->
+    <style>
+      .truncated {
+        word-wrap: break-word;
+        white-space: normal;
+        overflow-wrap: break-word;
+        width: 100%;
+      }
+    </style>
     <p id="truncatedDescription-{{ post.post_id }}" class="truncated" style="text-align: justify;">
       {{ post.description | truncatewords:30 }}
       {% if post.word_count > 30 %}

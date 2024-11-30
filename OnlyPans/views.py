@@ -398,6 +398,7 @@ def profile_view(request, username):
         'comment_counts': {post.post_id: post.comment_count for post in posts},
         'post_word_count': posts_with_word_count, 
         
+        
     }
     return render(request, 'OnlyPans/profile_view.html', context)
 
