@@ -24,10 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-aj%@bg-1q3q==8=jqkh!(q^&nsc142$0efd98y!9^8d*(d&753'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 #REMOVE 127 IG ONLINE
 # ALLOWED_HOSTS = ['jasrmg.pythonanywhere.com', '127.0.0.1']
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['jasrmg.pythonanywhere.com']
 
 
 # Application definition
