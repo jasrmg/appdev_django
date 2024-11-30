@@ -1,0 +1,168 @@
+/* Media query for screens smaller than 921px */
+/*TABLET*/
+@media screen and (max-width: 922px) {
+
+  /*EDIT PROFILE MODAL*/
+  #editProfile {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+
+  .editProfilecontent,
+  .editBiocontent,
+  .modal-content {
+    background-color: #e6d4bc;
+    margin: 45% auto;
+    padding: 20px;
+    border: 2px solid #33221a;
+    width: 500px;
+    border-radius: 10px;
+    text-align: center;
+  }
+
+  /*DELETE CONFIRMATION MODAL = .modal-content*/
+  .modal-content {
+    margin: 65% auto;
+  }
+
+  /*follower modal*/
+  .followerContent,
+  .followingContent {
+    margin: 20% auto;
+    width: 500px;
+  }
+
+  /* 
+  .followerContent::-webkit-scrollbar,
+  .followingContent::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  .followerContent::-webkit-scrollbar-track,
+  .followingContent::-webkit-scrollbar-track {
+    background: #e6d6bc;
+    border-radius: 10px;
+    border: 2px solid #33221a;
+  }
+
+  .followerContent::-webkit-scrollbar-thumb,
+  .followingContent::-webkit-scrollbar-thumb {
+    background-color: #33221a;
+    border-radius: 10px;
+  }
+
+  .followerContent::-webkit-scrollbar-thumb:hover,
+  .followingContent::-webkit-scrollbar-thumb:hover {
+    background-color: #4e3727;
+  } */
+
+  .createPostContent,
+  .editPostContent {
+    margin: 30% auto;
+    width: 500px;
+  }
+
+  /* Stack the profile, sidebar, and main content vertically */
+  .profile,
+  .body_content,
+  .sidebar,
+  .main_content {
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 8px;
+  }
+
+  .body_content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .main_content,
+  .sidebar {
+    flex: 0 0 auto;
+    margin-top: 15px;
+    position: static;
+    width: 680px;
+
+  }
+
+  /* Sidebar styles */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100%;
+    padding: 20px;
+    padding-bottom: 35px;
+    box-sizing: border-box;
+  }
+
+  /* Left-align p tags with the class .intro */
+  .sidebar .intro {
+    text-align: left;
+    width: 100%;
+    margin: 0;
+    padding-left: 0;
+    font-size: 16px;
+    font-weight: normal;
+    padding-left: 20px;
+  }
+
+  .sidebar .intro:nth-child(1) {
+    font-weight: bold;
+    font-size: 20px;
+  }
+
+  .sidebar .intro:nth-child(4) {
+    margin-bottom: 20px;
+  }
+
+  .bio_container,
+  .followers_container {
+    width: 100%;
+    max-width: 600px;
+    padding: 10px;
+  }
+
+  .sidebar p i {
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+
+  .bio_container {
+    width: 100%;
+  }
+
+  button.edit_bio {
+    width: 100%;
+  }
+
+  /*FOLLOWERS*/
+  .follower_picture {
+    width: 180px;
+    height: 180px;
+    border-radius: 8px;
+  }
+
+  .follower_title {
+    font-size: 20px;
+  }
+
+  /*CREATEPOST*/
+  .createPost {
+    width: 100%;
+  }
+
+  .post {
+    width: 680px;
+  }
+
+}

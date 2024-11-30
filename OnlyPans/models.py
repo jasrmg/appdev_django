@@ -16,6 +16,8 @@ class User(AbstractUser):
 
     bio = models.CharField(max_length=150, default='Edit your Bio')
     avatar = models.ImageField(null=True, blank=True, default='images/avatars/other.jpeg', upload_to='uploads/profile_pics/')
+    #for changepassword cooldown added on 2024/11/30(yyyy/mm/dd)
+    last_password_change = models.DateTimeField(null=True, blank=True)
 
     USERNAME_FIELD = 'username'
 

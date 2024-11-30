@@ -22,17 +22,38 @@ from urllib.parse import unquote
 def test(request):
   return HttpResponse('Hello World!')
 
+from django.utils.timezone import now
+from datetime import timedelta
+
 @login_required
 def changepassword_view(request, username):
   if request.method == 'POST':
     form = PasswordChangeForm(user=request.user, data=request.POST)
+    #check if the user changed their password in the last week
+    last_password_change = request.user.last_password_change
+    print('LAST PASSWORD CHANGE: ', last_password_change)
+    print('NOW: ', now())
+    if last_password_change and (now() - last_password_change) < timedelta(weeks=1):
+      messages.error(request, 'You can only change your password once a week!')
+      return redirect('profile', username=unquote(username))
     if form.is_valid():
+      new_password = form.cleaned_data.get('new_password1')
+      full_name = f"{request.user.first_name} {request.user.last_name}".strip().lower()
+      print('NEW PASSWORD: ', new_password)
+      print('FULL NAME: ', full_name)
+      if full_name and full_name.replace(' ', '') in new_password.replace(' ', '').lower():
+        messages.error(request, 'Password is too similar to full name.')
+        return redirect('profile', username=unquote(username))
+
       user = form.save()
+      user.last_password_change = now()
+      user.save()
+
       update_session_auth_hash(request, user)  # Keeps the user logged in after password change
       messages.success(request, 'Password Changed Successfully!')
       return redirect('profile', username=unquote(username))
     else:
-      # If the form is invalid, capture specific error messages
+      # Capture specific error messages
       for field, errors in form.errors.items():
         for error in errors:
           messages.error(request, f"{error}")

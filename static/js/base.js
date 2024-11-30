@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  
+
 
   //EDITPROFILE:
   const $editProfileForm = $("#editProfile form");
@@ -443,8 +443,7 @@ $(document).ready(function () {
         $("#followerCount").text(response.follower_count);
         //update the follower count in the #followerModalBtn
         $("#followerModalBtn").text(
-          `${response.follower_count} follower${
-            response.follower_count > 1 ? "s" : ""
+          `${response.follower_count} follower${response.follower_count > 1 ? "s" : ""
           }`
         );
         $("#followed-by").text(response.follower_count + " people");
