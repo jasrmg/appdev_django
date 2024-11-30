@@ -50,10 +50,12 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
-
+from slugify import slugify
 def recipe_image_upload_path(instance, filename):
     #extract the title and username of the poster:
-    post_title = instance.post.title.replace(" ", "_")#replace spaces with underscores
+    # post_title = instance.post.title.replace(" ", "_")#replace spaces with underscores
+    #using sluggify to ensure the filetitle is safe
+    post_title = slugify(instance.post.title)
     username = instance.post.user.username
     #create a unique filename
     new_filename = f"{post_title}_{username}_{filename}"

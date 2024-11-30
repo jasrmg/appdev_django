@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-aj%@bg-1q3q==8=jqkh!(q^&nsc142$0efd98y!9^8d*(d&753
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+#REMOVE 127 IG ONLINE
+# ALLOWED_HOSTS = ['jasrmg.pythonanywhere.com', '127.0.0.1']
 ALLOWED_HOSTS = []
 
 
@@ -123,14 +124,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_DIRS = [
   BASE_DIR / 'static'
 ]
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# TRADITIONAL WAY BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# WILL BE USING PYTHONIC WAY USING PATHLIB ON THE BASE_DIR ABOVE
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
