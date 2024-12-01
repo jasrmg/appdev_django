@@ -70,10 +70,13 @@ $(document).on("submit", ".comment_section", function (event) {
               <h4>${response.user_name}</h4>
               <p>${timeAgo(response.created_at)}</p>
             </div>
-              <p>${response.message}</p>
+            <div class="edit-comment" contenteditable="false" id="comment-text-${ response.comment_id }">
+          <p>${response.message}</p>
+        </div>
+              
             </div>
             <div class="comment-controls">
-              <i class="fa-solid fa-pencil-alt pen-icon" style="color: #33221a"></i>
+              <i class="fa-solid fa-pencil-alt pen-icon" style="color: #33221a" id="editCommentBtn-${ response.comment_id }" onclick="toggleEdit('${ response.comment_id }')"></i>
               <button class="close-button" data-comment-id=${
                 response.comment_id
               }>&times;</button>
