@@ -37,13 +37,17 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
 }
 
 .right-side {
   flex-direction: column;
   width: 400px;
+  background-color: #e6d4bc;
+  border-radius: 10px;
+  max-width: 580px;
+  height: 400px;
 }
+
 
 .left-side {
   width: 800px;
@@ -60,7 +64,6 @@ h1 {
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #e6d4bc;
-  margin-bottom: 15px;
 }
 
 .brand-label {
@@ -74,6 +77,7 @@ h1 {
   font-size: 30px;
   color: #e6d4bc;
   margin: 0;
+  font-style: italic;
 }
 
 /*
@@ -92,12 +96,7 @@ h1 {
   cursor: pointer;
 } */
 
-.right-side {
-  background-color: #e6d4bc;
-  border-radius: 10px;
-  max-width: 580px;
-  height: 400px;
-}
+
 
 #id_username,
 #id_password {
@@ -126,7 +125,6 @@ h1 {
   border: 1px solid #33221a;
   border-radius: 5px;
   padding: 10px;
-  width: 231.8px;
   height: 37.6px;
 }
 
@@ -195,7 +193,6 @@ h1 {
 .divider {
   border-bottom: 1.5px solid #b0b0b0;
   margin: 20px 16px;
-
 }
 
 
@@ -213,15 +210,9 @@ h1 {
     background: url("{% static 'images/bg.jpg' %}") center / cover no-repeat;
   }
 
-  h1 {
-    display: none;
-  }
-
   .container {
     display: flex;
     flex-direction: column;
-    width: 80%;
-    height: 80%;
     margin: 0 auto;
     justify-content: center;
     align-items: center;
@@ -229,7 +220,7 @@ h1 {
 
   .left-side,
   .right-side {
-    width: 70%;
+    width: 440px;
   }
 
   .profile-pic {
@@ -238,5 +229,63 @@ h1 {
 
   .left-side div p {
     text-align: center;
+  }
+}
+/*RESPONSIVE PHONE 600px*/
+@media screen and (max-width: 600px) {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+
+  body {
+    background: url("{% static 'images/bg.jpg' %}") center / cover no-repeat;
+  }
+  .left-side {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .left-side div p {
+    display: none;
+  }
+  .profile-pic {
+    display: block;
+    width: 60px;
+    height: 60px;
+  }
+  h1 {
+    display: none;
+  }
+  
+  #id_username, #id_password {
+    font-size: 16px;
+    padding: 30px 16px;
+    border-radius: 14px;
+  }
+  #loginSubmitBtn, .sign-up-btn {
+    border-radius: 24px;
+  }
+  .right-side,
+  .left-side {
+    width: 330px;
+  }
+  #id_username,
+  #id_password,
+  #loginSubmitBtn,
+  .sign-up-btn {
+    width: 300px;
+  }
+  #loginSubmitBtn,
+  .sign-up-btn {
+    font-size: 16px;
+    height: 44px;
+  }
+  .error p {
+    text-align: center;
+    font-weight: bold;
   }
 }
