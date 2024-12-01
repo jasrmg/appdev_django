@@ -1,0 +1,226 @@
+/*SIGNUP*/
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,700;1,200&display=swap");
+
+
+* {
+  box-sizing: border-box;
+
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+
+  margin: 0;
+  padding: 0;
+  background-image: url("/static/images/bg.jpg");
+  background-size: cover;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  margin: 0 auto;
+  height: 80vh;
+}
+
+/* Left and right sides now take equal width */
+.left-side,
+.right-side {
+  width: 50%;
+  /* Make both sides take 50% width */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px;
+  box-sizing: border-box;
+  /* Ensure padding is included in width calculation */
+}
+
+/* Circular Profile Picture */
+.profile-pic {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+  object-fit: cover;
+  /* Ensure image fits inside circle */
+  border: 2px solid #e6d4bc;
+}
+
+/* Brand Label */
+.brand-label {
+  font-size: 38px;
+  font-weight: bold;
+  color: #e6d4bc;
+  margin-bottom: 10px;
+  margin-top: 0;
+}
+
+/* Tagline */
+.tagline {
+  font-size: 20px;
+  color: #e6d4bc;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Sign In Text */
+.login-text {
+  font-size: 14px;
+  color: #e6d4bc;
+  margin-bottom: 20px;
+}
+
+/* Sign In Link */
+.sign-in-link {
+  color: #e6d4bc;
+  text-decoration: underline;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Right side (Sign Up form) */
+.right-side {
+  background-color: #e6d4bc;
+  border-radius: 10px;
+  border: none;
+  max-width: 580px;
+
+  height: 500px;
+  padding: 20px;
+  box-sizing: content-box;
+}
+
+/* Sign Up Form */
+h1 {
+  margin-top: 20px;
+  text-align: center;
+  color: #e6d4bc;
+  margin-bottom: 10px;
+}
+
+/* Form row for side-by-side input fields */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-field,
+.form-field-password label {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-field label,
+.form-field-password label {
+  margin-bottom: 5px;
+  color: #33221a;
+}
+
+.form-field input,
+.form-field select {
+  background-color: #fdeed8;
+  border: 1px solid #33221a;
+  border-radius: 5px;
+  padding: 10px;
+  width: 231.8px;
+  height: 37.6px;
+}
+
+/*para sa password*/
+.form-field-password input {
+  background-color: #fdeed8;
+  border: 1px solid #33221a;
+  border-radius: 5px;
+  padding: 10px;
+  width: 483.6px;
+  height: 37.6px;
+}
+
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 35px;
+  /* Make room for the icon */
+  box-sizing: border-box;
+}
+
+.password-wrapper .fas.fa-eye,
+.password-wrapper .fas.fa-eye-slash {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #33221a;
+}
+
+
+/* Form footer for submit button */
+.form-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Buttons styles */
+#signUpSubmitBtn {
+  font-weight: 500;
+  padding: 10px 20px;
+  background-color: #33221a;
+  color: #fdeed8;
+  border: 2px solid #33221a;
+  border-radius: 10px;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+#signUpSubmitBtn:hover {
+  background-color: #fdeed8;
+  color: #33221a;
+  border: 2px solid #33221a;
+}
+
+/*errors*/
+.error {
+  height: 20px;
+  /* Adjust this based on the typical height of your error messages */
+  font-size: 12px;
+  color: red;
+  margin-top: 5px;
+  word-wrap: break-word;
+  overflow: hidden;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    width: 90%;
+    height: auto;
+    /* Remove full height on mobile */
+  }
+
+  .left-side,
+  .right-side {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .right-side {
+    padding: 20px;
+    /* Reduce padding on smaller screens */
+  }
+}

@@ -1,391 +1,367 @@
 {% load static %}
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{title}}</title>
-    <!--browser icon-->
-    <link
-      rel="icon"
-      href="{% static 'images/icons/Logo Onlypans.ico' %}"
-      sizes="48x48"
-      type="image/x-icon"
-    />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-    <style>
-@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,700;1,200&display=swap");
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{title}}</title>
+  <!--browser icon-->
+  <link rel="icon" href="{% static 'images/icons/Logo Onlypans.ico' %}" sizes="48x48" type="image/x-icon" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,700;1,200&display=swap");
 
 
-      * {
-        box-sizing: border-box;
+    * {
+      box-sizing: border-box;
 
-        font-family: "Poppins", sans-serif;
-      }
-      body {
-        
-        margin: 0;
-        padding: 0;
-        background-image: url("/static/images/bg.jpg");
-        background-size: cover;
-      }
+      font-family: "Poppins", sans-serif;
+    }
 
+    body {
+
+      margin: 0;
+      padding: 0;
+      background-image: url("/static/images/bg.jpg");
+      background-size: cover;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 80%;
+      margin: 0 auto;
+      height: 80vh;
+    }
+
+    /* Left and right sides now take equal width */
+    .left-side,
+    .right-side {
+      width: 50%;
+      /* Make both sides take 50% width */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px;
+      box-sizing: border-box;
+      /* Ensure padding is included in width calculation */
+    }
+
+    /* Circular Profile Picture */
+    .profile-pic {
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      margin-bottom: 15px;
+      object-fit: cover;
+      /* Ensure image fits inside circle */
+      border: 2px solid #e6d4bc;
+    }
+
+    /* Brand Label */
+    .brand-label {
+      font-size: 38px;
+      font-weight: bold;
+      color: #e6d4bc;
+      margin-bottom: 10px;
+      margin-top: 0;
+    }
+
+    /* Tagline */
+    .tagline {
+      font-size: 20px;
+      color: #e6d4bc;
+      margin: 0;
+      font-style: italic;
+    }
+
+    /* Sign In Text */
+    .login-text {
+      font-size: 14px;
+      color: #e6d4bc;
+      margin-bottom: 20px;
+    }
+
+    /* Sign In Link */
+    .sign-in-link {
+      color: #e6d4bc;
+      text-decoration: underline;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* Right side (Sign Up form) */
+    .right-side {
+      background-color: #e6d4bc;
+      border-radius: 10px;
+      border: none;
+      max-width: 580px;
+
+      height: 500px;
+      padding: 20px;
+      box-sizing: content-box;
+    }
+
+    /* Sign Up Form */
+    h1 {
+      margin-top: 20px;
+      text-align: center;
+      color: #e6d4bc;
+      margin-bottom: 10px;
+    }
+
+    /* Form row for side-by-side input fields */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-field,
+    .form-field-password label {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-field label,
+    .form-field-password label {
+      margin-bottom: 5px;
+      color: #33221a;
+    }
+
+    .form-field input,
+    .form-field select {
+      background-color: #fdeed8;
+      border: 1px solid #33221a;
+      border-radius: 5px;
+      padding: 10px;
+      width: 231.8px;
+      height: 37.6px;
+    }
+
+    /*para sa password*/
+    .form-field-password input {
+      background-color: #fdeed8;
+      border: 1px solid #33221a;
+      border-radius: 5px;
+      padding: 10px;
+      width: 483.6px;
+      height: 37.6px;
+    }
+
+    .password-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .password-wrapper input {
+      width: 100%;
+      padding-right: 35px;
+      /* Make room for the icon */
+      box-sizing: border-box;
+    }
+
+    .password-wrapper .fas.fa-eye,
+    .password-wrapper .fas.fa-eye-slash {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #33221a;
+    }
+
+
+    /* Form footer for submit button */
+    .form-footer {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    /* Buttons styles */
+    #signUpSubmitBtn {
+      font-weight: 500;
+      padding: 10px 20px;
+      background-color: #33221a;
+      color: #fdeed8;
+      border: 2px solid #33221a;
+      border-radius: 10px;
+      font-size: 14px;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100%;
+    }
+
+    #signUpSubmitBtn:hover {
+      background-color: #fdeed8;
+      color: #33221a;
+      border: 2px solid #33221a;
+    }
+
+    /*errors*/
+    .error {
+      height: 20px;
+      /* Adjust this based on the typical height of your error messages */
+      font-size: 12px;
+      color: red;
+      margin-top: 5px;
+      word-wrap: break-word;
+      overflow: hidden;
+    }
+
+    /* Responsiveness */
+    @media (max-width: 768px) {
       .container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 80%;
-        margin: 0 auto;
-        height: 80vh;
+        flex-direction: column;
+        width: 90%;
+        height: auto;
+        /* Remove full height on mobile */
       }
 
-      /* Left and right sides now take equal width */
       .left-side,
       .right-side {
-        width: 50%; /* Make both sides take 50% width */
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: 40px;
-        box-sizing: border-box; /* Ensure padding is included in width calculation */
-      }
-
-      /* Circular Profile Picture */
-      .profile-pic {
-        width: 250px;
-        height: 250px;
-        border-radius: 50%;
-        margin-bottom: 15px;
-        object-fit: cover; /* Ensure image fits inside circle */
-        border: 2px solid #e6d4bc;
-      }
-
-      /* Brand Label */
-      .brand-label {
-        font-size: 38px;
-        font-weight: bold;
-        color: #e6d4bc;
-        margin-bottom: 10px;
-        margin-top: 0;
-      }
-
-      /* Tagline */
-      .tagline {
-        font-size: 20px;
-        color: #e6d4bc;
-        margin: 0;
-        font-style: italic;
-      }
-
-      /* Sign In Text */
-      .login-text {
-        font-size: 14px;
-        color: #e6d4bc;
+        width: 100%;
         margin-bottom: 20px;
       }
 
-      /* Sign In Link */
-      .sign-in-link {
-        color: #e6d4bc;
-        text-decoration: underline;
-        font-weight: bold;
-        cursor: pointer;
-      }
-
-      /* Right side (Sign Up form) */
       .right-side {
-        background-color: #e6d4bc;
-        border-radius: 10px;
-        border: none;
-        max-width: 580px;
-        
-        height: 500px;
         padding: 20px;
-        box-sizing: content-box;
+        /* Reduce padding on smaller screens */
       }
+    }
+  </style>
+</head>
 
-      /* Sign Up Form */
-      h1 {
-        margin-top: 20px;
-        text-align: center;
-        color: #e6d4bc;
-        margin-bottom: 10px;
-      }
-
-      /* Form row for side-by-side input fields */
-      .form-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-      }
-
-      .form-field,
-      .form-field-password label {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .form-field label,
-      .form-field-password label {
-        margin-bottom: 5px;
-        color: #33221a;
-      }
-
-      .form-field input,
-      .form-field select {
-        background-color: #fdeed8;
-        border: 1px solid #33221a;
-        border-radius: 5px;
-        padding: 10px;
-        width: 231.8px;
-        height: 37.6px;
-      }
-      /*para sa password*/
-      .form-field-password input {
-        background-color: #fdeed8;
-        border: 1px solid #33221a;
-        border-radius: 5px;
-        padding: 10px;
-        width: 483.6px; 
-        height: 37.6px; 
-      }
-      .password-wrapper {
-        position: relative;
-        width: 100%;
-      }
-      .password-wrapper input {
-        width: 100%;
-        padding-right: 35px; /* Make room for the icon */
-        box-sizing: border-box;
-      }
-      .password-wrapper .fas.fa-eye,
-      .password-wrapper .fas.fa-eye-slash {
-        position: absolute;
-        right: 20px;
-        top: 50%;
-        transform: translateY(-50%);
-        cursor: pointer;
-        color: #33221a;
-      }
-      
-
-      /* Form footer for submit button */
-      .form-footer {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-      }
-
-      /* Buttons styles */
-      #signUpSubmitBtn {
-        font-weight: 500;
-        padding: 10px 20px;
-        background-color: #33221a;
-        color: #fdeed8;
-        border: 2px solid #33221a;
-        border-radius: 10px;
-        font-size: 14px;
-        letter-spacing: 1.5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        width: 100%;
-      }
-
-      #signUpSubmitBtn:hover {
-        background-color: #fdeed8;
-        color: #33221a;
-        border: 2px solid #33221a;
-      }
-      /*errors*/
-      .error {
-        height: 20px; /* Adjust this based on the typical height of your error messages */
-        font-size: 12px;
-        color: red;
-        margin-top: 5px;
-        word-wrap: break-word;
-        overflow: hidden;
-      }
-
-      /* Responsiveness */
-      @media (max-width: 768px) {
-        .container {
-          flex-direction: column;
-          width: 90%;
-          height: auto; /* Remove full height on mobile */
-        }
-
-        .left-side,
-        .right-side {
-          width: 100%;
-          margin-bottom: 20px;
-        }
-
-        .right-side {
-          padding: 20px; /* Reduce padding on smaller screens */
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <h1>SIGN UP</h1>
-    <div class="container">
-      <!-- Left Side: Circular Image, Text, and Sign In Link -->
-      <div class="left-side">
-        <img
-          src="{% static 'images/bg2.jpg' %}"
-          alt="OnlyPans Logo"
-          class="profile-pic"
-        />
-        <p class="brand-label">ONLYPANS</p>
-        <p class="tagline">where the hottest dishes go viral</p>
-        <p class="login-text">
-          Already have an account?<br />
-          <a href="{% url 'login' %}" class="sign-in-link">Sign in here.</a>
-        </p>
-      </div>
-
-      <!-- Right Side: Sign Up Form -->
-      <div class="right-side">
-        <form method="POST">
-          {% csrf_token %}
-
-          <!-- First row: First Name and Last Name -->
-          <div class="form-row">
-            <div class="form-field">
-              <label for="firstname">First Name</label>
-              <input
-                type="text"
-                id="firstname"
-                name="first_name"
-                {%
-                if
-                form.first_name.errors
-                or
-                form.is_bound
-                %}required{%
-                endif
-                %}
-              />
-              <div class="error">
-                {% if request.method == 'POST' and form.first_name.errors %} {% for error in form.first_name.errors %}
-                <p style="margin: 0">{{ error }}</p>
-                {% endfor %} {% endif %}
-              </div>
-            </div>
-            <div class="form-field">
-              <label for="lastname">Last Name</label>
-              <input
-                type="text"
-                id="lastname"
-                name="last_name"
-                {%
-                if
-                form.last_name.errors
-                or
-                form.is_bound
-                %}required{%
-                endif
-                %}
-              />
-              <div class="error">
-                {% if request.method == 'POST' and form.last_name.errors %} {% for error in form.last_name.errors %}
-                <p style="margin: 0">{{ error }}</p>
-                {% endfor %} {% endif %}
-              </div>
-            </div>
-          </div>
-
-          <!-- Second row: Username and Gender -->
-          <div class="form-row">
-            <div class="form-field">
-              <label for="username">Username</label>
-              <input
-                type="text"
-                id="username"
-                name="username"
-                {%
-                if
-                form.username.errors
-                or
-                form.is_bound
-                %}required{%
-                endif
-                %}
-              />
-              <div class="error">
-                {% if request.method == 'POST' and form.username.errors %} {% for error in form.username.errors %}
-                <p style="margin: 0">{{ error }}</p>
-                {% endfor %} {% endif %}
-              </div>
-            </div>
-            <div class="form-field">
-              <label for="gender">Gender</label>
-              <select id="gender" name="gender" required>
-                <option value="M">Male</option>
-                <option value="F">Female</option>
-                <option value="O">Other</option>
-              </select>
-              <div class="error">
-                {% if request.method == 'POST' and form.gender.errors %} {% for error in form.gender.errors %}
-                <p style="margin: 0">{{ error }}</p>
-                {% endfor %} {% endif %}
-              </div>
-            </div>
-          </div>
-
-          <!-- Third row: Password -->
-          <div class="form-field-password">
-            <label for="password">Password</label>
-            <div class="password-wrapper">
-              <input type="password" id="password" name="password1" required />
-              <i class="fas fa-eye-slash" id="togglePassword1" onclick="togglePassword('password', 'togglePassword1')"></i>
-            </div>
-            <div class="error">
-              {% if request.method == 'POST' and form.password1.errors %} {% for error in form.password1.errors %}
-              <p style="margin: 0">{{ error }}</p>
-              {% endfor %} {% endif %}
-            </div>
-          </div>
-          
-          <div class="form-field-password">
-            <label for="confirm_password">Confirm Password</label>
-            <div class="password-wrapper">
-              <input type="password" id="confirm_password" name="password2" required />
-              <i class="fas fa-eye-slash" id="togglePassword2" onclick="togglePassword('confirm_password', 'togglePassword2')"></i>
-            </div>
-            <div class="error">
-              {% if request.method == 'POST' and form.password2.errors %} {% for error in form.password2.errors %}
-              <p style="margin: 0">{{ error }}</p>
-              {% endfor %} {% endif %}
-            </div>
-          </div>
-          
-
-          <!-- Submit Button -->
-          <div class="form-footer">
-            <input type="submit" value="Sign Up" id="signUpSubmitBtn" />
-          </div>
-        </form>
-      </div>
+<body>
+  <h1>SIGN UP</h1>
+  <div class="container">
+    <!-- Left Side: Circular Image, Text, and Sign In Link -->
+    <div class="left-side">
+      <img src="{% static 'images/bg2.jpg' %}" alt="OnlyPans Logo" class="profile-pic" />
+      <p class="brand-label">ONLYPANS</p>
+      <p class="tagline">where the hottest dishes go viral</p>
+      <p class="login-text">
+        Already have an account?<br />
+        <a href="{% url 'login' %}" class="sign-in-link">Sign in here.</a>
+      </p>
     </div>
-    <script>
-      function togglePassword(inputId, iconId) {
-        const passwordInput = document.getElementById(inputId);
-        const toggleIcon = document.getElementById(iconId);
-    
-        if (passwordInput.type === "password") {
-          passwordInput.type = "text";
-          toggleIcon.classList.remove("fa-eye-slash");
-          toggleIcon.classList.add("fa-eye");
-        } else {
-          passwordInput.type = "password";
-          toggleIcon.classList.remove("fa-eye");
-          toggleIcon.classList.add("fa-eye-slash");
-        }
+
+    <!-- Right Side: Sign Up Form -->
+    <div class="right-side">
+      <form method="POST">
+        {% csrf_token %}
+
+        <!-- First row: First Name and Last Name -->
+        <div class="form-row">
+          <div class="form-field">
+            <label for="firstname">First Name</label>
+            <input type="text" id="firstname" name="first_name" {% if form.first_name.errors or form.is_bound %}
+              required {% endif %} />
+            <div class="error">
+              {% if request.method == 'POST' and form.first_name.errors %} {% for error in form.first_name.errors %}
+              <p style="margin: 0">{{ error }}</p>
+              {% endfor %} {% endif %}
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="lastname">Last Name</label>
+            <input type="text" id="lastname" name="last_name" {% if form.last_name.errors or form.is_bound %} required
+              {% endif %} />
+            <div class="error">
+              {% if request.method == 'POST' and form.last_name.errors %} {% for error in form.last_name.errors %}
+              <p style="margin: 0">{{ error }}</p>
+              {% endfor %} {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Second row: Username and Gender -->
+        <div class="form-row">
+          <div class="form-field">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" {% if form.username.errors or form.is_bound %} required
+              {%endif %} />
+            <div class="error">
+              {% if request.method == 'POST' and form.username.errors %} {% for error in form.username.errors %}
+              <p style="margin: 0">{{ error }}</p>
+              {% endfor %} {% endif %}
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender" required>
+              <option value="M">Male</option>
+              <option value="F">Female</option>
+              <option value="O">Other</option>
+            </select>
+            <div class="error">
+              {% if request.method == 'POST' and form.gender.errors %} {% for error in form.gender.errors %}
+              <p style="margin: 0">{{ error }}</p>
+              {% endfor %} {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Third row: Password -->
+        <div class="form-field-password">
+          <label for="password">Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="password" name="password1" required />
+            <i class="fas fa-eye-slash" id="togglePassword1"
+              onclick="togglePassword('password', 'togglePassword1')"></i>
+          </div>
+          <div class="error">
+            {% if request.method == 'POST' and form.password1.errors %} {% for error in form.password1.errors %}
+            <p style="margin: 0">{{ error }}</p>
+            {% endfor %} {% endif %}
+          </div>
+        </div>
+
+        <div class="form-field-password">
+          <label for="confirm_password">Confirm Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="confirm_password" name="password2" required />
+            <i class="fas fa-eye-slash" id="togglePassword2"
+              onclick="togglePassword('confirm_password', 'togglePassword2')"></i>
+          </div>
+          <div class="error">
+            {% if request.method == 'POST' and form.password2.errors %} {% for error in form.password2.errors %}
+            <p style="margin: 0">{{ error }}</p>
+            {% endfor %} {% endif %}
+          </div>
+        </div>
+
+
+        <!-- Submit Button -->
+        <div class="form-footer">
+          <input type="submit" value="Sign Up" id="signUpSubmitBtn" />
+        </div>
+      </form>
+    </div>
+  </div>
+  <script>
+    function togglePassword(inputId, iconId) {
+      const passwordInput = document.getElementById(inputId);
+      const toggleIcon = document.getElementById(iconId);
+
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        toggleIcon.classList.remove("fa-eye-slash");
+        toggleIcon.classList.add("fa-eye");
+      } else {
+        passwordInput.type = "password";
+        toggleIcon.classList.remove("fa-eye");
+        toggleIcon.classList.add("fa-eye-slash");
       }
-    </script>
-    
-  </body>
+    }
+  </script>
+
+</body>
+
 </html>

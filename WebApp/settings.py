@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'OnlyPans'
+    'OnlyPans',
+    'widget_tweaks',
 ]
 #customize usermodel:
 AUTH_USER_MODEL = 'OnlyPans.User'
