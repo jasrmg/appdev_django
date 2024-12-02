@@ -146,6 +146,54 @@ a {
   display: block;
 }
 
+/*search suggestion*/
+
+#suggestions {
+  border: 1px solid #33221a;
+  max-height: 480px;
+  overflow-y: auto;
+  background: #33221a;
+  color: #fdeed8;
+  position: absolute;
+  z-index: 2;
+  width: 100%;
+  border-radius: 10px;
+}
+#suggestions div {
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+#suggestions div:hover {
+  background: #271911;
+  color: #fdeed8;
+}
+.suggestion-avatar, .suggestion-search {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.suggestion-search i {
+  color: #33221a;
+}
+.suggestion-search {
+  background: #fdeed8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.suggestion-link,
+.custom-search-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  width: 100%;
+}
+
 /*RESPONSIVE*/
 /* Tablet view */
 @media screen and (max-width: 922px) {

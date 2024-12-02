@@ -24,15 +24,16 @@
   <!--NAVBAR-->
   <nav>
     <div class="left_side">
-      <img src="{% static 'images/onlypans_logo.png' %}" alt="OnlyPans Logo" class="logo" />
-      <p class="title">OnlyPans</p>
+        <img src="{% static 'images/onlypans_logo.png' %}" alt="OnlyPans Logo" class="logo" />
+        <p class="title">OnlyPans</p>
     </div>
 
     <div class="mid">
       <div class="search-container">
         <form action="{% url 'search' %}" method="GET">
           <i class="fas fa-search search-icon"></i>
-          <input type="text" name="q" placeholder="Search..." class="searchbar" value="{{ query }}" />
+          <input type="text" name="q" id="search-input" placeholder="Search..." class="searchbar" value="{{ query }}" autocomplete="off" />
+          <div id="suggestions"></div>
         </form>
       </div>
       <a href="{% url 'home' %}">
@@ -120,6 +121,48 @@
   </nav>
 
   {% block content %} {% endblock %}
+  <script>
+    // SEARCH SUGGESTION
+    const searchInput = document.getElementById('search-input');
+    const suggestionsDiv = document.getElementById('suggestions');
+    
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value; // Keep the full query without trimming
+      if (query.length > 0) {
+        fetch(`/search_suggestions/?q=${encodeURIComponent(query)}`)
+          .then(response => response.json())
+          .then(data => {
+            suggestionsDiv.innerHTML = '';
+            // Display the suggestions
+            data.results.forEach(user => {
+              const suggestion = document.createElement('div');
+              suggestion.innerHTML = `
+                <a href="/profile/${user.username}" class="suggestion-link">
+                  <img src="${user.avatar}" alt="${user.username}" class="suggestion-avatar">
+                  <span>${user.first_name} ${user.last_name}</span>
+                </a>
+              `;
+              suggestionsDiv.appendChild(suggestion);
+            });
+            
+            // Display the custom search query at the bottom
+            const customSearch = document.createElement('div');
+            customSearch.innerHTML = `
+              <a href="/search/?q=${encodeURIComponent(query)}" class="custom-search-link">
+                <div class="suggestion-search">
+                  <i class="fas fa-search"></i> <!-- Fixed the i tag -->
+                </div>
+                <span>${query}</span>
+              </a>
+            `;
+            suggestionsDiv.appendChild(customSearch);
+          });
+      } else {
+        suggestionsDiv.innerHTML = ''; // Clear suggestions if query is empty
+      }
+    });
+  </script>
+  
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <script src="{% static 'js/base.js' %}"></script>

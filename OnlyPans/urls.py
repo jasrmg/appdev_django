@@ -41,4 +41,6 @@ urlpatterns = [
   
   #search test
   path('search/', views.search_view, name='search'),
+  #search suggestions:
+  path('search_suggestions/', views.search_suggestions, name='search_suggestions'),
 ]

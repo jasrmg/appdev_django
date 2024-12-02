@@ -557,6 +557,31 @@ def time_since(created_at):
 
 
 #search
+def search_suggestions(request):
+  query = request.GET.get('q', '').strip()
+  print('QUERY: ', query)
+  if query:
+    query_parts = query.split()
+    if len(query_parts) > 1:
+      suggestions = User.objects.filter(
+        Q(first_name__icontains=query_parts[0]) | 
+        Q(last_name__icontains=query_parts[1]))[:7]
+    else:
+      suggestions = User.objects.filter(
+        Q(first_name__icontains=query) | Q(last_name__icontains=query))[:7]
+    results = [
+      {
+        'id': user.id, 
+        'username': user.username,
+        'first_name': user.first_name, 
+        'last_name': user.last_name,
+        'avatar': user.avatar.url if user.avatar else ''
+        } 
+        for user in suggestions]
+    # print('RESULTS ',results)
+  else:
+    results = []
+  return JsonResponse({'results': results})
 
 def search_view(request):
   query = request.GET.get('q')
