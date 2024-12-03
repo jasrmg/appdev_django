@@ -30,7 +30,7 @@
 
     <div class="mid">
       <div class="search-container">
-        <form action="{% url 'search' %}" method="GET">
+        <form action="{% url 'search' %}" method="GET" id="search-form">
           <i class="fas fa-search search-icon"></i>
           <input type="text" name="q" id="search-input" placeholder="Search..." class="searchbar" value="{{ query }}" autocomplete="off" />
           <div id="suggestions"></div>
@@ -159,6 +159,13 @@
           });
       } else {
         suggestionsDiv.innerHTML = ''; // Clear suggestions if query is empty
+      }
+    });
+    //dont allow to search if its empty
+    document.getElementById("search-form").addEventListener("submit", function(event) {
+      //get the input field
+      if (searchInput.value.trim() === "") {
+        event.preventDefault();
       }
     });
   </script>

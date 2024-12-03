@@ -559,7 +559,6 @@ def time_since(created_at):
 #search
 def search_suggestions(request):
   query = request.GET.get('q', '').strip()
-  print('QUERY: ', query)
   if query:
     query_parts = query.split()
     if len(query_parts) > 1:
@@ -583,8 +582,11 @@ def search_suggestions(request):
     results = []
   return JsonResponse({'results': results})
 
+from django.db.models import Count
 def search_view(request):
   query = request.GET.get('q')
+  if not query:
+    return render(request, 'OnlyPans/search.html', {})
   post = []
   users = []
 
@@ -594,10 +596,13 @@ def search_view(request):
       Q(title__icontains=query) | Q(description__icontains=query)
     ).distinct()
     #search users by username or name
-    users = User.objects.filter(
+    users = User.objects.annotate(
+      follower_count = Count('followers')
+    ).filter(
       Q(username__icontains=query) | Q(first_name__icontains=query) | Q(last_name__icontains=query)
     ).distinct()
-
+    # for u in users:
+    #   print(f"{u.username}: {u.follower_count} followers")
   context = {
     'query': query,
     'posts': posts,

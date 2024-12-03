@@ -1,64 +1,57 @@
 {% load static %} {% include 'base.html' %}
 <link rel="stylesheet" href="{% static 'css/search.css' %}" />
+
 {% block content %}
 
 <main>
-  <aside>
+  <aside id="aside-filter">
     <h2>Search results</h2>
     <hr />
     <div class="filters">
-      <a href="#"><i class="fas fa-th"></i> All</a>
-      <a href="#"><i class="fas fa-newspaper"></i> Posts</a>
-      <a href="#"><i class="fas fa-users"></i> People</a>
-      <a href="#"><i class="fas fa-hamburger"></i> Meat</a>
-      <a href="#"><i class="fas fa-drumstick-bite"></i> Chicken</a>
-      <a href="#"><i class="fas fa-fish"></i> Seafood</a>
-      <a href="#"><i class="fas fa-carrot"></i> Veggies</a>
-      <a href="#"><i class="fas fa-ice-cream"></i> Dessert</a>
-      <a href="#"><i class="fas fa-cookie"></i> Snack</a>
-      <a href="#"><i class="fas fa-coffee"></i> Beverage</a>
+      <a href="#" class="active" id="all-filter"><i class="fas fa-th"></i> All</a>
+      <a href="#" id="posts-filter"><i class="fas fa-newspaper"></i> Posts</a>
+      <a href="#" id="people-filter"><i class="fas fa-users"></i> People</a>
+      <a href="#" id="meat-filter"><i class="fas fa-hamburger"></i> Meat</a>
+      <a href="#" id="seafood-filter"><i class="fas fa-fish"></i> Seafood</a>
+      <a href="#" id="chicken-filter"><i class="fas fa-drumstick-bite"></i> Chicken</a>
+      <a href="#" id="veggies-filter"><i class="fas fa-carrot"></i> Veggies</a>
+      <a href="#" id="dessert-filter"><i class="fas fa-ice-cream"></i> Dessert</a>
+      <a href="#" id="snack-filter"><i class="fas fa-cookie"></i> Snack</a>
+      <a href="#" id="beverage-filter"><i class="fas fa-coffee"></i> Beverage</a>
     </div>
   </aside>
   <div class="result-container">
-    <section class="results">
+    <section class="user-results" id="user-results">
       <h2>People</h2>
-      <div class="person">
+      {% for user in users %}
+      <div class="person user-item {% if forloop.counter > 3 %} hidden {% endif %}">
+        {% comment %}style="{% if forloop.counter > 3 %} display: none;{% endif %}"{% endcomment %}
         <img
-          src="https://media.wired.com/photos/598e35fb99d76447c4eb1f28/master/pass/phonepicutres-TA.jpg"
-          alt="avatar"
+          src="{{ user.avatar.url }}"
+          alt="{{ user.username }}"
         />
         <div>
-          <a href="">Ethan Acasio</a>
-          <span>5 followers</span>
+          <a href="{% url 'profile' user.username %}">{{ user.first_name }} {{ user.last_name }}</a>
+          {% if user.follower_count == 0 %}
+            <span>{{ user.follower_count }} follower</span>
+          {% else %}
+            <span>{{ user.follower_count }} {{ user.follower_count|pluralize:"follower, followers" }}</span>
+          {% endif %}
         </div>
         <button class="follow-btn">Follow</button>
-      </div>
+      </div> 
+      {% empty %}
       <div class="person">
-        <img
-          src="https://static.vecteezy.com/system/resources/thumbnails/009/273/280/small/concept-of-loneliness-and-disappointment-in-love-sad-man-sitting-element-of-the-picture-is-decorated-by-nasa-free-photo.jpg"
-          alt="avatar"
-        />
-        <div>
-          <a href="">Jeño Flores</a>
+        <span>No users found.</span>
+      </div>
 
-          <span>5 followers</span>
-        </div>
-        <button class="follow-btn">Follow</button>
-      </div>
-      <div class="person">
-        <img
-          src="https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_640.jpg"
-          alt="avatar"
-        />
-        <div>
-          <a href="">Shane Dela Torre</a>
-
-          <span>5 followers</span>
-        </div>
-        <button class="follow-btn">Follow</button>
-      </div>
-      <button class="see-all-btn">See all</button>
+      {% endfor %}
+      {% if users|length > 3 %}
+        <button class="see-all-btn" id="toggle-btn">See More</button>
+      {% endif %}
     </section>
   </div>
+
 </main>
+<script src="{% static 'js/search.js' %}"></script>
 {% endblock %}

@@ -6,6 +6,9 @@ nav {
   padding: 10px 80px;
   background-color: var(--accent-color);
   color: var(--primary-color);
+  position: sticky;
+  top: 0;
+  z-index: 3;
 }
 
 .left_side {

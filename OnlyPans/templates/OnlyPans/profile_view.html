@@ -19,10 +19,7 @@
 
 
       <div class="follow_details">
-        <p>
-          <span id="followerModalBtn"> {{ number_of_follower }} follower{% if number_of_follower > 1 %}s{% endif %}
-          </span>
-        </p>
+          <span id="followerModalBtn"> {{ number_of_follower }} follower{% if number_of_follower > 1 %}s{% endif %}</span>
         <!--follower modal-->
         <div id="followerModal" class="modal">
           <div class="followerContent">
@@ -46,12 +43,9 @@
             </div>
           </div>
         </div>
-        <p class="dot">&#x2022;</p>
-        
-        <p>
+        <span class="dot">&#x2022;</span>
           <span id="followingModalBtn"> {{ number_of_following }} following{% if number_of_following > 1 %}s{% endif %}
           </span>
-        </p>
         <!--following modal-->
         <div id="followingModal" class="modal">
           <div class="followingContent">

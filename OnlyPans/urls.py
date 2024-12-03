@@ -39,7 +39,7 @@ urlpatterns = [
   #load more comments:
   path('load_more_comments/<int:post_id>/', views.load_more_comments, name="load_more_comments"),
   
-  #search test
+  #search
   path('search/', views.search_view, name='search'),
   #search suggestions:
   path('search_suggestions/', views.search_suggestions, name='search_suggestions'),

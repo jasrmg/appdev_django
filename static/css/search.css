@@ -7,10 +7,13 @@ main {
 }
 
 aside {
-  width: 22vw;
+  width: 350px;
   background-color: var(--darker-primary-color);
   padding: 10px;
-  height: 89.8vh;
+  height: 625px;
+  position: sticky;
+  top: 70px;
+  z-index: 2;
 }
 aside h2 {
   margin: 15px 0;
@@ -31,6 +34,10 @@ aside hr {
   color: var(--secondary-color);
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s;
+}
+.filters a.active {
+  background-color: #fdeed8;
 }
 .filters a i {
   margin-right: 10px;
@@ -48,14 +55,17 @@ aside hr {
   margin: 20px; /* Adds whitespace around the container */
 }
 
-section.results {
+section.user-results {
   width: 50vw;
   max-width: 600px;
-  background-color: var(--darker-primary-color);
-  padding: 20px;
-  border-radius: 10px;
-  max-height: 54vh;
+  min-height: 210px;
+  height: 210px;
 }
+/* section.results,
+.user-item,
+.see-all-btn {
+    border: 1px solid red;
+} */
 
 .results h2 {
   margin-bottom: 15px;
@@ -65,7 +75,7 @@ section.results {
 .person {
   display: flex;
   align-items: center;
-  background-color: var(--primary-color);
+  background-color: var(--darker-primary-color);
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 5px;
@@ -109,6 +119,7 @@ section.results {
   font-size: 15px;
   padding: 10px;
   transition: background-color .2s ease;
+  margin-bottom: 20px;
 }
 
 .follow-btn:hover, .see-all-btn:hover {
@@ -116,3 +127,8 @@ section.results {
   color: #1c1b1b;
   border: 2px solid #1c1b1b;
 }
+
+.hidden {
+  display: none !important;
+}
+/*shows the filter*/

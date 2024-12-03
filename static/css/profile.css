@@ -31,7 +31,6 @@ body {
 }
 
 .profile p {
-  margin-top: 20px;
   text-align: center;
 }
 
@@ -79,7 +78,7 @@ a {
   color: var(--secondary-color);
   padding: 20px;
   position: sticky;
-  top: 1px;
+  top: 70px;
   height: auto;
   max-height: 100vh;
   min-width: 406px;
@@ -481,11 +480,14 @@ p:nth-of-type(3) {
 .follow_details {
   display: flex;
 }
+.follow_details span {
+  margin: 10px 0;
+}
 
 .dot {
   padding: 0 10px;
-
 }
+
 
 #followerModalBtn,
 #followingModalBtn {
