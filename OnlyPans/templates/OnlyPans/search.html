@@ -1,14 +1,16 @@
-{% load static %} {% include 'base.html' %}
+{% block content %}
+{% load static %}
+{% include 'base.html' %}
 <link rel="stylesheet" href="{% static 'css/search.css' %}" />
 
-{% block content %}
 
-<main>
-  <aside id="aside-filter">
+{% if user.is_authenticated %}
+<div class="search-view-container">
+  <div id="aside-filter" class="sidebar-search">
     <h2>Search results</h2>
     <hr />
     <div class="filters">
-      <a href="#" class="active" id="all-filter"><i class="fas fa-th"></i> All</a>
+      <a href="#" class="active" id=" all-filter"><i class="fas fa-th"></i> All</a>
       <a href="#" id="posts-filter"><i class="fas fa-newspaper"></i> Posts</a>
       <a href="#" id="people-filter"><i class="fas fa-users"></i> People</a>
       <a href="#" id="meat-filter"><i class="fas fa-hamburger"></i> Meat</a>
@@ -19,7 +21,10 @@
       <a href="#" id="snack-filter"><i class="fas fa-cookie"></i> Snack</a>
       <a href="#" id="beverage-filter"><i class="fas fa-coffee"></i> Beverage</a>
     </div>
-  </aside>
+    
+  </div>
+
+
   <div class="result-container">
     <section class="user-results" id="user-results">
       <h2>People</h2>
@@ -39,7 +44,7 @@
           {% endif %}
         </div>
         <button class="follow-btn">Follow</button>
-      </div> 
+      </div>
       {% empty %}
       <div class="person">
         <span>No users found.</span>
@@ -50,8 +55,14 @@
         <button class="see-all-btn" id="toggle-btn">See More</button>
       {% endif %}
     </section>
+
+    <section class="food-results">
+      <!--  -->
+    </section>
   </div>
 
-</main>
+</div>
+
 <script src="{% static 'js/search.js' %}"></script>
+{% endif %}
 {% endblock %}

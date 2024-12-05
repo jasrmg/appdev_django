@@ -13,6 +13,9 @@
   <link rel="stylesheet" href="{% static 'css/changepassword.css' %}" />
   <link rel="stylesheet" href="{% static 'css/modal.css' %}" />
   <link rel="stylesheet" href="{% static 'css/navbar.css' %}" />
+  <!--preload jquery-->
+  <link rel="preload" href="https://code.jquery.com/jquery-3.6.0.min.js" as="script">
+
   <!--icon cdn-->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
@@ -119,8 +122,10 @@
       </div>
     </div>
   </nav>
-
-  {% block content %} {% endblock %}
+  {% block content %} 
+  
+  
+  {% endblock %}
   <script>
     // SEARCH SUGGESTION
     const searchInput = document.getElementById('search-input');
@@ -169,12 +174,12 @@
       }
     });
   </script>
-  
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <script src="{% static 'js/base.js' %}"></script>
-  <script src="{% static 'js/changepassword.js' %}"></script>
-  <script src="{% static 'js/navbar.js' %}"></script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" defer></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" defer></script>
+  <script src="{% static 'js/base.js' %}" defer></script>
+  <script src="{% static 'js/changepassword.js' %}" defer></script>
+  <script src="{% static 'js/navbar.js' %}" defer></script>
 </body>
 
 </html>

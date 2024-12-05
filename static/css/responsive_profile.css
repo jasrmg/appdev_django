@@ -78,6 +78,9 @@
     margin: 0 auto;
     border-radius: 8px;
   }
+  .profile {
+    margin-top: 70px;
+  }
 
   .body_content {
     flex-direction: column;
