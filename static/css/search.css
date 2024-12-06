@@ -62,23 +62,10 @@ body {
   align-items: center;
   gap: 20px;
 }
-section {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-section.user-results {
-  width: 50vw;
-  max-width: 600px;
-  min-height: 210px;
-  height: 210px;
-}
-/* section.results,
-.user-item,
-.see-all-btn {
-    border: 1px solid red;
-} */
+ .user-results {
+  width: 600px;
+  margin-bottom: 0;
+ }
 
 .results h2 {
   margin-bottom: 15px;
@@ -135,7 +122,6 @@ section.user-results {
   font-size: 15px;
   padding: 10px;
   transition: background-color .2s ease;
-  margin-bottom: 20px;
 }
 
 .search-follow-btn:hover, .see-all-btn:hover {
@@ -147,4 +133,114 @@ section.user-results {
 .hidden {
   display: none !important;
 }
-/*shows the filter*/
+
+/* Food Post Section */
+.search-food-results {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Food Post */
+.search-post {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--darker-primary-color);
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Post Header */
+.search-post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.search-post-owner-details {
+  display: flex;
+  align-items: center;
+}
+
+.search-avatar-image img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.owner-name {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--secondary-color);
+}
+
+.post-date {
+  font-size: 14px;
+  color: #888;
+  margin-left: 5px;
+}
+
+.search-post-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  font-size: 16px;
+}
+
+.search-post-actions i {
+  color: #33221a;
+}
+
+/* Post Body */
+.search-post-body {
+  margin: 10px 0;
+}
+
+.search-post-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--secondary-color);
+}
+
+.search-post-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  margin-top: 10px;
+}
+
+/* Post Footer */
+.search-post-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #555;
+}
+
+.no-of-likes, .no-of-comments {
+  margin-right: 10px;
+}
+
+.search-post-edit, .search-post-delete {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  font-size: 16px;
+}
+
+.search-post-edit:hover {
+  color: #1c1b1b;
+}
+
+.search-post-delete:hover {
+  color: red;
+}

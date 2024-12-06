@@ -1,6 +1,6 @@
+{% include 'base.html' %}
 {% block content %}
 {% load static %}
-{% include 'base.html' %}
 <link rel="stylesheet" href="{% static 'css/search.css' %}" />
 
 
@@ -26,7 +26,7 @@
 
 
   <div class="result-container">
-    <section class="user-results" id="user-results">
+    <div class="user-results">
       <h2>People</h2>
       {% for user in users %}
       <div class="person user-item {% if forloop.counter > 3 %} hidden {% endif %}">
@@ -66,19 +66,49 @@
       {% if users|length > 3 %}
         <button class="see-all-btn" id="toggle-btn">See More</button>
       {% endif %}
-    </section>
+    </div>
 
-    <section class="food-results">
-      <!--  -->
-    </section>
+    <div class="search-food-results">
+      <h2>Posts</h2>
+    <!--post-->
+      <div class="search-post">
+        <!--post header-->
+        <div class="search-post-header">
+          <div class="search-post-owner-details">
+            <div class="search-post-owner">
+              <div class="search-avatar-image">
+                <img src="" alt="{{ user.username }}">
+              </div>
+              <span class="owner-name">asd</span>
+              <span class="post-date">5 mins ago</span>
+            </div>
+          </div>
+          <div class="search-post-actions">
+            <button class="search-post-edit">
+              <i class="fa-solid fa-pencil-alt" style="color: #33221a" title="Edit"></i>
+            </button>
+            <button class="search-post-delete">
+              &times;
+            </button>
+          </div>
+        </div>
+        <!--post body-->
+        <div class="search-post-body">
+          <span class="search-post-title">Testing</span>
+          <div class="search-post-image">
+            <img src="" alt="post-image">
+          </div>
+        </div>
+        <!--post footer-->
+        <div class="search-post-footer">
+          <span class="no-of-likes">10 Likes</span>
+          <span class="no-of-comments">10 Comments</span>
+        </div>
+      </div>
+    </div>
   </div>
-
+  
 </div>
-
-<script>
-  var username = "{{ user.username | escapejs }}"
-  var followUrl = "{% url 'follow_user' user.username %}"
-</script>
 <script src="{% static 'js/search.js' %}"></script>
 {% endif %}
 {% endblock %}
