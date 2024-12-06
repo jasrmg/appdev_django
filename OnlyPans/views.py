@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import login, logout, get_user_model, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Q, Count, Prefetch
 from django.contrib.auth.forms import AuthenticationForm
 #for scrolling
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
@@ -582,31 +582,63 @@ def search_suggestions(request):
     results = []
   return JsonResponse({'results': results})
 
-from django.db.models import Count
+
 def search_view(request):
-  query = request.GET.get('q')
-  if not query:
-    return render(request, 'OnlyPans/search.html', {})
+  query = request.GET.get('q').strip()
   post = []
   users = []
-
+  if not query:
+    return render(request, 'OnlyPans/search.html', {})
+  
   if query:
-    #search post by title or description:
-    posts = Post.objects.filter(
-      Q(title__icontains=query) | Q(description__icontains=query)
-    ).distinct()
-    #search users by username or name
+    #search posts by title or description
+    posts = Post.objects.select_related('user', 'category') \
+      .prefetch_related(
+        'images',
+        Prefetch('comment', queryset=Comment.objects.select_related('user').order_by('-created_at')),#fetch comments
+        Prefetch('like', queryset=Like.objects.select_related('user'))#fetch likes
+      ) \
+      .annotate(
+        like_count=Count('like', distinct=True),
+        comment_count=Count('comment', distinct=True)
+      ) \
+      .filter(Q(title__icontains=query) | Q(description__icontains=query)) \
+      .distinct()
+    
+    #search users by first name or last name
     users = User.objects.annotate(
-      follower_count = Count('followers')
+      follower_count=Count('followers', distinct=True)
     ).filter(
-      Q(username__icontains=query) | Q(first_name__icontains=query) | Q(last_name__icontains=query)
-    ).distinct()
-    # for u in users:
-    #   print(f"{u.username}: {u.follower_count} followers")
+      Q(first_name__icontains=query) | Q(last_name__icontains=query)
+    ).exclude(id=request.user.id)
+
+    #add the following information for each users:
+    for user in users:
+      user.is_following = Follow.objects.filter(follower=request.user, followed=user).exists()
+  
+  # user = User.objects.filter(username__icontains=query)
+  # is_following = Follow.objects.filter(follower=request.user, followed=user).exists()
+  # results = []
+  # results.append({
+  #   'is_following': is_following,
+  # })
+
+  # if query:
+  #   #search post by title or description:
+  #   posts = Post.objects.filter(
+  #     Q(title__icontains=query) | Q(description__icontains=query)
+  #   ).distinct()
+  #   #search users by username or name
+  #   users = User.objects.annotate(
+  #     follower_count = Count('followers')
+  #   ).filter(
+  #     Q(username__icontains=query) | Q(first_name__icontains=query) | Q(last_name__icontains=query)
+  #   ).exclude(id=request.user.id).distinct()
   context = {
     'query': query,
     'posts': posts,
     'users': users,
+    # 'results': results,
     
   }
   return render(request, 'OnlyPans/search.html', context)

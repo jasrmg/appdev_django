@@ -119,13 +119,16 @@ section.user-results {
 }
 
 
-.follow-btn, .see-all-btn {
+.search-follow-btn, .see-all-btn {
   background-color: var(--accent-color);
   color: #fdeed8;
   padding: 5px 10px;
   border: 2px solid var(--accent-color);
   border-radius: 5px;
   cursor: pointer;
+  font-family: Poppins, sans-serif;
+  font-weight: 600;
+  letter-spacing: 1.5px;
 }
 .see-all-btn {
   width: 100%;
@@ -135,7 +138,7 @@ section.user-results {
   margin-bottom: 20px;
 }
 
-.follow-btn:hover, .see-all-btn:hover {
+.search-follow-btn:hover, .see-all-btn:hover {
   background-color: #fdeed8;
   color: #1c1b1b;
   border: 2px solid #1c1b1b;

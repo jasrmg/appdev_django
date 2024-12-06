@@ -202,9 +202,6 @@
             </div>
           </div>
         </div>
-        {% else %}
-        <input type="text" placeholder="Write something to {{ user.first_name }}?" id="createPostDiv" />
-        <!-- Create POST MODAL -->
         {% endif %}
       </div>
       {% if posts %}
@@ -277,7 +274,7 @@
 </div>
 <!--scripts for showing the posts-->
 <script>
-  var username = "{{ user.username | escapejs }}";
+  var username = "{{ user.username | escapejs }}"
   var followUrl = "{% url 'follow_user' user.username %}"
   console.log("{{user.username}}")
 </script>

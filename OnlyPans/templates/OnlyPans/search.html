@@ -10,7 +10,7 @@
     <h2>Search results</h2>
     <hr />
     <div class="filters">
-      <a href="#" class="active" id=" all-filter"><i class="fas fa-th"></i> All</a>
+      <a href="#" class="active" id="all-filter"><i class="fas fa-th"></i> All</a>
       <a href="#" id="posts-filter"><i class="fas fa-newspaper"></i> Posts</a>
       <a href="#" id="people-filter"><i class="fas fa-users"></i> People</a>
       <a href="#" id="meat-filter"><i class="fas fa-hamburger"></i> Meat</a>
@@ -37,13 +37,25 @@
         />
         <div>
           <a href="{% url 'profile' user.username %}">{{ user.first_name }} {{ user.last_name }}</a>
-          {% if user.follower_count == 0 %}
-            <span>{{ user.follower_count }} follower</span>
-          {% else %}
-            <span>{{ user.follower_count }} {{ user.follower_count|pluralize:"follower, followers" }}</span>
-          {% endif %}
+          <span class="search-follower-count">
+            {% if user.follower_count == 0 %}    
+            {{ user.follower_count }} follower
+            {% else %} 
+            {{ user.follower_count }} {{ user.follower_count|pluralize:"follower, followers" }}
+            {% endif %}
+          </span>
+            
+          
         </div>
-        <button class="follow-btn">Follow</button>
+        {% csrf_token %}
+        <button class="search-follow-btn" id="searchFollowBtn" data-username="{{ user.username }}"
+          data-logged-in-username="{{ request.user.username }}">
+          {% if user.is_following %}
+            Unfollow
+          {% else %}
+            Follow
+          {% endif %}
+        </button>
       </div>
       {% empty %}
       <div class="person">
@@ -63,6 +75,10 @@
 
 </div>
 
+<script>
+  var username = "{{ user.username | escapejs }}"
+  var followUrl = "{% url 'follow_user' user.username %}"
+</script>
 <script src="{% static 'js/search.js' %}"></script>
 {% endif %}
 {% endblock %}

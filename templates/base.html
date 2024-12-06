@@ -9,18 +9,21 @@
     {% block title %} {% if title %} {{ title }} {% else %} {{ query }} -
     Search Results | OnlyPans {% endif %} {% endblock %}
   </title>
+  <!--poppins-->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/style.css' %}" />
   <link rel="stylesheet" href="{% static 'css/changepassword.css' %}" />
   <link rel="stylesheet" href="{% static 'css/modal.css' %}" />
   <link rel="stylesheet" href="{% static 'css/navbar.css' %}" />
   <!--preload jquery-->
-  <link rel="preload" href="https://code.jquery.com/jquery-3.6.0.min.js" as="script">
+  <link rel="preload" href="https://ajax.googleapis.com/ajax/libs/jquery-3.6.0/jquery.min.js" as="script">
 
   <!--icon cdn-->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
   <!--browser icon-->
   <link rel="icon" href="{% static 'images/icons/logo onlypans.ico' %}" type="image/x-icon" />
+
 </head>
 
 <body>
@@ -127,52 +130,7 @@
   
   {% endblock %}
   <script>
-    // SEARCH SUGGESTION
-    const searchInput = document.getElementById('search-input');
-    const suggestionsDiv = document.getElementById('suggestions');
-    
-    searchInput.addEventListener('input', () => {
-      const query = searchInput.value; // Keep the full query without trimming
-      if (query.length > 0) {
-        fetch(`/search_suggestions/?q=${encodeURIComponent(query)}`)
-          .then(response => response.json())
-          .then(data => {
-            suggestionsDiv.innerHTML = '';
-            // Display the suggestions
-            data.results.forEach(user => {
-              const suggestion = document.createElement('div');
-              suggestion.innerHTML = `
-                <a href="/profile/${user.username}" class="suggestion-link">
-                  <img src="${user.avatar}" alt="${user.username}" class="suggestion-avatar">
-                  <span>${user.first_name} ${user.last_name}</span>
-                </a>
-              `;
-              suggestionsDiv.appendChild(suggestion);
-            });
-            
-            // Display the custom search query at the bottom
-            const customSearch = document.createElement('div');
-            customSearch.innerHTML = `
-              <a href="/search/?q=${encodeURIComponent(query)}" class="custom-search-link">
-                <div class="suggestion-search">
-                  <i class="fas fa-search"></i> <!-- Fixed the i tag -->
-                </div>
-                <span>${query}</span>
-              </a>
-            `;
-            suggestionsDiv.appendChild(customSearch);
-          });
-      } else {
-        suggestionsDiv.innerHTML = ''; // Clear suggestions if query is empty
-      }
-    });
-    //dont allow to search if its empty
-    document.getElementById("search-form").addEventListener("submit", function(event) {
-      //get the input field
-      if (searchInput.value.trim() === "") {
-        event.preventDefault();
-      }
-    });
+
   </script>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" defer></script>
