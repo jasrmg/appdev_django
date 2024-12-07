@@ -1,6 +1,7 @@
 {% include 'base.html' %}
 {% block content %}
 {% load static %}
+{% load custom_timesince %}
 <link rel="stylesheet" href="{% static 'css/search.css' %}" />
 
 
@@ -11,15 +12,15 @@
     <hr />
     <div class="filters">
       <a href="#" class="active" id="all-filter"><i class="fas fa-th"></i> All</a>
-      <a href="#" id="posts-filter"><i class="fas fa-newspaper"></i> Posts</a>
       <a href="#" id="people-filter"><i class="fas fa-users"></i> People</a>
-      <a href="#" id="meat-filter"><i class="fas fa-hamburger"></i> Meat</a>
-      <a href="#" id="seafood-filter"><i class="fas fa-fish"></i> Seafood</a>
-      <a href="#" id="chicken-filter"><i class="fas fa-drumstick-bite"></i> Chicken</a>
-      <a href="#" id="veggies-filter"><i class="fas fa-carrot"></i> Veggies</a>
-      <a href="#" id="dessert-filter"><i class="fas fa-ice-cream"></i> Dessert</a>
-      <a href="#" id="snack-filter"><i class="fas fa-cookie"></i> Snack</a>
-      <a href="#" id="beverage-filter"><i class="fas fa-coffee"></i> Beverage</a>
+      <a href="#" id="posts-filter"><i class="fas fa-newspaper"></i> Posts</a>
+        <a href="#" id="meat-category"><i class="fas fa-hamburger"></i> Meat</a>
+        <a href="#" id="seafood-category"><i class="fas fa-fish"></i> Seafood</a>
+        <a href="#" id="chicken-category"><i class="fas fa-drumstick-bite"></i> Chicken</a>
+        <a href="#" id="veggies-category"><i class="fas fa-carrot"></i> Veggies</a>
+        <a href="#" id="dessert-category"><i class="fas fa-ice-cream"></i> Dessert</a>
+        <a href="#" id="snack-category"><i class="fas fa-cookie"></i> Snack</a>
+        <a href="#" id="beverage-category"><i class="fas fa-coffee"></i> Beverage</a>
     </div>
     
   </div>
@@ -27,10 +28,9 @@
 
   <div class="result-container">
     <div class="user-results">
-      <h2>People</h2>
+      <h2 id="people-heading">People</h2>
       {% for user in users %}
       <div class="person user-item {% if forloop.counter > 3 %} hidden {% endif %}">
-        {% comment %}style="{% if forloop.counter > 3 %} display: none;{% endif %}"{% endcomment %}
         <img
           src="{{ user.avatar.url }}"
           alt="{{ user.username }}"
@@ -43,9 +43,7 @@
             {% else %} 
             {{ user.follower_count }} {{ user.follower_count|pluralize:"follower, followers" }}
             {% endif %}
-          </span>
-            
-          
+          </span>   
         </div>
         {% csrf_token %}
         <button class="search-follow-btn" id="searchFollowBtn" data-username="{{ user.username }}"
@@ -67,48 +65,71 @@
         <button class="see-all-btn" id="toggle-btn">See More</button>
       {% endif %}
     </div>
+    <!--end for users-->
 
-    <div class="search-food-results">
-      <h2>Posts</h2>
+    <!--start for posts-->
+    <div class="search-food-results {% if forloop.counter > 2 %} hidden {% endif %}">
+      <h2 id="post-heading">Posts</h2>
     <!--post-->
+    {% for post in posts %}
       <div class="search-post">
         <!--post header-->
         <div class="search-post-header">
-          <div class="search-post-owner-details">
-            <div class="search-post-owner">
-              <div class="search-avatar-image">
-                <img src="" alt="{{ user.username }}">
-              </div>
-              <span class="owner-name">asd</span>
-              <span class="post-date">5 mins ago</span>
+          <div class="search-post-owner">
+            <div class="search-avatar-image">
+              <img src="{{ post.user.avatar.url }}" alt="{{ post.user.username }}">
+            </div>
+            <div class="search-post-owner-details">
+              <span class="owner-name">{{ post.user.first_name }}, {{ post.user.last_name }}</span>
+              <span class="post-date">{{ post.created_at | custom_timesince }} ago.</span>
             </div>
           </div>
+          {% if post.user == request.user %}
           <div class="search-post-actions">
             <button class="search-post-edit">
-              <i class="fa-solid fa-pencil-alt" style="color: #33221a" title="Edit"></i>
+              <i class="fa-solid fa-pencil-alt" title="Edit"></i>
             </button>
             <button class="search-post-delete">
-              &times;
+              <span class="search-delete" title="Delete">&times;</span>
             </button>
           </div>
+          {% endif %}
         </div>
         <!--post body-->
         <div class="search-post-body">
-          <span class="search-post-title">Testing</span>
+          <span class="search-post-title">{{ post.title }}</span>
           <div class="search-post-image">
-            <img src="" alt="post-image">
+            {% if post.images.all %}
+            {% for image in post.images.all %}
+            <img src="{{ image.image.url }}" alt="post-image">
+            {% endfor %}
+            {% endif %}
           </div>
         </div>
         <!--post footer-->
         <div class="search-post-footer">
-          <span class="no-of-likes">10 Likes</span>
-          <span class="no-of-comments">10 Comments</span>
+          <span class="no-of-likes">
+            {{ post.like_count }} 
+            <i class="fa-solid fa-heart"></i>
+          </span>
+          <span class="no-of-comments">
+            {{ post.comment_count }} 
+            <i class="fa-solid fa-comment"></i>  
+          </span>
         </div>
+      </div> 
+      {% empty %}
+      <div class="search-post">
+        <span>No posts found.</span>
       </div>
+      {% endfor %}
+      <!--if there are more than 2 posts-->
+      {% if posts|length > 2 %}
+        <button class="see-all-btn" id="toggle-btn-post">See More</button>
+      {% endif %}
     </div>
   </div>
   
 </div>
-<script src="{% static 'js/search.js' %}"></script>
 {% endif %}
 {% endblock %}

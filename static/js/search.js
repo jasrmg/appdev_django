@@ -46,6 +46,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
+
+
   // SCRIPT FOR SHOW MORE USERS
   function toggleUsers() {
     // Select all users and the toggle button
@@ -83,6 +85,8 @@ document.addEventListener('DOMContentLoaded', function() {
       peopleFilter.classList.remove('active');
       allFilter.classList.add('active');
     }
+    // scroll to the button and focus on it
+    toggleButton.scrollIntoView({behavior:'smooth', block:'center'});
   }
 
   // Add the event listener to the button
@@ -90,6 +94,77 @@ document.addEventListener('DOMContentLoaded', function() {
   if (toggleButton) {
     toggleButton.addEventListener('click', toggleUsers);
   }
+  
+  //SCRIPT FOR SHOW MORE POSTS
+  const togglePostBtn = document.getElementById('toggle-btn-post');
+  const posts = document.querySelectorAll('.search-post');
+  //initially hide posts after the first 2:
+  posts.forEach((post, index) => {
+    if (index >= 2) {
+      post.classList.add('hidden');
+    }
+  });
+  //toggle button functionality
+  togglePostBtn.addEventListener('click', function() {
+    const hiddenPosts = document.querySelectorAll('.search-post.hidden');
+
+    if (hiddenPosts.length > 0) {
+      for (let i = 0; i < 2 && hiddenPosts[i]; i++) {
+        hiddenPosts[i].classList.remove('hidden');
+      }
+      //if there are no more hidden posts, change the button text to see less
+      if (document.querySelectorAll('.search-post.hidden').length === 0) {
+        togglePostBtn.textContent = 'See Less';
+      }
+    } else {
+      //hide all posts after the first 2
+      posts.forEach((post, index) => {
+        if (index > 2) {
+          post.classList.add('hidden');
+        }
+      });
+      togglePostBtn.textContent = 'See More';
+    }
+  })
+
+
+
+  //PUT ACTIVE ON THE POSTS IF H2 HEADING IS REACHED:
+  // window.addEventListener('scroll', function() {
+  //   const postHeading = document.getElementById('post-heading');
+  //   const postsFilterLink = document.getElementById('posts-filter');
+  //   const allFilterLink = document.getElementById('all-filter');
+  //   const peopleFilterLink = document.getElementById('people-filter');
+
+  //   //get the position of the posts heading relative to the top of the viewport
+  //   const rect = postHeading.getBoundingClientRect();
+  //   console.log(rect);
+
+  //   const peopleHeading = document.getElementById('people-heading');
+  //   const peopleRect = peopleHeading ? peopleHeading.getBoundingClientRect() : null;
+
+  //   //remove active class from all filters
+  //   document.querySelectorAll('.filters a').forEach(filterLink => {
+  //     filterLink.classList.remove('active');
+  //   });
+  //   //check if the posts section is in the viewport
+  //   const isPostsVisible = rect.top >= 0 && rect.top <= window.innerHeight * 0.5 && rect.bottom <= window.innerHeight;
+
+  //   if (isPostsVisible) {
+  //     postsFilterLink.classList.add('active');
+  //   } else {
+  //     allFilterLink.classList.add('active');
+  //   }
+
+  //   //check if the people section is in the viewport
+  //   if (peopleRect) {
+  //     const isPeopleVisible = peopleRect.top >= 0 && peopleRect.top <= window.innerHeight * 0.5 && peopleRect.bottom <= window.innerHeight;
+  //     if (isPeopleVisible) {
+  //       peopleFilterLink.add('active');
+  //     }
+  //   }
+  // });
+  
 
   //ajax for follow/unfollow in search view:
   document.querySelectorAll('.search-follow-btn').forEach(button => {

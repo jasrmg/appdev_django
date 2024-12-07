@@ -273,8 +273,8 @@ import re
 @login_required
 def profile_view(request, username):
     user = get_object_or_404(User, username=username)
-    print('USER: ', user)
-    print('USERNAME: ', username)
+    # print('USER: ', user)
+    # print('USERNAME: ', username)
     # Flags
     is_own_profile = request.user == user  # Check if the user is the authenticated user
     is_following = Follow.objects.filter(follower=request.user, followed=user).exists()  # Check if the visiting user is following the account
@@ -397,8 +397,6 @@ def profile_view(request, username):
         'initial_comment_limit': initial_comment_limit,
         'comment_counts': {post.post_id: post.comment_count for post in posts},
         'post_word_count': posts_with_word_count, 
-        
-        
     }
     return render(request, 'OnlyPans/profile_view.html', context)
 
@@ -449,15 +447,6 @@ def add_comment(request):
             'message': comment.message,
             'comment_id': comment.comment_id,
             'comment_count': comment_count,
-            # 'comments': [
-            #    {
-            #       'user_avatar': c.user.avatar_url,
-            #       'user_name': f"{c.user.first_name} {c.user.last_name}",
-            #       'message': c.message,
-            #       'created_at': timesince(c.created_at),
-            #       'comment_id': c.comment_id,
-            #    } for c in comments
-            # ]
         }
 
         return JsonResponse({'success': True, **response_data})
@@ -590,50 +579,35 @@ def search_view(request):
   if not query:
     return render(request, 'OnlyPans/search.html', {})
   
+  #normalize the search query to show "meat load" even user searched "meatload"
+  normalized_query = query.replace(" ", "").lower()
+  
   if query:
     #search posts by title or description
     posts = Post.objects.select_related('user', 'category') \
       .prefetch_related(
         'images',
-        Prefetch('comment', queryset=Comment.objects.select_related('user').order_by('-created_at')),#fetch comments
-        Prefetch('like', queryset=Like.objects.select_related('user'))#fetch likes
+        Prefetch('comment_set', queryset=Comment.objects.select_related('user').order_by('-created_at')),#fetch comments
+        Prefetch('like_set', queryset=Like.objects.select_related('user'))#fetch likes
       ) \
       .annotate(
         like_count=Count('like', distinct=True),
         comment_count=Count('comment', distinct=True)
       ) \
-      .filter(Q(title__icontains=query) | Q(description__icontains=query)) \
+      .filter(Q(title__icontains=normalized_query) | Q(description__icontains=normalized_query)) \
       .distinct()
     
     #search users by first name or last name
     users = User.objects.annotate(
       follower_count=Count('followers', distinct=True)
     ).filter(
-      Q(first_name__icontains=query) | Q(last_name__icontains=query)
+      Q(first_name__icontains=normalized_query) | Q(last_name__icontains=normalized_query)
     ).exclude(id=request.user.id)
 
     #add the following information for each users:
     for user in users:
       user.is_following = Follow.objects.filter(follower=request.user, followed=user).exists()
   
-  # user = User.objects.filter(username__icontains=query)
-  # is_following = Follow.objects.filter(follower=request.user, followed=user).exists()
-  # results = []
-  # results.append({
-  #   'is_following': is_following,
-  # })
-
-  # if query:
-  #   #search post by title or description:
-  #   posts = Post.objects.filter(
-  #     Q(title__icontains=query) | Q(description__icontains=query)
-  #   ).distinct()
-  #   #search users by username or name
-  #   users = User.objects.annotate(
-  #     follower_count = Count('followers')
-  #   ).filter(
-  #     Q(username__icontains=query) | Q(first_name__icontains=query) | Q(last_name__icontains=query)
-  #   ).exclude(id=request.user.id).distinct()
   context = {
     'query': query,
     'posts': posts,

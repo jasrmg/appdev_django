@@ -8,7 +8,7 @@ body {
 }
 
 .sidebar-search {
-  min-width: 350px;
+  min-width: 290px;
   background: var(--darker-primary-color);
   padding: 10px;
   position: fixed;
@@ -64,12 +64,17 @@ body {
 }
  .user-results {
   width: 600px;
-  margin-bottom: 0;
+  gap: 20px;
  }
 
-.results h2 {
+ .user-results h2 {
   margin-bottom: 15px;
-  font-size: 20px;
+}
+.user-results h2,
+.search-food-results h2 {
+  font-size: 24px;
+  letter-spacing: 1.5px;
+  color: var(--secondary-color);
 }
 
 .person {
@@ -86,6 +91,7 @@ body {
   height: 50px;
   border-radius: 50%;
   margin-right: 10px;
+  border: 1px solid var(--secondary-color)
 }
 
 .person div {
@@ -122,6 +128,9 @@ body {
   font-size: 15px;
   padding: 10px;
   transition: background-color .2s ease;
+}
+#toggle-btn-post {
+  margin-bottom: 20px;
 }
 
 .search-follow-btn:hover, .see-all-btn:hover {
@@ -160,10 +169,12 @@ body {
   align-items: center;
   margin-bottom: 10px;
 }
-
+.search-post-owner {
+  display: flex;
+}
 .search-post-owner-details {
   display: flex;
-  align-items: center;
+  flex-direction: column;
 }
 
 .search-avatar-image img {
@@ -171,6 +182,7 @@ body {
   height: 40px;
   border-radius: 50%;
   margin-right: 10px;
+  border: 1px solid var(--secondary-color);
 }
 
 .owner-name {
@@ -180,37 +192,46 @@ body {
 }
 
 .post-date {
-  font-size: 14px;
+  font-size: 12px;
   color: #888;
-  margin-left: 5px;
 }
 
 .search-post-actions button {
-  background: none;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  
+  justify-content: center;
+  align-items: center;
   border: none;
-  cursor: pointer;
-  padding: 8px;
-  font-size: 16px;
+  background: none;
 }
 
-.search-post-actions i {
-  color: #33221a;
+
+.search-post-delete {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--accent-color);
+  transition: transform 0.3s ease, color 0.3s ease;
 }
 
 /* Post Body */
 .search-post-body {
   margin: 10px 0;
+  text-align: center;
 }
 
-.search-post-title {
+span.search-post-title {
   font-size: 18px;
   font-weight: bold;
   color: var(--secondary-color);
 }
 
 .search-post-image img {
-  width: 100%;
-  height: auto;
+  object-fit: cover;
+  width: 570px;
+  height: 570px;
+  
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   margin-top: 10px;
@@ -221,26 +242,34 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 14px;
-  color: #555;
-}
-
-.no-of-likes, .no-of-comments {
-  margin-right: 10px;
+  font-size: 16px;
+  color: var(--accent-color);
 }
 
 .search-post-edit, .search-post-delete {
   background-color: transparent;
   border: none;
   cursor: pointer;
-  padding: 6px;
-  font-size: 16px;
 }
 
 .search-post-edit:hover {
-  color: #1c1b1b;
+  color: var(--secondary-color);
 }
 
 .search-post-delete:hover {
-  color: red;
+  color: var(--red-color);
+  transform: scale(1.4);
+}
+.no-of-comments, .no-of-likes {
+  color: var(--accent-color);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.no-of-likes .fa-heart {
+  color: var(--red-color);
+}
+.no-of-comments .fa-comment {
+  color: var(--accent-color);
 }

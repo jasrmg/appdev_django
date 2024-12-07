@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_timesince %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,14 +25,24 @@
   <!--browser icon-->
   <link rel="icon" href="{% static 'images/icons/logo onlypans.ico' %}" type="image/x-icon" />
 
+
+  <!--javascript-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" defer></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" defer></script>
+  <script src="{% static 'js/base.js' %}" defer></script>
+  <script src="{% static 'js/changepassword.js' %}" defer></script>
+  <script src="{% static 'js/navbar.js' %}" defer></script>
+  <script src="{% static 'js/search.js' %}" defer></script>
 </head>
 
 <body>
   <!--NAVBAR-->
   <nav>
     <div class="left_side">
+      <a href="{% url 'home' %}" id="OP-logo">
         <img src="{% static 'images/onlypans_logo.png' %}" alt="OnlyPans Logo" class="logo" />
         <p class="title">OnlyPans</p>
+      </a>
     </div>
 
     <div class="mid">
@@ -73,6 +84,7 @@
         <span class="drop-down-arrow" id="userDropdownButton">
           <i class="fas fa-chevron-down"></i>
         </span>
+        
         <div class="dropdown-content" id="userDropdown">
           <a onclick="openModal()">Change Password</a>
           <!--CHANGE PASSWORD MODAL-->
@@ -132,12 +144,6 @@
   <script>
 
   </script>
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" defer></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" defer></script>
-  <script src="{% static 'js/base.js' %}" defer></script>
-  <script src="{% static 'js/changepassword.js' %}" defer></script>
-  <script src="{% static 'js/navbar.js' %}" defer></script>
 </body>
 
 </html>
