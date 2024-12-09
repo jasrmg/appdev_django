@@ -6,6 +6,9 @@
 
 
 {% if user.is_authenticated %}
+<!--csrf form-->
+<form method="post" id="csrf_form">{% csrf_token %}</form>
+
 <div class="search-view-container">
   <div id="aside-filter" class="sidebar-search">
     <h2>Search results</h2>
@@ -104,7 +107,7 @@
               &times;
             </button>
             <!--the delete confirmation modal is added on the base template-->
-            <form method="post" id="csrf_form">{% csrf_token %}</form>
+            
           </div>
           {% endif %}
         </div>

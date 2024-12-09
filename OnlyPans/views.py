@@ -274,7 +274,7 @@ def delete_post(request, post_id):
   print('SEARCH QUERY: ', search_query)
   #default if next_url is not provided:
   if not next_url:
-    next_url = 'search'
+    next_url = 'home'
 
   #check if the next_url is the profile
   if 'profile' in next_url:
@@ -291,8 +291,6 @@ import re
 @login_required
 def profile_view(request, username):
     user = get_object_or_404(User, username=username)
-    # print('USER: ', user)
-    # print('USERNAME: ', username)
     # Flags
     is_own_profile = request.user == user  # Check if the user is the authenticated user
     is_following = Follow.objects.filter(follower=request.user, followed=user).exists()  # Check if the visiting user is following the account
@@ -303,16 +301,7 @@ def profile_view(request, username):
     editbio_form = EditBioForm(instance=user)
     
     comments = Comment.objects.all()
-
-    #check if there is a post to edit:
-    post_to_edit = None
-    if request.method == 'POST' and 'edit_post_id' in request.POST:
-      post_id = request.POST.get('edit_post_id')
-      post_to_edit = get_object_or_404(Post, pk=post_id, user=user)
-      editpost_form = EditPostForm(instance=post_to_edit)
-    else:
-      editpost_form = EditPostForm()
-
+    
     # Fetch user posts and prefetch related fields
     posts = Post.objects.filter(user=user).order_by('-created_at').prefetch_related(
     'images',
@@ -325,13 +314,9 @@ def profile_view(request, username):
     for post in posts:
         comments = list(post.comment_set.all())
         post.comment_count = post.comment_set.count()
-        # post.initial_comments = comments[:initial_comment_limit]
-        # post.remaining_comments = comments[initial_comment_limit:]
 
         post.initial_comments = comments[:initial_comment_limit]
         post.remaining_comments = comments[initial_comment_limit:]
-        # print('INITIAL COMMENTS: ', comments[:initial_comment_limit])
-        # print('REMAINING COMMENTS: ', comments[initial_comment_limit:])
 
         # split the comments based on comma, wont strip it if its within ()
         post.ingredients_list = [ingredient.strip() for ingredient in re.split(r',\s*(?![^()]*\))', post.ingredients)]
@@ -342,16 +327,6 @@ def profile_view(request, username):
         #count sa # of words sa post:
         post.word_count = post.word_count()
         posts_with_word_count.append(post)
-
-    #AJAX REQUEST FOR LOAD MORE:
-    # if request.META.get('HTTP:_X_REQUESTED_WITH') == 'XMLHttpRequest':
-    #   if 'load_more_comments' in request.POST:
-    #     post_id = request.POST.get('post_id')
-    #     post = get_object_or_404(Post, pk=post_id) 
-        # remaining_comments = post.remaining_comments[:2]
-        # post.remaining_comments = post.remaining_comments[2:]
-        # comments_data = [{'content': comment.content} for comment in remaining_comments]
-        # return JsonResponse({'comments': comments_data, 'post_id': post_id})
 
     paginator = Paginator(posts, 1)  # Display one post per page
     page_number = request.GET.get('page', 1)
@@ -375,8 +350,6 @@ def profile_view(request, username):
 
     # Handle AJAX requests
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-        # print("visible posts ids: ", visible_posts_ids)
-        # print("page obj: ", page_obj)
         if not page_obj:  # If there are no posts to show
             return HttpResponse('')  # Return an empty response for AJAX
         return render(request, 'OnlyPans/post.html', {'posts': page_obj, 'liked_posts': liked_posts})
@@ -397,8 +370,6 @@ def profile_view(request, username):
         'createpost_form': createpost_form,
         'editprofile_form': editprofile_form,
         'editbio_form': editbio_form,
-        'editpost_form': editpost_form,
-        'post_to_edit': post_to_edit,
         'categories': categories,
 
         'is_own_profile': is_own_profile,
@@ -417,6 +388,8 @@ def profile_view(request, username):
         'post_word_count': posts_with_word_count, 
     }
     return render(request, 'OnlyPans/profile_view.html', context)
+
+
 
 #like
 @login_required
