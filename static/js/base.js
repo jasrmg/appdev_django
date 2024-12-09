@@ -5,8 +5,8 @@ $(document).ready(function () {
   const $editProfileForm = $("#editProfile form");
   const $submitProfileBtn = $("#editProfileSubmitbtn");
   let formChanged = false;
-  //function to close the modals:
-  function toggleModal(modal, show) {
+  //GLOBAL function to close the modals:
+  window.toggleModal = function (modal, show) {
     if (show) {
       $(modal).show();
     } else {
@@ -111,54 +111,7 @@ $(document).ready(function () {
     toggleModal($createPostModal, false);
   });
 
-  //POST
-  //DELETE POST
-  let postIdToDelete;
-  const $deletePostModal = $("#deleteConfirmationModal");
-  const $closePostModalDelBtn = $("#closeDeletePostModal");
-  const $confirmPostDeleteBtn = $("#postConfirmDeleteBtn");
-  const $cancelPostDeleteBtn = $("#cancelDeleteBtn");
-  // const $openDeleteModal = $(".delete_icon");
-  //close delete modal:
-  $closePostModalDelBtn.on("click", () => {
-    toggleModal($deletePostModal, false);
-  });
-  $cancelPostDeleteBtn.on("click", () => {
-    toggleModal($deletePostModal, false);
-  });
-
-  //function to confirm delete:
-  function confirmDelete(postIdDel) {
-    console.log("confirm delete: ", postIdDel);
-    postIdToDelete = postIdDel;
-    $deletePostModal.show();
-  }
-  // Event delegation for dynamically created delete buttons:
-  $(document).on("click", "#deletePostModalBtn", function () {
-    postIdToDelete = $(this).data("post-id"); // Get the post ID from the button's data attribute
-    confirmDelete(postIdToDelete); // Open the delete confirmation modal
-  });
-
-  //confirm and submit the deletion:
-  $confirmPostDeleteBtn.on("click", () => {
-    const delPostToken = $(
-      '#csrf_form input[name="csrfmiddlewaretoken"]'
-    ).val();
-    console.log(postIdToDelete);
-    //create form to submit the delete post:
-    const $deletePostForm = $("<form>", {
-      method: "POST",
-      action: deletePostUrl.replace("0", postIdToDelete),
-    }).append(
-      $("<input>", {
-        type: "hidden",
-        name: "csrfmiddlewaretoken",
-        value: delPostToken,
-      })
-    );
-    $("body").append($deletePostForm);
-    $deletePostForm.submit();
-  });
+  
 
   // Reference to the edit post modal
   const $editPostModal = $("#editPost");
@@ -462,11 +415,12 @@ $(document).ready(function () {
       toggleModal($followingModal, false);
     else if ($(event.target).is($followerModal))
       toggleModal($followerModal, false);
-    else if ($(event.target).is($bioModal)) toggleModal($bioModal, false);
+    else if ($(event.target).is($bioModal)) 
+      toggleModal($bioModal, false);
     else if ($(event.target).is($createPostModal))
       toggleModal($createPostModal, false);
-    else if ($(event.target).is($deletePostModal))
-      toggleModal($deletePostModal, false);
+    // else if ($(event.target).is($deletePostModal))
+    //   toggleModal($deletePostModal, false);
     else if ($(event.target).is($editPostModal))
       toggleModal($editPostModal, false);
     else if ($(event.target).is($deleteCommentModal))
@@ -475,111 +429,3 @@ $(document).ready(function () {
 });
 //----------------OUTSIDE THE $(document).ready(function())--------------------------\\
 
-
-/* sa like nako// Variables for delete post
-let postIdToDelete = null; // Store the ID of the post to delete
-const $deleteModal = $("#deleteConfirmationModal");
-const $closeDeleteModalBtn = $("#closeDeleteModal");
-const $confirmDeleteBtn = $("#postConfirmDeleteBtn");
-const $cancelDeleteBtn = $("#cancelDeleteBtn");
-
-// Variables for edit post
-const $editPostModal = $("#editPost");
-const $closeEditPostBtn = $("#editPostX");
-
-// Function to confirm deletion of post
-function confirmDelete(postId) {
-  console.log("Confirm Delete: ", postId);
-  postIdToDelete = postId; // Store the post ID
-  $deleteModal.show(); // Show the delete confirmation modal
-}
-
-// Close delete modal when 'X' or cancel button is clicked
-$closeDeleteModalBtn.on("click", function () {
-  console.log("close delete modal pressed");
-  $deleteModal.hide(); // Close the delete modal
-});
-
-$cancelDeleteBtn.on("click", function () {
-  console.log("cancel delete modal pressed");
-  $deleteModal.hide(); // Close the delete modal
-});
-
-// Confirm and submit delete request
-$confirmDeleteBtn.on("click", function () {
-  const delcsrfToken = $('#csrf_form input[name="csrfmiddlewaretoken"]').val();
-  
-  // Create a form to submit the delete request
-  const $form = $('<form>', {
-    method: "POST",
-    action: deletePostUrl.replace("0", postIdToDelete)
-  }).append($('<input>', {
-    type: "hidden",
-    name: "csrfmiddlewaretoken",
-    value: delcsrfToken
-  }));
-
-  // Append the form to the body and submit
-  $("body").append($form);
-  $form.submit();
-});
-
-// Function to open the edit post modal
-function openEditPostModal(postId) {
-  // Set the form action to target the correct post ID
-  const $form = $editPostModal.find("form");
-  $form.attr("action", `/edit-post/${postId}/`); // URL to edit the post
-
-  // Show the edit modal
-  $editPostModal.show();
-}
-
-// Close edit modal when 'X' is clicked
-if ($closeEditPostBtn.length) {
-  $closeEditPostBtn.on("click", function () {
-    $editPostModal.hide(); // Close the edit post modal
-  });
-}
-
-// Close either modal when clicking outside of it
-$(window).on("click", function (event) {
-  if ($(event.target).is($deleteModal)) {
-    $deleteModal.hide(); // Close the delete modal
-  } else if ($(event.target).is($editPostModal)) {
-    $editPostModal.hide(); // Close the edit modal
-  }
-});
-
-// AJAX for the like button
-$(document).ready(function () {
-  // Use event delegation
-  $(document).on("click", ".like_button", function (e) {
-    e.preventDefault(); // Prevent the default button behavior
-
-    const postId = $(this).data("post-id"); // Get the post ID
-    const $button = $(this); // Reference to the button that was clicked
-    const csrfToken = $('#csrf_form input[name="csrfmiddlewaretoken"]').val();
-
-    $.ajax({
-      url: `/like/${postId}/`, // URL for the toggle_like view
-      type: "POST",
-      data: {
-        csrfmiddlewaretoken: csrfToken, // CSRF token
-      },
-      success: function (data) {
-        // Update the button text based on the response
-        if (data.liked) {
-          $button.html('<i class="fa-solid fa-heart"></i> Unlike'); // Change to Unlike
-        } else {
-          $button.html('<i class="fa-solid fa-heart"></i> Like'); // Change to Like
-        }
-        // Update the like count display
-        $("#like-count-" + postId).contents().first().replaceWith(data.like_count); // Update the like count
-      },
-      error: function (xhr, status, error) {
-        console.error("An error occurred:", error);
-      },
-    });
-  });
-});
-*/

@@ -262,11 +262,29 @@ def edit_post(request, post_id):
 
 @login_required
 def delete_post(request, post_id):
-    post = get_object_or_404(Post, post_id=post_id)
-    if request.user == post.user:  # Check if the logged-in user is the owner of the post
-        post.delete()
-        messages.success(request, "Your post has been deleted.")
-    return redirect('profile', username=request.user.username)
+  post = get_object_or_404(Post, post_id=post_id)
+  if request.user == post.user:  # Check if the logged-in user is the owner of the post
+    post.delete()
+    messages.success(request, "Your post has been deleted.")
+
+  #get the next parameter from the request if available
+  next_url = request.POST.get('next') or request.GET.get('next')
+  print('NEXT URL: ', next_url)
+  search_query = request.GET.get('q')
+  print('SEARCH QUERY: ', search_query)
+  #default if next_url is not provided:
+  if not next_url:
+    next_url = 'search'
+
+  #check if the next_url is the profile
+  if 'profile' in next_url:
+    next_url = f'/profile/{request.user.username}/'
+
+  #if its from the search view
+  if search_query:
+    next_url = f'/search/q={search_query}'
+
+  return redirect(next_url)
 
 #profile view main code
 import re
@@ -595,7 +613,8 @@ def search_view(request):
         comment_count=Count('comment', distinct=True)
       ) \
       .filter(Q(title__icontains=normalized_query) | Q(description__icontains=normalized_query)) \
-      .distinct()
+      .distinct() \
+      .order_by('-created_at')
     
     #search users by first name or last name
     users = User.objects.annotate(

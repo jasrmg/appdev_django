@@ -86,12 +86,25 @@
           </div>
           {% if post.user == request.user %}
           <div class="search-post-actions">
-            <button class="search-post-edit">
+            <button class="edit-icon" title="{{ post.title | escapejs}}"
+            id="openEditPostModalBtn"
+            data-post-id="{{ post.post_id }}"
+            data-post-category="{{ post.category.category_id | escapejs }}"
+            data-post-description="{{ post.description | escapejs }}"
+            data-post-ingredients="{{ post.ingredients | escapejs }}"
+            >
               <i class="fa-solid fa-pencil-alt" title="Edit"></i>
             </button>
-            <button class="search-post-delete">
-              <span class="search-delete" title="Delete">&times;</span>
+            <!--edit post modal is added on the base template-->
+
+            <button class="delete-post-button" title="Delete Post"
+            id="deletePostModalBtn" 
+            data-post-id="{{ post.post_id }}"
+            data-next="{{ request.path }}?q={{ request.GET.q }}">
+              &times;
             </button>
+            <!--the delete confirmation modal is added on the base template-->
+            <form method="post" id="csrf_form">{% csrf_token %}</form>
           </div>
           {% endif %}
         </div>

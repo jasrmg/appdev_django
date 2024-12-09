@@ -17,7 +17,8 @@
   <link rel="stylesheet" href="{% static 'css/modal.css' %}" />
   <link rel="stylesheet" href="{% static 'css/navbar.css' %}" />
   <!--preload jquery-->
-  <link rel="preload" href="https://ajax.googleapis.com/ajax/libs/jquery-3.6.0/jquery.min.js" as="script">
+  <!-- <link rel="preload" href="https://ajax.googleapis.com/ajax/libs/jquery-3.6.0/jquery.min.js" as="script"> -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
   <!--icon cdn-->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -27,12 +28,12 @@
 
 
   <!--javascript-->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" defer></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" defer></script>
   <script src="{% static 'js/base.js' %}" defer></script>
   <script src="{% static 'js/changepassword.js' %}" defer></script>
   <script src="{% static 'js/navbar.js' %}" defer></script>
   <script src="{% static 'js/search.js' %}" defer></script>
+  <script src="{% static 'js/delete-post.js' %}" defer></script>
 </head>
 
 <body>
@@ -141,6 +142,11 @@
   
   
   {% endblock %}
+
+  <!--delete confirmation modal-->
+  {% include 'OnlyPans/modals/post_delete_confirmation.html' %}
+  <!--edit post modal-->
+  {% include 'OnlyPans/modals/editpost_modal.html' %}
   <script>
 
   </script>

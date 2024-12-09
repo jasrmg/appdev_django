@@ -13,53 +13,34 @@
     {% if request.user == post.user %}
 
     <div class="post_actions">
-      <button class="edit_icon" title="{{ post.title | escapejs }}" id="openEditPostModalBtn"
+      <button class="edit-icon" title="{{ post.title | escapejs }}" id="openEditPostModalBtn"
         data-post-id="{{ post.post_id }}" data-post-category="{{ post.category.category_id | escapejs }}"
         data-post-description="{{ post.description | escapejs }}"
         data-post-ingredients="{{ post.ingredients | escapejs }}"
-        style="background: none; border: none; cursor: pointer">
-        <i class="fa-solid fa-pencil-alt" style="color: #33221a" title="Edit"></i>
+        >
+        <i class="fa-solid fa-pencil-alt" title="Edit"></i>
       </button>
-
-      <!--edit post modal-->
-      {% include 'OnlyPans/modals/editpost_modal.html' %}
-
-      <button class="delete_icon" title="Delete Post" id="deletePostModalBtn" data-post-id="{{ post.post_id }}" style="
-  padding: 2px;
-  font-size: 20px;
-  font-weight: bold;
-  border-radius: 50%;
-  border: none;
-  width: 30px;
-  height: 30px;
-  color: #fdeed8;
-  background-color: #33221a;
-  cursor: pointer;
-">
+      <!--edit post modal is added on the base template-->
+  
+      <button class="delete-post-button" title="Delete Post" id="deletePostModalBtn" 
+      data-post-id="{{ post.post_id }}"
+      data-next="{{ request.path }}">
         &times;
       </button>
+      <!--the delete confirmation modal is added on the base template-->
     </div>
     {% endif %}
   </div>
-  {% include 'OnlyPans/modals/post_delete_confirmation.html' %}
   <div class="post_body">
     <h3 style="text-align: center">{{ post.title }}</h3>
     <!--DESCRIPTION-->
-    <style>
-      .truncated {
-        word-wrap: break-word;
-        white-space: normal;
-        overflow-wrap: break-word;
-        width: 100%;
-      }
-    </style>
-    <p id="truncatedDescription-{{ post.post_id }}" class="truncated" style="text-align: justify;">
+    <p id="truncatedDescription-{{ post.post_id }}" class="truncated">
       {{ post.description | truncatewords:30 }}
       {% if post.word_count > 30 %}
       <span href="" class="seeMoreDescription" data-post-id="{{ post.post_id }}">See more</span>
       {% endif %}
     </p>
-    <p id="fullDescription-{{ post.post_id}}" style="text-align: justify; display: none;">
+    <p class="full-description" id="fullDescription-{{ post.post_id}}">
       {{ post.description }}
       <span class="seeLessDescription" data-post-id="{{ post.post_id}}">See less</span>
     </p>

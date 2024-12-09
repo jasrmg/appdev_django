@@ -259,6 +259,18 @@ p:nth-of-type(3) {
 .post_body p {
   font-size: 14px;
 }
+/*from the inline css*/
+.truncated {
+  word-wrap: break-word;
+  white-space: normal;
+  overflow-wrap: break-word;
+  width: 100%;
+  text-align: justify;
+}
+.full-description {
+  text-align: justify; 
+  display: none;
+}
 
 .post_image {
   width: 100%;

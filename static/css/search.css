@@ -196,7 +196,7 @@ body {
   color: #888;
 }
 
-.search-post-actions button {
+.search-post-actions .search-post-edit {
   width: 20px;
   height: 20px;
   padding: 0;

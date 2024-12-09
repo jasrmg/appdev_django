@@ -45,3 +45,37 @@ body {
 
 /*NAA SA profile.css ang SUMPAY SA PROFILE NA CSS*/
 /*NAA SA navbar.css ang navbar na css*/
+
+/*DELETE BUTTON STYLES*/
+.delete-post-button {
+  padding: 2px;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 50%;
+  border: 1px solid var(--accent-color);
+  width: 30px;
+  height: 30px;
+  color: var(--primary-color);
+  background-color: var(--accent-color);
+  cursor: pointer !important;
+  transition: transform 0.2s ease;
+}
+.delete-post-button:hover {
+  background-color: var(--primary-color);
+  color: var(--red-color);
+  border: 1px solid var(--red-color);
+  transform: scale(1.2);
+}
+/* EDIT BUTTON STYLES */
+.edit-icon {
+  background: none; 
+  border: none; 
+  cursor: pointer
+}
+button.edit-icon i {
+  color: var(--accent-color);
+  margin-right: 10px;
+}
+button.edit-icon i:hover {
+  transform: scale(1.6);
+}
