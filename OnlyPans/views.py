@@ -180,7 +180,7 @@ def edit_profile(request, username):
           return redirect('profile', username=user.username)
         else:
           form = EditProfileForm(instance=user)
-
+    
     context = {
         'form': form,
     }
@@ -240,12 +240,12 @@ def create_post(request, username):
 @login_required
 def edit_post(request, post_id):
   post = get_object_or_404(Post, post_id=post_id)
-  print('Post: ', post)
-  if request.user != post.user:
-     return redirect('home')
+  # if request.user != post.user:
+  #    return redirect('home')
   
   if request.method == 'POST':
     editpost_form = EditPostForm(request.POST, instance=post)
+    print('FOOOOOOOORM!!!: ', editpost_form)
     if editpost_form.is_valid():
       editpost_form.save()
       messages.success(request, 'Post updated!')
@@ -257,7 +257,12 @@ def edit_post(request, post_id):
   else:
     editpost_form = EditPostForm(instance=post)
   
-  return render(request, 'OnlyPans/modals/editpost_modal.html', {'editpost_form':editpost_form})
+  categories = Category.objects.all()
+  context = {
+    'editpost_form': editpost_form,
+    'categories': categories,
+  }
+  return render(request, 'OnlyPans/modals/editpost_modal.html', context)
 
 
 @login_required
@@ -600,12 +605,12 @@ def search_view(request):
     for user in users:
       user.is_following = Follow.objects.filter(follower=request.user, followed=user).exists()
   
+  categories = Category.objects.all()
   context = {
     'query': query,
     'posts': posts,
     'users': users,
-    # 'results': results,
-    
+    'categories': categories,
   }
   return render(request, 'OnlyPans/search.html', context)
     

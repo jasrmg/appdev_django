@@ -1,8 +1,11 @@
-{% load static %} {% load custom_timesince %} {% if posts %}{%for post in posts%}
+{% load static %} 
+{% load custom_timesince %} 
+{% if posts %}
+{% for post in posts %}
 <div class="post">
   <div class="post_header">
     <div style="display: flex; align-items: center">
-      <img src="{{ post.user.avatar.url }}" alt="pp" class="avatar_post" />
+      <img src="{{ post.user.avatar.url }}" alt="{{ post.user.username }}" class="avatar_post" />
       <div class="post_info">
         <h3>{{ post.user.first_name }} {{ post.user.last_name }}</h3>
         <p>{{ post.created_at | custom_timesince }} ago.</p>
@@ -13,11 +16,13 @@
     {% if request.user == post.user %}
 
     <div class="post_actions">
-      <button class="edit-icon" title="{{ post.title | escapejs }}" id="openEditPostModalBtn"
-        data-post-id="{{ post.post_id }}" data-post-category="{{ post.category.category_id | escapejs }}"
-        data-post-description="{{ post.description | escapejs }}"
-        data-post-ingredients="{{ post.ingredients | escapejs }}"
-        >
+      <button class="edit-icon" title="{{ post.title | escapejs }}"
+      id="openEditPostModalBtn"
+      data-post-id="{{ post.post_id }}" 
+      data-post-category="{{ post.category_id }}"
+      data-post-description="{{ post.description | escapejs }}"
+      data-post-ingredients="{{ post.ingredients | escapejs }}"
+      >
         <i class="fa-solid fa-pencil-alt" title="Edit"></i>
       </button>
       <!--edit post modal is added on the base template-->

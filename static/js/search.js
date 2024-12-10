@@ -97,15 +97,9 @@ document.addEventListener('DOMContentLoaded', function() {
   
   //SCRIPT FOR SHOW MORE POSTS
   const togglePostBtn = document.getElementById('toggle-btn-post');
-  const posts = document.querySelectorAll('.search-post');
-  //initially hide posts after the first 2:
-  posts.forEach((post, index) => {
-    if (index >= 2) {
-      post.classList.add('hidden');
-    }
-  });
-  //toggle button functionality
-  togglePostBtn.addEventListener('click', function() {
+  if (togglePostBtn) {
+    //toggle button functionality
+    togglePostBtn.addEventListener('click', function() {
     const hiddenPosts = document.querySelectorAll('.search-post.hidden');
 
     if (hiddenPosts.length > 0) {
@@ -125,7 +119,16 @@ document.addEventListener('DOMContentLoaded', function() {
       });
       togglePostBtn.textContent = 'See More';
     }
-  })
+  });
+}
+  const posts = document.querySelectorAll('.search-post');
+  //initially hide posts after the first 2:
+  posts.forEach((post, index) => {
+    if (index >= 2) {
+      post.classList.add('hidden');
+    }
+  });
+  
 
 
 
@@ -166,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // });
   
 
-  //ajax for follow/unfollow in search view:
+  //follow/unfollow in search view:
   document.querySelectorAll('.search-follow-btn').forEach(button => {
     button.addEventListener('click', function (e) {
       e.preventDefault();
@@ -175,6 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
       console.log(username)
       const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
       console.log('csrf token: ', csrfToken);
+      
       fetch(`/follow/${username}/`, {
         method: 'POST',
         headers: {

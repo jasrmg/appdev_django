@@ -1,40 +1,6 @@
 $(document).ready(function () {
-    //EDITPROFILE:
-    const $editProfileForm = $("#editProfile form");
-    const $submitProfileBtn = $("#editProfileSubmitbtn");
-    let formChanged = false;
-    //enable submit btn when there is a change in the form:
-    $editProfileForm.on("change", function () {
-      formChanged = true;
-      $submitProfileBtn.prop("disabled", false);
-    });
-    //prevent submission if no change:
-    $editProfileForm.on("submit", function (e) {
-      if (!formChanged) {
-        e.preventDefault();
-      } else {
-        $submitProfileBtn.prop("disabled", true);
-      }
-    });
-    //edit profile modal behavior:
-    const $editProfileModal = $("#editProfile");
-    const $openProfileModalBtn = $("#editProfileBtn");
-    const $closeProfileModalBtn = $("#editX");
-    //open edit profile modal:
-    $openProfileModalBtn.on("click", function () {
-      $editProfileModal.show();
-    });
-    //close modal when clicking the x button or outside the modal:
-    $closeProfileModalBtn.on("click", () => {
-      toggleModal($editProfileModal, false);
-    });
-  
-    
-    
-  
-    // Reference to the edit post modal
-    const $editPostModal = $("#editPost");
-  
+  // Reference to the edit post modal
+  const $editPostModal = $("#editPost");
     // Function to prefill the edit post modal fields
     function openEditModal(
       editPostId,
@@ -46,6 +12,7 @@ $(document).ready(function () {
       const $editPostForm = $("#editPostForm");
       const $submitEditPostBtn = $("#editPostSubmitbtn");
   
+      console.log('postCategory: ', postCategory)
       // Set the form action dynamically based on editPostId
       const editPostActionUrl = editPostUrl.replace("0", editPostId);
       console.log(editPostActionUrl);
@@ -56,30 +23,39 @@ $(document).ready(function () {
       const $descriptionInput = $("#editPostDescription");
       const $ingredientsInput = $("#editPostIngredients");
       const $categorySelect = $("#editPostCategory");
-  
-      $titleInput.val(postTitle);
-      $ingredientsInput.val(postIngredients);
-      $descriptionInput.val(postDescription);
-      $categorySelect.val(postCategory);
-  
+        
+      //ensure the elements are not null before proceeding
+      if ($titleInput.length > 0) {
+        $titleInput.val(postTitle);
+      }
+      if ($descriptionInput.length > 0) {
+        $descriptionInput.val(postDescription);
+      }
+      if ($ingredientsInput.length > 0) {
+        $ingredientsInput.val(postIngredients);
+      }
+      if ($categorySelect.length > 0) {
+        $categorySelect.val(postCategory);
+      }
+      console.log('val: ', $categorySelect.val(postCategory))
       // Show the edit modal
       $editPostModal.show();
   
       // Save the initial form values to detect changes
       const initialFormValues = {
-        title: $titleInput.val().trim(),
-        category: $categorySelect.val().trim(),
-        description: $descriptionInput.val().trim(),
-        ingredients: $ingredientsInput.val().trim(),
+        title: $titleInput.length > 0 ? $titleInput.val().trim() : '',
+        category: $categorySelect.length > 0 ? $categorySelect.val().trim() : '',
+        description: $descriptionInput.length > 0 ? $descriptionInput.val().trim() : '',
+        ingredients: $ingredientsInput.length > 0 ? $ingredientsInput.val().trim() : '',
       };
   
       // Function to enable/disable submit button based on form changes
       const checkForChanges = () => {
         const currentFormValues = {
-          title: $titleInput.val().trim(),
-          category: $categorySelect.val().trim(),
-          description: $descriptionInput.val().trim(),
-          ingredients: $ingredientsInput.val().trim(),
+          title: $titleInput.length > 0 ? $titleInput.val().trim() : '',
+          category: $categorySelect.length > 0 ? $categorySelect.val().trim() : '',
+          description: $descriptionInput.length > 0 ? $descriptionInput.val().trim() : '',
+          ingredients: $ingredientsInput.length > 0 ? $ingredientsInput.val().trim() : '',
         };
   
         // Check if any value has changed
@@ -116,7 +92,12 @@ $(document).ready(function () {
       const postCategory = $(this).data("post-category");
       const postDescription = $(this).data("post-description");
       const postIngredients = $(this).data("post-ingredients");
-  
+      
+      // console.log('post id: ', edtpostId)
+      // console.log('post title: ', postTitle)
+      // console.log('post category: ', postCategory)
+      // console.log('post description: ', postDescription)
+      // console.log('post ingredients: ', postIngredients)
       openEditModal(
         edtpostId,
         postTitle,
@@ -125,5 +106,4 @@ $(document).ready(function () {
         postIngredients
       );
     });
-  
 });

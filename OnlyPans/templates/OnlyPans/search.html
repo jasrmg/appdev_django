@@ -87,12 +87,12 @@
               <span class="post-date">{{ post.created_at | custom_timesince }} ago.</span>
             </div>
           </div>
-          {% if post.user == request.user %}
+          {% if request.user == post.user %}
           <div class="search-post-actions">
-            <button class="edit-icon" title="{{ post.title | escapejs}}"
+            <button class="edit-icon" title="{{ post.title | escapejs }}"
             id="openEditPostModalBtn"
             data-post-id="{{ post.post_id }}"
-            data-post-category="{{ post.category.category_id | escapejs }}"
+            data-post-category="{{ post.category_id }}"
             data-post-description="{{ post.description | escapejs }}"
             data-post-ingredients="{{ post.ingredients | escapejs }}"
             >

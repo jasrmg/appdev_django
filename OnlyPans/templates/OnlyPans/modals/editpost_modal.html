@@ -19,9 +19,9 @@
           <label for="editPostCategory">Category</label>
           <select name="category" id="editPostCategory">
             {% for category in categories %}
-            <option value="{{ category.category_id }}">
-              {{ category.name }}
-            </option>
+              <option value="{{ category.category_id }}" {% if category.category_id == post.category_id %}selected{% endif %}>
+                {{ category.name }}
+              </option>
             {% endfor %}
           </select>
         </div>

@@ -8,6 +8,35 @@ $(document).ready(function () {
     }
   }
 
+  //EDITPROFILE:
+  const $editProfileForm = $("#editProfile form");
+  const $submitProfileBtn = $("#editProfileSubmitbtn");
+  let formChanged = false;
+  //enable submit btn when there is a change in the form:
+  $editProfileForm.on("change", function () {
+    formChanged = true;
+    $submitProfileBtn.prop("disabled", false);
+  });
+  //prevent submission if no change:
+  $editProfileForm.on("submit", function (e) {
+    if (!formChanged) {
+      e.preventDefault();
+    } else {
+      $submitProfileBtn.prop("disabled", true);
+    }
+  });
+  //edit profile modal behavior:
+  const $editProfileModal = $("#editProfile");
+  const $openProfileModalBtn = $("#editProfileBtn");
+  const $closeProfileModalBtn = $("#editX");
+  //open edit profile modal:
+  $openProfileModalBtn.on("click", function () {
+    $editProfileModal.show();
+  });
+  //close modal when clicking the x button or outside the modal:
+  $closeProfileModalBtn.on("click", () => {
+    toggleModal($editProfileModal, false);
+  });
   //FOLLOWING:
   const $followingModal = $("#followingModal");
   const $openFollowingBtn = $("#followingModalBtn");
