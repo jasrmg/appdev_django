@@ -442,6 +442,8 @@ $(document).ready(function () {
   $(window).on("click", function (event) {
     if ($(event.target).is($followingModal))
       toggleModal($followingModal, false);
+    else if ($(event.target).is($editProfileModal))
+      toggleModal($editProfileModal, false);
     else if ($(event.target).is($followerModal))
       toggleModal($followerModal, false);
     else if ($(event.target).is($bioModal)) 

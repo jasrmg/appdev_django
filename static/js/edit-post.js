@@ -106,4 +106,10 @@ $(document).ready(function () {
         postIngredients
       );
     });
+
+    $(window).on("click", function (event) {
+      if ($(event.target).is($editPostModal))
+        toggleModal($editPostModal, false);
+    })
+
 });
