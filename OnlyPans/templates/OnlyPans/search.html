@@ -4,18 +4,15 @@
 {% load custom_timesince %}
 <link rel="stylesheet" href="{% static 'css/search.css' %}" />
 <script src="{% static 'js/sidebar-active.js' %}"></script>
-
+<script src="{% static 'js/open-post.js' %}"></script>
 
 {% if user.is_authenticated %}
-<!--csrf form-->
-<form method="post" id="csrf_form">{% csrf_token %}</form>
-
 <div class="search-view-container">
   <div id="aside-filter" class="sidebar-search">
     <h2>Search results</h2>
     <hr />
     <div class="filters">
-      <a href="{% url 'search_view' filter_type='all' %}?q={{ query }}" class="filter-link active" id="all-filter" data-target="all"><i class="fas fa-th"></i> All</a>
+      <a href="{% url 'search_view' filter_type='all' %}?q={{ query }}" class="filter-link" id="all-filter" data-target="all"><i class="fas fa-th"></i> All</a>
       <a href="{% url 'search_view' filter_type='people' %}?q={{ query }}" class="filter-link" id="people-filter" data-target="people"><i class="fas fa-users"></i> People</a>
       <a href="{% url 'search_view' filter_type='posts' %}?q={{ query }}" class="filter-link" id="posts-filter" data-target="posts"><i class="fas fa-newspaper"></i> Posts</a>
       <a href="{% url 'search_view' filter_type='Meat' %}?q={{ query }}" class="filter-link" id="meat-category" data-target="Meat"><i class="fas fa-hamburger"></i> Meat</a>
@@ -36,21 +33,22 @@
       <h2 id="people-heading">People</h2>
       {% for user in users %}
       <div class="person user-item {% if forloop.counter > 3 %} hidden {% endif %}">
-        <img
-          src="{{ user.avatar.url }}"
-          alt="{{ user.username }}"
-          loading="lazy"
-        />
-        <div>
-          <a href="{% url 'profile' user.username %}">{{ user.first_name }} {{ user.last_name }}</a>
-          <span class="search-follower-count">
-            {% if user.follower_count == 0 %}    
-            {{ user.follower_count }} follower
-            {% else %} 
-            {{ user.follower_count }} {{ user.follower_count|pluralize:"follower, followers" }}
-            {% endif %}
-          </span>   
-        </div>
+        <a href="{% url 'profile' user.username %}">
+          <img
+            src="{{ user.avatar.url }}"
+            alt="{{ user.username }}"
+            loading="lazy"
+          />
+          <div>
+            {{ user.first_name }} {{ user.last_name }}</a>
+            <span class="search-follower-count">
+              {% if user.follower_count == 0 %}    
+              {{ user.follower_count }} follower
+              {% else %} 
+              {{ user.follower_count }} {{ user.follower_count|pluralize:"follower, followers" }}
+              {% endif %}
+            </span>   
+          </div>
         {% csrf_token %}
         <button class="search-follow-btn" id="searchFollowBtn" data-username="{{ user.username }}"
           data-logged-in-username="{{ request.user.username }}">
@@ -74,8 +72,9 @@
     {% endif %}
     <!--end for users-->
 
-    {% if filter_type != 'people' %}
+
     <!--start for posts-->
+    {% if filter_type != 'people' %}
     <div class="search-food-results {% if forloop.counter > 2 %} hidden {% endif %}">
       <h2 id="post-heading">
         {% if filter_type == 'posts' %} 
@@ -128,7 +127,16 @@
           <div class="search-post-image">
             {% if post.images.all %}
             {% for image in post.images.all %}
-            <img src="{{ image.image.url }}" alt="post-image" loading="lazy">
+            <a href="#"
+              class="post-image-link"
+              data-post-id="{{ post.post_id }}"
+              data-post-title="{{ post.title | escapejs }}"
+              data-post-description="{{ post.description | escapejs }}"
+              data-post-ingredients="{{ post.ingredients | escapejs }}"
+              data-post-owner="{{ post.user.first_name }} {{ post.user.last_name }}"
+              data-post-image="{{ image.image.url }}">
+              <img src="{{ image.image.url }}" alt="post-image" loading="lazy">
+            </a>
             {% endfor %}
             {% endif %}
           </div>

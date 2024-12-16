@@ -2,6 +2,7 @@
 {% load custom_timesince %} 
 {% if posts %}
 {% for post in posts %}
+<link rel="stylesheet" href="{% static 'css/post.css' %}">
 <div class="post">
   <div class="post_header">
     <div style="display: flex; align-items: center">
@@ -70,80 +71,6 @@
     {% if post.ingredients_list|length > 3 %}
     <span class="seeMoreIngredients" data-post-id="{{ post.post_id }}">See more</span>
     {% endif %}
-    <script>
-      //script para sa see more description:
-      $(document).ready(function () {
-        // Handle "See more" / "See less" for descriptions
-        $(document).on('click', '.seeMoreDescription', function (e) {
-          e.preventDefault();
-          var postId = $(this).data('post-id');
-          $("#fullDescription-" + postId).show();
-          $("#truncatedDescription-" + postId).hide();
-        })
-        $(document).on('click', '.seeLessDescription', function (e) {
-          e.preventDefault();
-          var postId = $(this).data('post-id');
-          $("#fullDescription-" + postId).hide();
-          $("#truncatedDescription-" + postId).show();
-        })
-
-        // Handle "See more" / "See less" for ingredients
-        $(document).on('click', '.seeMoreIngredients', function (e) {
-          e.preventDefault();
-          var postId = $(this).data('post-id');
-
-          // Toggle visibility of all ingredients and truncated ingredients for the specific post
-          $("#allIngredients-" + postId).toggle();
-          const $truncatedIngredients = $('#truncatedIngredients-' + postId);
-          var link = $(this);
-
-          // Check if all ingredients are visible and change link text
-          if ($('#allIngredients-' + postId).is(':visible')) {
-            link.text('See less');
-            $truncatedIngredients.hide();
-          } else {
-            link.text('See more');
-            $truncatedIngredients.show();
-          }
-        });
-      });
-
-    </script>
-
-    <style>
-      .post_body h3,
-      #ingredient-header {
-        padding: 10px 0;
-        font-size: 1.4rem;
-        font-weight: bold;
-      }
-
-      .ingredients_container {
-        display: flex;
-        flex-wrap: wrap;
-      }
-
-      .ingredients_container li {
-        width: 38%;
-        list-style-type: disc;
-        /* Keeps the bullet points */
-        padding: 5px 0;
-        /* Add a little space between items */
-      }
-
-      .ingredients_container li:nth-child(odd) {
-        margin-right: 0;
-        /* Remove margin from odd-numbered items to balance the columns */
-      }
-
-      .seeMoreDescription,
-      .seeLessDescription,
-      .seeMoreIngredients {
-        cursor: pointer;
-        font-weight: bold;
-        font-size: 16px;
-      }
-    </style>
 
 
 
@@ -159,18 +86,22 @@
       {{ post.like_set.count }} <i class="fa-solid fa-heart"></i>
     </p>
     <p>
-      <span id="commentCount-{{ post.post_id | escapejs }}">{{ post.comment_count }}
+      <span id="commentCount-{{ post.post_id | escapejs }}">
+        {{ post.comment_count }}
       </span>
       <i class="fa-solid fa-comment"></i>
     </p>
   </div>
   {% if user.is_authenticated %}
-  <form method="post" id="csrf_form">{% csrf_token %}</form>
+  
   <div class="post_footer">
     <button class="like_button" id="like-btn-{{ post.post_id }}" data-post-id="{{ post.post_id }}">
       <i class="fa-solid fa-heart"></i>
-
-      {% if post.post_id in liked_posts %} Unlike {% else %} Like {% endif %}
+      {% if post.post_id in liked_posts %} 
+        Unlike 
+      {% else %} 
+        Like 
+      {% endif %}
     </button>
     <button class="comment_button">
       <i class="fa-solid fa-comment"></i> Comment
@@ -180,10 +111,12 @@
 
   <!-- Comments Section -->
 
-  <div class="comments_section" data-post-id="{{ post.post_id }}" id="commentsSection-{{ post.post_id }}"
-    data-total-comments="{{ post.comment_count }}"
-    data-logged-user-name="{{ request.user.first_name }} {{ request.user.last_name }}">
-    {% for comment in post.initial_comments %}
+  <div class="comments_section" 
+  data-post-id="{{ post.post_id }}" 
+  id="commentsSection-{{ post.post_id }}"
+  data-total-comments="{{ post.comment_count }}"
+  data-logged-user-name="{{ request.user.first_name }} {{ request.user.last_name }}">
+  {% for comment in post.initial_comments %}
     <div class="comment" data-post-id="{{post.post_id|escapejs}}">
       <img src="{{ comment.user.avatar.url }}" alt="pp" class="avatar_post" />
       <div class="comment_content">
@@ -201,89 +134,23 @@
           onclick="toggleEdit('{{ comment.comment_id }}')"></i>
 
         <button class="close-button" data-comment-id="{{ comment.comment_id }}"
-          onclick="openDeleteModal('{{ comment.comment_id }}')">
+        onclick="openDeleteModal('{{ comment.comment_id }}')">
           &times;
         </button>
       </div>
       {% endif %}
+      
     </div>
-    {% endfor %} {% if post.comment_count > initial_comment_limit %}
-
-    <span id="seeMore" data-offset="2" style="font-size: 14px; font-weight: lighter; cursor: pointer">Load more.
-      .
-      .</span>
+  {% endfor %} 
+    {% if post.comment_count > initial_comment_limit %}
+    <span class="seeMore" data-offset="2" 
+    style="font-size: 14px; font-weight: lighter; cursor: pointer">Load more...</span>
     {% endif %}
-    <!--style for editing the comment-->
-    <script>
-      //EDIT COMMENT:
-      let originalCommentText = "";
-      function toggleEdit(commentId) {
-        const $commentText = $(`#comment-text-${commentId}`);
-        const $button = $(`#editCommentBtn-${commentId}`);
-        // console.log(commentId);
-        //check the current state:
-        if ($commentText.attr("contenteditable") === "false") {
-          originalCommentText = $commentText.text();
-          $commentText.attr("contenteditable", "true").focus();
-
-          //style ig edit comment:
-          $commentText.css({
-            padding: "10px",
-            "border-radius": "50px",
-          });
-
-          $button.removeClass("fa-pencil-alt").addClass("fa-check");
-
-          $(document).on("click", handleOutsideClick);
-          function handleOutsideClick(event) {
-            if (
-              !$commentText.is(event.target) &&
-              !$commentText.has(event.target).length &&
-              !$button.is(event.target) &&
-              !$button.has(event.target).length
-            ) {
-              //cancel edit if user clicks outside:
-              $commentText
-                .attr("contenteditable", "false")
-                .text(originalCommentText);
-              $commentText.css({
-                padding: "0",
-              });
-              $button.removeClass("fa-check").addClass("fa-pencil-alt");
-              $(document).off("click", handleOutsideClick);
-            }
-          }
-        } else {
-          $commentText.attr("contenteditable", "false");
-          $button.removeClass("fa-check").addClass("fa-pencil-alt");
-          $commentText.css({
-            padding: "0",
-          });
-          saveComment(commentId);
-          $(document).off("click", handleOutsideClick);
-        }
-      }
-      function saveComment(commentId) {
-        const $commentText = $(`#comment-text-${commentId}`);
-        const updatedComment = $commentText.text();
-        $.ajax({
-          type: "POST",
-          url: "/save_comment/",
-          data: {
-            comment_id: commentId,
-            updated_comment: updatedComment,
-            csrfmiddlewaretoken: "{{ csrf_token }}",
-          },
-          success: function (response) {
-            $commentText.attr("contenteditable", "false");
-          },
-          error: function (xhr, status, error) {
-            console.log("Error: ", error);
-          },
-        });
-      }
-    </script>
+    
   </div>
+    <script>
+      
+    </script>
   {% include 'OnlyPans/modals/comment_delete_confirmation.html' %}
 
   <!-- Add Comment Section -->
@@ -295,7 +162,7 @@
     <div class="input-wrapper">
       <!--gi ilisan nako ang id ug class-->
       <textarea placeholder="Write a comment..." class="addComment" name="message" required rows="1"
-        oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px';"></textarea>
+      oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px';"></textarea>
       <button type="submit" class="submit-button">
         <i class="fas fa-paper-plane"></i>
       </button>
@@ -307,3 +174,43 @@
   <p style="text-align: center; color: #8d8d8d">No post to show</p>
 </div>
 {% endif %}
+
+      <script>
+        //script para sa see more description:
+        $(document).ready(function () {
+          // Handle "See more" / "See less" for descriptions
+          $(document).on('click', '.seeMoreDescription', function (e) {
+            e.preventDefault();
+            var postId = $(this).data('post-id');
+            $("#fullDescription-" + postId).show();
+            $("#truncatedDescription-" + postId).hide();
+          })
+          $(document).on('click', '.seeLessDescription', function (e) {
+            e.preventDefault();
+            var postId = $(this).data('post-id');
+            $("#fullDescription-" + postId).hide();
+            $("#truncatedDescription-" + postId).show();
+          })
+    
+          // Handle "See more" / "See less" for ingredients
+          $(document).on('click', '.seeMoreIngredients', function (e) {
+            e.preventDefault();
+            var postId = $(this).data('post-id');
+    
+            // Toggle visibility of all ingredients and truncated ingredients for the specific post
+            $("#allIngredients-" + postId).toggle();
+            const $truncatedIngredients = $('#truncatedIngredients-' + postId);
+            var link = $(this);
+    
+            // Check if all ingredients are visible and change link text
+            if ($('#allIngredients-' + postId).is(':visible')) {
+              link.text('See less');
+              $truncatedIngredients.hide();
+            } else {
+              link.text('See more');
+              $truncatedIngredients.show();
+            }
+          });
+        });
+    
+      </script>

@@ -1,4 +1,4 @@
-//ADD COMMENT, EDIT COMMENT NAA SA POST.HTML
+
 $(document).on("submit", ".comment_section", function (event) {
   event.preventDefault();
 
@@ -8,9 +8,6 @@ $(document).on("submit", ".comment_section", function (event) {
   // Gather form data using class selectors
   const message = $(form).find(".addComment").val(); // Use class selector
   const postId = $(form).find('input[name="post_id"]').val();
-  const commentcsrfToken = $(form)
-    .find("input[name='csrfmiddlewaretoken']")
-    .val();
 
   $.ajax({
     type: "POST",
@@ -18,7 +15,7 @@ $(document).on("submit", ".comment_section", function (event) {
     data: {
       post_id: postId,
       message: message,
-      csrfmiddlewaretoken: commentcsrfToken,
+      csrfmiddlewaretoken: window.csrfToken,
     },
     success: function (response) {
       // Clear the comment box
@@ -86,7 +83,8 @@ $(document).on("submit", ".comment_section", function (event) {
 
       // Append the new comment to the correct post's comments section
       commentsSection.append(newComment);
-      const seeMoreButton = $("#seeMore");
+      //ensures load more button stays at the bottom
+      const seeMoreButton = $(".seeMore");
       commentsSection.append(seeMoreButton); // Append it below the new comment
       //count sa comments:
       const commentPostId = "{{ post.post_id }}";
@@ -169,15 +167,87 @@ $("#confirmDeleteBtn").on("click", function () {
   });
 });
 
+//EDIT COMMENT:
+let originalCommentText = "";
+function toggleEdit(commentId) {
+  const $commentText = $(`#comment-text-${commentId}`);
+  const $button = $(`#editCommentBtn-${commentId}`);
+  // console.log(commentId);
+  //check the current state:
+  if ($commentText.attr("contenteditable") === "false") {
+    originalCommentText = $commentText.text();
+    $commentText.attr("contenteditable", "true").focus();
+
+    //style ig edit comment:
+    $commentText.css({
+      padding: "10px",
+      "border-radius": "50px",
+    });
+
+    $button.removeClass("fa-pencil-alt").addClass("fa-check");
+
+    $(document).on("click", handleOutsideClick);
+    function handleOutsideClick(event) {
+      if (
+        !$commentText.is(event.target) &&
+        !$commentText.has(event.target).length &&
+        !$button.is(event.target) &&
+        !$button.has(event.target).length
+      ) {
+        //cancel edit if user clicks outside:
+        $commentText
+          .attr("contenteditable", "false")
+          .text(originalCommentText);
+        $commentText.css({
+          padding: "0",
+        });
+        $button.removeClass("fa-check").addClass("fa-pencil-alt");
+        $(document).off("click", handleOutsideClick);
+      }
+    }
+  } else {
+    $commentText.attr("contenteditable", "false");
+    $button.removeClass("fa-check").addClass("fa-pencil-alt");
+    $commentText.css({
+      padding: "0",
+    });
+    saveComment(commentId);
+    $(document).off("click", handleOutsideClick);
+  }
+}
+function saveComment(commentId) {
+  const $commentText = $(`#comment-text-${commentId}`);
+  const updatedComment = $commentText.text();
+  
+  $.ajax({
+    type: "POST",
+    url: "/save_comment/",
+    data: {
+      comment_id: commentId,
+      updated_comment: updatedComment,
+      csrfmiddlewaretoken: window.csrfToken,
+    },
+    success: function (response) {
+      $commentText.attr("contenteditable", "false");
+    },
+    error: function (xhr, status, error) {
+      console.log("Error: ", error);
+    },
+  });
+}
+
 //--------------------------LOAD MORE--------------------------\\
-let offset = 2; // Start with the initial comments loaded
 const LIMIT = 2; // Number of comments to load each time
 
-$("#seeMore").on("click", function () {
-  const postId = $(this).closest(".comments_section").data("post-id");
+$(document).on("click", ".seeMore", function () {
+  console.log("clicked");
 
-  // Check if we are in "See Less" mode
-  if ($(this).text().trim() === "See Less") {
+  const $button = $(this); // The clicked "Load More" button
+  const postId = $button.closest(".comments_section").data("post-id");
+  let offset = parseInt($button.data("offset")) || LIMIT; // Current offset from the button data
+
+  // Check if the button is in "See Less" mode
+  if ($button.text().trim() === "See Less") {
     // Reset to initial state: hide all but the first two comments
     offset = LIMIT; // Reset offset to initial value
 
@@ -188,7 +258,7 @@ $("#seeMore").on("click", function () {
         $(this).remove(); // Remove the comments after fade-out completes
       });
 
-    $(this).text("Load more...").data("offset", LIMIT); // Change text back to "Load more..." and reset data-offset
+    $button.text("Load more...").data("offset", LIMIT); // Change text back to "Load more..." and reset offset
     return;
   }
 
@@ -197,35 +267,27 @@ $("#seeMore").on("click", function () {
     url: `/load_more_comments/${postId}/`,
     data: {
       offset: offset, // Use the current offset
-      limit: LIMIT, // Ensure 'limit' is lowercase
+      limit: LIMIT, // Number of comments to load
     },
     type: "GET",
     success: function (data) {
       const comments = data.comments;
-      const $commentsContainer = $(
-        `.comments_section[data-post-id="${postId}"]`
-      );
+      const $commentsContainer = $(`.comments_section[data-post-id="${postId}"]`);
 
       // Append each new comment with a fade-in effect
       comments.forEach(function (comment) {
-        const loggedInUsername = $(`#commentsSection-${comment.post_id}`).data(
-          "loggedUserName"
-        );
+        const loggedInUsername = $(`#commentsSection-${comment.post_id}`).data("loggedUserName");
         const isSameUser = comment.user_name === loggedInUsername;
 
         const newComment = $(`
           <div class="comment" data-post-id="${comment.post_id}">
-              <img src="${
-                comment.user_avatar
-              }" alt="Avatar" class="avatar_post" />
+              <img src="${comment.user_avatar}" alt="Avatar" class="avatar_post" />
               <div class="comment_content">
                   <div class="comment_info">
                       <h4>${comment.user_name}</h4>
                       <p>${comment.created_at}</p>
                   </div>
-                  <div contenteditable="false" id="comment-text-${
-                    comment.comment_id
-                  }">
+                  <div contenteditable="false" id="comment-text-${comment.comment_id}">
                       ${comment.message}
                   </div>
               </div>
@@ -252,22 +314,18 @@ $("#seeMore").on("click", function () {
         newComment.fadeIn(500); // Fade in the new comment
       });
 
-      // Update the offset
-      offset += comments.length; // Increment offset by the number of loaded comments
+      // Update the offset on the button
+      $button.data("offset", offset + comments.length); // Increment offset by the number of loaded comments
 
       // Check if there are more comments to load
       if (!data.has_more) {
-        $("#seeMore").text("See Less"); // Change to "See Less" if no more comments
+        $button.text("See Less"); // Change to "See Less" if no more comments
+        const seeMoreButton = $button.detach(); // Detach the button
+        $commentsContainer.append(seeMoreButton); // Append it again to the bottom
       } else {
-        // Move the "Load More" button to the bottom
-        const seeMoreButton = $("#seeMore").detach(); // Detach to move
-        $commentsContainer.append(seeMoreButton); // Append it again
-      }
-
-      // Move "See Less" below all added comments
-      if ($("#seeMore").text() === "See Less") {
-        const seeLessButton = $("#seeMore").detach();
-        $commentsContainer.append(seeLessButton);
+        // Move the "Load More" button to the bottom as usual
+        const seeMoreButton = $button.detach();
+        $commentsContainer.append(seeMoreButton); // Append to the bottom of the comment section
       }
     },
     error: function () {

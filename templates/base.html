@@ -47,6 +47,8 @@
 </head>
 
 <body>
+  <!--GLOBAL CSRF TOKEN-->
+  <form method="POST" id="csrf_form">{% csrf_token %}</form>
   <!--NAVBAR-->
   <nav>
     <div class="left_side">
@@ -157,8 +159,10 @@
   {% include 'OnlyPans/modals/post_delete_confirmation.html' %}
   <!--edit post modal-->
   {% include 'OnlyPans/modals/editpost_modal.html' %}
-  <script>
 
+  <script>
+  // GLOBAL CSRF TOKEN
+  window.csrfToken = $('#csrf_form input[name="csrfmiddlewaretoken"]').val()
   </script>
 </body>
 

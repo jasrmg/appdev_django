@@ -1,0 +1,32 @@
+.post_body h3,
+#ingredient-header {
+  padding: 10px 0;
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.ingredients_container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.ingredients_container li {
+  width: 38%;
+  list-style-type: disc;
+  /* Keeps the bullet points */
+  padding: 5px 0;
+  /* Add a little space between items */
+}
+
+.ingredients_container li:nth-child(odd) {
+  margin-right: 0;
+  /* Remove margin from odd-numbered items to balance the columns */
+}
+
+.seeMoreDescription,
+.seeLessDescription,
+.seeMoreIngredients {
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+}

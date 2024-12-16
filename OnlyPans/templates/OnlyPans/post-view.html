@@ -1,0 +1,94 @@
+<div class="post">
+  <div class="post-header">
+    <div>
+      <img src="{{ post.user.avatar.url }}" alt="{{ post.user.username }}" class="avatar-post">
+      <div class="post-info">
+        <h3>{{ post.user.first_name }} {{ post.user.last_name }}</h3>
+        <span> {{ post.created_at | custom_timesince }} ago.</span>
+      </div>
+    </div>
+  </div>
+
+  <!--post body-->
+  <div class="post-body">
+    <h3> {{ post.title }} </h3>
+    <!--description-->
+    <span class="description">{{ post.description }}</span>
+    <!--ingredients-->
+    <span class="ingredients-header">Ingredients:</span>
+    <ul class="ingredients-container">
+      {% for ingredient in post.ingredients %}
+      <li> {{ ingredient }} </li>
+      {% endfor %}
+    </ul>
+    <!--post image-->
+    <div class="post-image-container">
+      {% for image in post.images.all %}
+      <img src="{{ image.image.url }}" alt="{{ post.title }}" class="post-image">
+      {% endfor %}
+    </div>
+  </div>
+  <div class="stats">
+    <span id="like-count-{{ post.post_id }}">
+      {{ post.like_set.count }} <i class="fa-solid fa-heart"></i>
+    </span>
+    <span id="comment-count-{{ post.post_id | escapejs }}">
+      {{ post.comment_count }} <i class="fa-solid fa-comment"></i>
+    </span>
+  </div>
+  {% if user.is_authenticated %}
+  
+  <!--post footer-->
+  <div class="post-footer">
+    <button class="like-button" 
+    id="like-btn-{{ post.post_id }}"
+    data-post-id="{{ post.post_id }}">
+      <i class="fa-solid fa-heart"></i>
+      {% if post.post_id in liked_posts %} 
+        Unlike 
+      {% else %} 
+        Like 
+      {% endif %}
+    </button>
+    <button class="comment-button">
+      <i class="fa-solid fa-comment"></i> Comment
+    </button>
+  </div>
+  {% endif %}
+  <!--comment section-->
+  <div class="comment-section" 
+  data-post-id="{{ post.post_id }}"
+  id="comments-section-{{ post.post_id }}"
+  data-total-comments="{{ post.comment_count }}"
+  data-logged-user-name="{{ request.user.first_name }} {{ request.user.last_name }}">
+    {% for comment in post.initial_comments %}
+      <div class="comment" data-post-id="{{ post.post_id | escapejs }}">
+        <img src="{{ comment.user.avatar.url }}" alt="{{ comment.user.username }}" class="avatar-post">
+        <div class="comment-content">
+          <div class="comment-info">
+            <h4>{{ comment.user.first_name }} {{ comment.user.last_name }}</h4>
+            <span>{{ comment.created_at | custom_timesince }} ago</span>
+          </div>
+          <div class="edit-comment"
+          contenteditable="false"
+          id="comment-text-{{ comment.comment_id }}">
+            {{ comment.message }}
+          </div>
+        </div>
+        {% if comment.user == request.user %}
+          <div class="comment-controls">
+            <i class="fa-solid fa-pencil-alt pen-icon"
+            id="editCommentBtn-{{ comment.comment_id }}"
+            onclick="toggleEdit('{{ comment.comment_id }}')"></i>
+
+            <button class="close-button"
+            data-comment-id="{{ comment.comment_id }}"
+            onclick="openDeleteModal('{{ comment.comment_id }}')">
+              &times;
+            </button>
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</div>

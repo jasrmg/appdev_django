@@ -290,11 +290,11 @@ def delete_post(request, post_id):
 
   return redirect(next_url)
 
-#profile view main code
 import re
 @login_required
 def profile_view(request, username):
     user = get_object_or_404(User, username=username)
+
     # Flags
     is_own_profile = request.user == user  # Check if the user is the authenticated user
     is_following = Follow.objects.filter(follower=request.user, followed=user).exists()  # Check if the visiting user is following the account
@@ -303,35 +303,32 @@ def profile_view(request, username):
     createpost_form = CreatePostForm()
     editprofile_form = EditProfileForm(instance=user)
     editbio_form = EditBioForm(instance=user)
-    
-    comments = Comment.objects.all()
-    
+
     # Fetch user posts and prefetch related fields
     posts = Post.objects.filter(user=user).order_by('-created_at').prefetch_related(
-    'images',
-    'comment_set',
-    # 'like_set'  # Prefetch likes for the current user
-)
+        'images',
+        'comment_set',
+    )
 
-    initial_comment_limit = 2   
-    posts_with_word_count = []
+    initial_comment_limit = 2
+
+    # Process all posts to add additional attributes
     for post in posts:
         comments = list(post.comment_set.all())
         post.comment_count = post.comment_set.count()
-
         post.initial_comments = comments[:initial_comment_limit]
         post.remaining_comments = comments[initial_comment_limit:]
 
-        # split the comments based on comma, wont strip it if its within ()
+        # Parse ingredients list
         post.ingredients_list = [ingredient.strip() for ingredient in re.split(r',\s*(?![^()]*\))', post.ingredients)]
-        post.ingredients_list = post.ingredients_list[::]
-        # 2 random comments
+
+        # Random comments
         post.random_comments = random.sample(comments, min(2, len(comments)))
 
-        #count sa # of words sa post:
+        # Count number of words in the post content
         post.word_count = post.word_count()
-        posts_with_word_count.append(post)
 
+    # Paginate posts
     paginator = Paginator(posts, 1)  # Display one post per page
     page_number = request.GET.get('page', 1)
 
@@ -340,34 +337,35 @@ def profile_view(request, username):
     except PageNotAnInteger:
         page_obj = paginator.page(1)  # If the page is not an integer, return the first page
     except EmptyPage:
-        return HttpResponse('') #stop if there is no more post
-    
-    if page_obj:
-      visible_posts_ids = [post.post_id for post in page_obj.object_list]
-    else:
-      visible_posts_ids = []
+        return HttpResponse('')  # Stop if there are no more posts
 
-    # Fetch the liked posts for the current user and the current page
+    # Fetch liked posts for the current user
     visible_posts_ids = [post.post_id for post in page_obj.object_list]
-
     liked_posts = Like.objects.filter(user=request.user, post_id__in=visible_posts_ids).values_list('post_id', flat=True)
 
     # Handle AJAX requests
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         if not page_obj:  # If there are no posts to show
             return HttpResponse('')  # Return an empty response for AJAX
-        return render(request, 'OnlyPans/post.html', {'posts': page_obj, 'liked_posts': liked_posts})
+        return render(request, 'OnlyPans/post.html', {
+            'posts': page_obj,
+            'liked_posts': liked_posts,
+            'initial_comment_limit': initial_comment_limit,
+        })
 
     # Followers and following
     followers = user.followers.all()
     random_followers = random.sample(list(followers), min(len(followers), 6))
-    
+
     following = user.following.all()
 
     number_of_follower = followers.count()
     number_of_following = following.count()
 
+    # Fetch categories
     categories = Category.objects.all()
+
+    # Context
     context = {
         'title': 'OnlyPans | Profile',
         'user': user,
@@ -389,7 +387,6 @@ def profile_view(request, username):
 
         'initial_comment_limit': initial_comment_limit,
         'comment_counts': {post.post_id: post.comment_count for post in posts},
-        'post_word_count': posts_with_word_count, 
     }
     return render(request, 'OnlyPans/profile_view.html', context)
 
@@ -472,38 +469,49 @@ def delete_comment(request, comment_id):
         comment.delete()
         return JsonResponse({'status': 'success', 'response': 'YAWA KA BAI'})
     return JsonResponse({'status': 'error'}, status=403)
+
+from django.db.models import F
+from django.core.serializers.json import DjangoJSONEncoder
 # LOAD MORE COMMENTS VIEW
+@login_required
 def load_more_comments(request, post_id):
-    print(int(request.GET.get('offset')))
-    offset = int(request.GET.get('offset', 2))
-    print(offset)
-    limit = int(request.GET.get('LIMIT', 2))
+    try:
+        offset = int(request.GET.get('offset', 2))
+        limit = int(request.GET.get('limit', 2))  # Ensure the limit is fetched correctly
+    except ValueError:
+        return JsonResponse({'error': 'Invalid offset or limit value'}, status=400)
 
-    total_comments = Comment.objects.filter(post_id=post_id).count()
+    # Ensure the post exists
+    post = get_object_or_404(Post, post_id=post_id)
 
-    comments = Comment.objects.filter(post_id=post_id).order_by('created_at')[offset: offset + limit]
-    print('comments: ', Comment.objects.filter(post_id=post_id).order_by('-created_at')[2:4])
+    # Query the comments
+    comments_query = Comment.objects.filter(post_id=post_id).order_by('created_at')
+    total_comments = comments_query.count()
+    comments = comments_query[offset:offset + limit]
 
-    comments_data = []
-    for comment in comments:
-        comments_data.append({
+    # Serialize the comments
+    comments_data = [
+        {
             'comment_id': comment.comment_id,
             'post_id': comment.post_id,
             'user_avatar': comment.user.avatar.url,
             'user_name': f"{comment.user.first_name} {comment.user.last_name}",
-            'created_at': time_since(comment.created_at), 
+            'created_at': time_since(comment.created_at),  # Assuming you have a custom time formatter
             'message': comment.message,
-        })
-    print('DATA:')
-    for comment in comments_data:
-      print(comment['message'])
-    print('LEN COMMENTS: ', len(comments))
-    print('LIMIT: ', limit)
-    print('T OR F: ', len(comments) == limit)
-    
-    has_more = (offset + limit) < total_comments
-    return JsonResponse({'comments': comments_data, 'has_more': has_more, 'total_comments':total_comments})
+        }
+        for comment in comments
+    ]
 
+    # Determine if there are more comments to load
+    has_more = (offset + limit) < total_comments
+
+    # Return the response
+    return JsonResponse({
+        'comments': comments_data,
+        'has_more': has_more,
+        'total_comments': total_comments,
+        'next_offset': offset + limit,  # Optional: Provide the next offset for convenience
+    }, encoder=DjangoJSONEncoder)
 
 from django.utils.timesince import timesince
 from django.utils import timezone
@@ -624,6 +632,10 @@ def search_view(request, filter_type):
     }
 
   return render(request, 'OnlyPans/search.html', context)
+
+#post pop up modal test
+def test(request):
+  return render(request, 'OnlyPans/post-view.html', )
     
 #follow unfollow
 @login_required

@@ -243,12 +243,12 @@ $(document).ready(function () {
     e.preventDefault();
     const postId = $(this).data("post-id");
     const $button = $(this);
-    const csrfToken = $('#csrf_form input[name="csrfmiddlewaretoken"]').val();
+    
     $.ajax({
       url: `/like/${postId}/`,
       type: "POST",
       data: {
-        csrfmiddlewaretoken: csrfToken,
+        csrfmiddlewaretoken: window.csrfToken,
       },
       success: function (data) {
         if (data.liked) {
@@ -287,12 +287,12 @@ $(document).ready(function () {
     e.preventDefault();
     const $username = $(this).data("username");
     const $button = $(this);
-    const csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
+    
     $.ajax({
       type: "POST",
       url: followUrl,
       data: {
-        csrfmiddlewaretoken: csrfToken,
+        csrfmiddlewaretoken: window.csrfToken,
       },
       success: function (response) {
         //FOLLOWING OR NAKA FOLLOW

@@ -26,9 +26,6 @@ $(document).ready(function () {
 
     //confirm and submit the deletion:
     $confirmPostDeleteBtn.on("click", () => {
-    const delPostToken = $(
-      '#csrf_form input[name="csrfmiddlewaretoken"]'
-    ).val();
     //create form to submit the delete post:
     const $deletePostForm = $("<form>", {
       method: "POST",
@@ -37,7 +34,7 @@ $(document).ready(function () {
       $("<input>", {
         type: "hidden",
         name: "csrfmiddlewaretoken",
-        value: delPostToken,
+        value: window.csrfToken,
       }),
       $("<input>", {
         type: 'hidden',
