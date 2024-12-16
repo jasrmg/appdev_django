@@ -3,6 +3,7 @@
 {% load static %}
 {% load custom_timesince %}
 <link rel="stylesheet" href="{% static 'css/search.css' %}" />
+<script src="{% static 'js/sidebar-active.js' %}"></script>
 
 
 {% if user.is_authenticated %}
@@ -14,18 +15,17 @@
     <h2>Search results</h2>
     <hr />
     <div class="filters">
-      <a href="#" class="active" id="all-filter"><i class="fas fa-th"></i> All</a>
-      <a href="#" id="people-filter"><i class="fas fa-users"></i> People</a>
-      <a href="#" id="posts-filter"><i class="fas fa-newspaper"></i> Posts</a>
-        <a href="#" id="meat-category"><i class="fas fa-hamburger"></i> Meat</a>
-        <a href="#" id="seafood-category"><i class="fas fa-fish"></i> Seafood</a>
-        <a href="#" id="chicken-category"><i class="fas fa-drumstick-bite"></i> Chicken</a>
-        <a href="#" id="veggies-category"><i class="fas fa-carrot"></i> Veggies</a>
-        <a href="#" id="dessert-category"><i class="fas fa-ice-cream"></i> Dessert</a>
-        <a href="#" id="snack-category"><i class="fas fa-cookie"></i> Snack</a>
-        <a href="#" id="beverage-category"><i class="fas fa-coffee"></i> Beverage</a>
+      <a href="#" class="filter-link active" id="all-filter" data-target="all"><i class="fas fa-th"></i> All</a>
+      <a href="#" class="filter-link" id="people-filter" data-target="people"><i class="fas fa-users"></i> People</a>
+      <a href="#" class="filter-link" id="posts-filter" data-target="posts"><i class="fas fa-newspaper"></i> Posts</a>
+      <a href="#" class="filter-link" id="meat-category" data-target="meat"><i class="fas fa-hamburger"></i> Meat</a>
+      <a href="#" class="filter-link" id="chicken-category" data-target="chicken"><i class="fas fa-drumstick-bite"></i> Chicken</a>
+      <a href="#" class="filter-link" id="seafood-category" data-target="seafood"><i class="fas fa-fish"></i> Seafood</a>
+      <a href="#" class="filter-link" id="veggies-category" data-target="veggies"><i class="fas fa-carrot"></i> Veggies</a>
+      <a href="#" class="filter-link" id="dessert-category" data-target="dessert"><i class="fas fa-ice-cream"></i> Dessert</a>
+      <a href="#" class="filter-link" id="snack-category" data-target="snack"><i class="fas fa-cookie"></i> Snack</a>
+      <a href="#" class="filter-link"  id="beverage-category" data-target="beverage"><i class="fas fa-coffee"></i> Beverage</a>
     </div>
-    
   </div>
 
 
@@ -37,6 +37,7 @@
         <img
           src="{{ user.avatar.url }}"
           alt="{{ user.username }}"
+          loading="lazy"
         />
         <div>
           <a href="{% url 'profile' user.username %}">{{ user.first_name }} {{ user.last_name }}</a>
@@ -70,6 +71,7 @@
     </div>
     <!--end for users-->
 
+
     <!--start for posts-->
     <div class="search-food-results {% if forloop.counter > 2 %} hidden {% endif %}">
       <h2 id="post-heading">Posts</h2>
@@ -80,7 +82,7 @@
         <div class="search-post-header">
           <div class="search-post-owner">
             <div class="search-avatar-image">
-              <img src="{{ post.user.avatar.url }}" alt="{{ post.user.username }}">
+              <img src="{{ post.user.avatar.url }}" alt="{{ post.user.username }}" loading="lazy">
             </div>
             <div class="search-post-owner-details">
               <span class="owner-name">{{ post.user.first_name }}, {{ post.user.last_name }}</span>
@@ -117,7 +119,7 @@
           <div class="search-post-image">
             {% if post.images.all %}
             {% for image in post.images.all %}
-            <img src="{{ image.image.url }}" alt="post-image">
+            <img src="{{ image.image.url }}" alt="post-image" loading="lazy">
             {% endfor %}
             {% endif %}
           </div>

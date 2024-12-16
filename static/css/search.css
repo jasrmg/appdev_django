@@ -143,6 +143,14 @@ body {
   display: none !important;
 }
 
+.search-food-results, .user-results {
+  margin: 1.5rem 0; /* Maintain consistent spacing even when toggling views */
+}
+
+.result-container > div.active {
+  display: block; /* Show only the active section */
+}
+
 /* Food Post Section */
 .search-food-results {
   width: 100%;
