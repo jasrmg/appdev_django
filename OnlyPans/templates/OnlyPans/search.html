@@ -18,13 +18,13 @@
       <a href="{% url 'search_view' filter_type='all' %}?q={{ query }}" class="filter-link active" id="all-filter" data-target="all"><i class="fas fa-th"></i> All</a>
       <a href="{% url 'search_view' filter_type='people' %}?q={{ query }}" class="filter-link" id="people-filter" data-target="people"><i class="fas fa-users"></i> People</a>
       <a href="{% url 'search_view' filter_type='posts' %}?q={{ query }}" class="filter-link" id="posts-filter" data-target="posts"><i class="fas fa-newspaper"></i> Posts</a>
-      <a href="{% url 'search_view' filter_type='Meat' %}?q={{ query }}" class="filter-link" id="meat-category" data-target="meat"><i class="fas fa-hamburger"></i> Meat</a>
-      <a href="{% url 'search_view' filter_type='Chicken' %}?q={{ query }}"  class="filter-link" id="chicken-category" data-target="chicken"><i class="fas fa-drumstick-bite"></i> Chicken</a>
-      <a href="{% url 'search_view' filter_type='Seafood' %}?q={{ query }}"  class="filter-link" id="seafood-category" data-target="seafood"><i class="fas fa-fish"></i> Seafood</a>
-      <a href="{% url 'search_view' filter_type='Veggies' %}?q={{ query }}"  class="filter-link" id="veggies-category" data-target="veggies"><i class="fas fa-carrot"></i> Veggies</a>
-      <a href="{% url 'search_view' filter_type='Dessert' %}?q={{ query }}"  class="filter-link" id="dessert-category" data-target="dessert"><i class="fas fa-ice-cream"></i> Dessert</a>
-      <a href="{% url 'search_view' filter_type='Snack' %}?q={{ query }}"  class="filter-link" id="snack-category" data-target="snack"><i class="fas fa-cookie"></i> Snack</a>
-      <a href="{% url 'search_view' filter_type='Beverage' %}?q={{ query }}"  class="filter-link"  id="beverage-category" data-target="beverage"><i class="fas fa-coffee"></i> Beverage</a>
+      <a href="{% url 'search_view' filter_type='Meat' %}?q={{ query }}" class="filter-link" id="meat-category" data-target="Meat"><i class="fas fa-hamburger"></i> Meat</a>
+      <a href="{% url 'search_view' filter_type='Chicken' %}?q={{ query }}"  class="filter-link" id="chicken-category" data-target="Chicken"><i class="fas fa-drumstick-bite"></i> Chicken</a>
+      <a href="{% url 'search_view' filter_type='Seafood' %}?q={{ query }}"  class="filter-link" id="seafood-category" data-target="Seafood"><i class="fas fa-fish"></i> Seafood</a>
+      <a href="{% url 'search_view' filter_type='Veggies' %}?q={{ query }}"  class="filter-link" id="veggies-category" data-target="Veggies"><i class="fas fa-carrot"></i> Veggies</a>
+      <a href="{% url 'search_view' filter_type='Dessert' %}?q={{ query }}"  class="filter-link" id="dessert-category" data-target="Dessert"><i class="fas fa-ice-cream"></i> Dessert</a>
+      <a href="{% url 'search_view' filter_type='Snack' %}?q={{ query }}"  class="filter-link" id="snack-category" data-target="Snack"><i class="fas fa-cookie"></i> Snack</a>
+      <a href="{% url 'search_view' filter_type='Beverage' %}?q={{ query }}"  class="filter-link"  id="beverage-category" data-target="Beverage"><i class="fas fa-coffee"></i> Beverage</a>
     </div>
   </div>
 
@@ -77,7 +77,13 @@
     {% if filter_type != 'people' %}
     <!--start for posts-->
     <div class="search-food-results {% if forloop.counter > 2 %} hidden {% endif %}">
-      <h2 id="post-heading">{{ category|title }} Posts</h2>
+      <h2 id="post-heading">
+        {% if filter_type == 'posts' %} 
+          Posts 
+        {% else %}
+          {{ filter_type|title }} Posts
+        {% endif %}
+      </h2>
     <!--post-->
     {% for post in posts %}
       <div class="search-post">

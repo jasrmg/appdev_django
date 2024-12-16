@@ -290,16 +290,6 @@ def delete_post(request, post_id):
 
   return redirect(next_url)
 
-def filter_posts_by_category(request, category_name):
-    # Filter posts by the category name dynamically
-    posts = Post.objects.filter(category__name=category_name)
-    posts_count = posts.count()
-    context = {
-      'posts': posts,
-      'category': category_name,
-      'posts_count': posts_count,
-    }
-    return render(request, 'OnlyPans/search.html', context)
 #profile view main code
 import re
 @login_required
@@ -582,6 +572,7 @@ def search_view(request, filter_type):
 
   # Normalize the search query to handle spaces and case sensitivity
   normalized_query = query.replace(" ", "").lower() if query else ''
+  print('NORMALIZED QUERY: ', normalized_query)
 
   # Filter posts based on filter type and search query
   posts = Post.objects.select_related('user', 'category') \
@@ -594,15 +585,22 @@ def search_view(request, filter_type):
     like_count=Count('like', distinct=True),
     comment_count=Count('comment', distinct=True)
   )
-
-  # Apply category filter if filter type is a category
-  if filter_type and filter_type != 'all':
+  # print('POSTS CHECK 1: ', posts)
+  # CATEGORY
+  if filter_type and filter_type != 'all' and filter_type != 'posts' and filter_type != 'people':
     posts = posts.filter(category__name=filter_type)
+    if query:
+      posts = posts.filter(Q(title__icontains=normalized_query) | Q(description__icontains=normalized_query))
+    #   print('post inside if: ', posts)
+    # print('POSTS CHECK not all: ', posts)
+  # print('POSTS CHECK 2: ', posts)
 
-  # Apply search query filter to posts
-  if query:
+  # POSTS AND ALL + QUERY
+  if query and filter_type == 'posts' or filter_type == 'all':
+    # print('POSTS CHECK 3: ', posts)
     posts = posts.filter(Q(title__icontains=normalized_query) | Q(description__icontains=normalized_query))
-
+    # print('POSTS CHECK 4: ', posts)
+  # print('POSTS CHECK 5: ', posts)
   posts = posts.order_by('-created_at')
 
   # Search users for people filter
