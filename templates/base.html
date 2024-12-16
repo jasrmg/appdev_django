@@ -7,8 +7,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>
-    {% block title %} {% if title %} {{ title }} {% else %} {{ query }} -
-    Search Results | OnlyPans {% endif %} {% endblock %}
+    {% block title %}
+      {% if title %}
+        {{ title }}
+      {% else %}
+        {% if query %}
+          {{ query }} - Search Results | OnlyPans
+        {% else %}
+          Search Results | OnlyPans
+        {% endif %}
+      {% endif %}
+    {% endblock %}
   </title>
   <!--poppins-->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -49,7 +58,7 @@
 
     <div class="mid">
       <div class="search-container">
-        <form action="{% url 'search' %}" method="GET" id="search-form">
+        <form action="{% url 'search_view' filter_type='all' %}" method="GET" id="search-form">
           <i class="fas fa-search search-icon"></i>
           <input type="text" name="q" id="search-input" placeholder="Search..." class="searchbar" value="{{ query }}" autocomplete="off" />
           <div id="suggestions"></div>
@@ -65,13 +74,13 @@
         </span>
         <div class="food-dropdown" id="foodDropdown">
           <div class="food-column">
-            <a>Meat</a>
-            <a>Chicken</a>
-            <a>Seafood</a>
-            <a>Veggies</a>
-            <a>Dessert</a>
-            <a>Snack</a>
-            <a>Beverages</a>
+            <a href="{% url 'search_view' filter_type='Meat' %}?q=Meat">Meat</a>
+            <a href="{% url 'search_view' filter_type='Chicken' %}?q=Chicken">Chicken</a>
+            <a href="{% url 'search_view' filter_type='Seafood' %}?q=Seafood">Seafood</a>
+            <a href="{% url 'search_view' filter_type='Veggies' %}?q=Veggies">Veggies</a>
+            <a href="{% url 'search_view' filter_type='Dessert' %}?q=Dessert">Dessert</a>
+            <a href="{% url 'search_view' filter_type='Snack' %}?q=Snack">Snack</a>
+            <a href="{% url 'search_view' filter_type='Beverages' %}?q=Beverages">Beverages</a>
           </div>
         </div>
       </div>

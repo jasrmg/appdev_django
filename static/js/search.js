@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
       //hide all posts after the first 2
       posts.forEach((post, index) => {
-        if (index > 2) {
+        if (index >= 2) {
           post.classList.add('hidden');
         }
       });

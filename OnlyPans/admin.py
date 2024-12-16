@@ -22,6 +22,8 @@ class PostAdmin(admin.ModelAdmin):
 class CommentAdmin(admin.ModelAdmin):
   list_display = ['comment_id', 'post_id', 'created_at', 'user', 'message']
   
+class PostAdmin(admin.ModelAdmin):
+  list_display = ['post_id', 'user', 'title', 'category']
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Post, PostAdmin)

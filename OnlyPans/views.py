@@ -274,9 +274,8 @@ def delete_post(request, post_id):
 
   #get the next parameter from the request if available
   next_url = request.POST.get('next') or request.GET.get('next')
-  print('NEXT URL: ', next_url)
   search_query = request.GET.get('q')
-  print('SEARCH QUERY: ', search_query)
+
   #default if next_url is not provided:
   if not next_url:
     next_url = 'home'
@@ -291,6 +290,16 @@ def delete_post(request, post_id):
 
   return redirect(next_url)
 
+def filter_posts_by_category(request, category_name):
+    # Filter posts by the category name dynamically
+    posts = Post.objects.filter(category__name=category_name)
+    posts_count = posts.count()
+    context = {
+      'posts': posts,
+      'category': category_name,
+      'posts_count': posts_count,
+    }
+    return render(request, 'OnlyPans/search.html', context)
 #profile view main code
 import re
 @login_required
@@ -566,52 +575,56 @@ def search_suggestions(request):
   else:
     results = []
   return JsonResponse({'results': results})
-
-
-def search_view(request):
-  query = request.GET.get('q').strip()
-  post = []
-  users = []
-  if not query:
-    return render(request, 'OnlyPans/search.html', {})
-  
-  #normalize the search query to show "meat load" even user searched "meatload"
-  normalized_query = query.replace(" ", "").lower()
-  
-  if query:
-    #search posts by title or description
-    posts = Post.objects.select_related('user', 'category') \
-      .prefetch_related(
-        'images',
-        Prefetch('comment_set', queryset=Comment.objects.select_related('user').order_by('-created_at')),#fetch comments
-        Prefetch('like_set', queryset=Like.objects.select_related('user'))#fetch likes
-      ) \
-      .annotate(
-        like_count=Count('like', distinct=True),
-        comment_count=Count('comment', distinct=True)
-      ) \
-      .filter(Q(title__icontains=normalized_query) | Q(description__icontains=normalized_query)) \
-      .distinct() \
-      .order_by('-created_at')
     
-    #search users by first name or last name
+def search_view(request, filter_type):
+  # Get the search query if it exists
+  query = request.GET.get('q', '').strip()
+
+  # Normalize the search query to handle spaces and case sensitivity
+  normalized_query = query.replace(" ", "").lower() if query else ''
+
+  # Filter posts based on filter type and search query
+  posts = Post.objects.select_related('user', 'category') \
+  .prefetch_related(
+    'images',
+    'comment_set',
+    'like_set'
+  ) \
+  .annotate(
+    like_count=Count('like', distinct=True),
+    comment_count=Count('comment', distinct=True)
+  )
+
+  # Apply category filter if filter type is a category
+  if filter_type and filter_type != 'all':
+    posts = posts.filter(category__name=filter_type)
+
+  # Apply search query filter to posts
+  if query:
+    posts = posts.filter(Q(title__icontains=normalized_query) | Q(description__icontains=normalized_query))
+
+  posts = posts.order_by('-created_at')
+
+  # Search users for people filter
+  users = []
+  if filter_type == 'people' or filter_type == 'all':
     users = User.objects.annotate(
       follower_count=Count('followers', distinct=True)
     ).filter(
       Q(first_name__icontains=normalized_query) | Q(last_name__icontains=normalized_query)
     ).exclude(id=request.user.id)
 
-    #add the following information for each users:
-    for user in users:
-      user.is_following = Follow.objects.filter(follower=request.user, followed=user).exists()
-  
+  # Get all categories to display in the filter
   categories = Category.objects.all()
+
   context = {
     'query': query,
     'posts': posts,
     'users': users,
     'categories': categories,
-  }
+    'filter_type': filter_type,  # The filter type (e.g., 'all', 'people', 'posts', etc.)
+    }
+
   return render(request, 'OnlyPans/search.html', context)
     
 #follow unfollow
