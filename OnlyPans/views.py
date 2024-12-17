@@ -467,8 +467,14 @@ def save_comment(request):#wa na giapil ang id kay apil na siya sa post body
 def delete_comment(request, comment_id):
     comment = get_object_or_404(Comment, comment_id=comment_id)
     if request.method == 'POST' and comment.user == request.user:
-        comment.delete()
-        return JsonResponse({'status': 'success', 'response': 'YAWA KA BAI'})
+        post = comment.post
+        comment_count = Comment.objects.filter(post=post).count()
+        print(comment_count)
+        return JsonResponse({
+          'status': 'success',
+          'comment_count': comment_count, 
+          'response': 'YAWA KA BAI'
+        })
     return JsonResponse({'status': 'error'}, status=403)
 
 from django.db.models import F

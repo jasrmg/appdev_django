@@ -1,7 +1,7 @@
 {% load static %}
-<!--modal para sa messages-->
-{% include 'OnlyPans/modals/messages_modal.html' %}
+
 <script src="{% static 'js/search-delete.js' %}" defer></script>
+<script src="{% static 'js/search-add-comment.js' %}" defer></script>
 
 <link rel="stylesheet" href="{% static 'css/post-view.css' %}">
 <div class="popup-container">
@@ -91,8 +91,10 @@
       </div>
       <!--ADD COMMENT-->
       <div class="comment-input-container">
-        <input type="text" placeholder="Write a comment..." aria-label="Comment input">
-        <button type="submit">Send</button>
+        <textarea placeholder="Write a comment..." class="add-comment" required rows="1" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px';"></textarea>
+        <button type="submit" class="comment-add-btn">
+          <i class="fas fa-paper-plane"></i>
+        </button>
       </div>
     </div>
   </div>

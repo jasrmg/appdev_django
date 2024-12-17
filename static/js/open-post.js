@@ -25,11 +25,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Focus on comment box if comment button is clicked
   const commentButton = document.querySelector('.comment-button');
-  const commentInput = document.querySelector('.comment-input-container input');
+  const commentArea = document.querySelector('.comment-input-container textarea');
   
-  if (commentButton && commentInput) {
+  if (commentButton && commentArea) {
     commentButton.addEventListener('click', function() {
-      commentInput.focus();
+      commentArea.focus();
     });
   }
 });
@@ -124,7 +124,7 @@ function showPopup(event) {
                   ` : ''}
                 </div>
               </div>
-              <p>${comment.content} ${comment.comment_id}</p>
+              <p class="comment-message">${comment.content}</p>
             </div>
           `;
 
@@ -164,5 +164,13 @@ function timeSince(date) {
     return "Just now";
   }
 }
+
+//comment count update:
+function updateCommentCount(count) {
+  const commentCountElement = document.querySelector('.comment-count');
+  commentCountElement.innerHTML = `<i class="fas fa-comment"></i> ${count} Comments`;
+}
+window.updateCommentCount = updateCommentCount;
+
 
 /*===============================CLAUDE==================================*/
