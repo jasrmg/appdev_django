@@ -43,7 +43,6 @@ urlpatterns = [
   path('search/<str:filter_type>/', views.search_view, name='search_view'),
   #search suggestions:
   path('search_suggestions/', views.search_suggestions, name='search_suggestions'),
-  # path('filter-posts/', views.filter_posts, name="filter_posts"),
-  # path('posts/meat/', views.meat_posts, name="meat_posts"),
-  # path('search/<str:filter_type>/', views.filter_posts_by_category, name='filter_posts_category'),
+  #pop up
+  path('search/post-view/<int:post_id>/', views.post_popup, name='post_popup')
 ]

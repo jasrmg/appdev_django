@@ -1,0 +1,340 @@
+.popup-container {
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+}
+
+.reveal-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.reveal-button:hover {
+  background-color: #2980b9;
+}
+
+.post-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  overflow-y: auto;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.post-popup.show {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 1;
+}
+
+.post-popup-content {
+  background: white;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: slideUp 0.4s ease;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+/*scrollbar design*/
+.post-popup-content::-webkit-scrollbar {
+  width: 12px;
+}
+.post-popup-content::-webkit-scrollbar-track {
+  background: var(--darker-primary-color);
+  /* border-radius: 10px; */
+  border: 2px solid var(--accent-color);
+}
+.post-popup-content::-webkit-scrollbar-thumb:hover {
+  background-color: var(--accent-color);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.popup-heading {
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 20px;
+  background: var(--darker-primary-color);
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 10px;
+}
+.popup-actions {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  border-top: 1px solid var(--accent-color);
+  background: var(--darker-primary-color);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.poster-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+  border: 1px solid var(--secondary-color);
+}
+
+.user-details {
+  text-align: left;
+}
+
+.user-details h3 {
+  font-size: 16px;
+  color: var(--secondary-color);
+}
+
+.user-details .post-time {
+  color: var(--secondary-color);
+  font-size: 12px;
+}
+
+.close-popup {
+  color: var(--red-color);
+  font-size: 24px;
+  cursor: pointer;
+  display: inline-block;
+  transition: transform 0.3s ease-in-out;
+}
+.close-popup:hover {
+  transform: scale(1.4);
+}
+
+.popup-body {
+  padding: 0 20px;
+  padding-bottom: 20px;
+  background: var(--darker-primary-color);
+}
+
+.popup-title {
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: var(--secondary-color);
+}
+
+.popup-description {
+  color: var(--secondary-color);
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.ingredients-section {
+  margin-bottom: 20px;
+}
+
+.ingredients-header {
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: var(--secondary-color);
+}
+
+.ingredients-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.ingredients-list li {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  padding: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease-in-out;
+
+  border-radius: 4px;
+  text-align: center;
+  list-style-type: none;
+}
+.ingredients-list li:hover {
+  transform: scale(1.05);
+}
+
+.popup-image {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.popup-stats {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  border-top: 1px solid var(--accent-color);
+  background: var(--darker-primary-color);
+}
+.popup-stats .fa-heart {
+  color: var(--red-color);
+  margin-left: 5px;
+}
+.popup-stats .fa-comment {
+  color: var(--accent-color);
+  margin-left: 8px;
+}
+/*LIKE AND COMMENT BUTTONS*/
+.popup-interaction-buttons {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px;
+  border-top: 1px solid var(--accent-color);
+  background: var(--darker-primary-color);
+}
+
+.like-button, 
+.comment-button {
+  display: flex;
+  align-items: center;
+  background: var(--accent-color);
+  border: 1px solid var(--accent-color);
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--primary-color);
+  transition: color 0.3s ease, border 0.3s ease;
+  gap: 8px;
+  padding: 10px 25px;
+  border-radius: 5px;
+}
+/* .like-button {
+  color: var(--red-color);
+}
+.comment-button {
+  color: var(--accent-color);
+} */
+
+.like-button:hover, 
+.comment-button:hover {
+  background-color: var(--primary-color);
+  color: var(--accent-color);
+  border: 1px solid var(--accent-color)
+}
+
+.like-button.active,
+.like-button.active:hover {
+  color: #ff4d4d;
+}
+
+.like-button i, 
+.comment-button i {
+  font-size: 18px;
+}
+/*COMMENT SECTION*/
+.popup-comments-section {
+  padding: 15px;
+  border-top: 1px solid #f1f1f1;
+}
+
+.single-comment {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.comment-avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.comment-content {
+  flex-grow: 1;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.comment-author {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.comment-time {
+  color: #888;
+  font-size: 12px;
+}
+/*ADD COMMENT FIXED*/
+.comment-input-container {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  padding: 10px;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+  z-index: 10;
+}
+
+.comment-input-container input {
+  flex-grow: 1;
+  padding: 8px;
+  margin-right: 10px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+}
+
+.comment-input-container button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.comment-input-container button:hover {
+  background-color: #0056b3;
+}

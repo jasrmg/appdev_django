@@ -1,3 +1,4 @@
+import json
 import random
 from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse, HttpResponseRedirect
@@ -23,7 +24,7 @@ def test(request):
   return HttpResponse('Hello World!')
 
 from django.utils.timezone import now
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 @login_required
 def changepassword_view(request, username):
@@ -574,19 +575,20 @@ def search_suggestions(request):
     results = []
   return JsonResponse({'results': results})
     
+from .templatetags.custom_timesince import custom_timesince    
 def search_view(request, filter_type):
   # Get the search query if it exists
   query = request.GET.get('q', '').strip()
 
   # Normalize the search query to handle spaces and case sensitivity
-  normalized_query = query.replace(" ", "").lower() if query else ''
+  normalized_query = query.strip().lower() if query else ''
   print('NORMALIZED QUERY: ', normalized_query)
 
   # Filter posts based on filter type and search query
   posts = Post.objects.select_related('user', 'category') \
   .prefetch_related(
     'images',
-    'comment_set',
+    'comment_set__user',
     'like_set'
   ) \
   .annotate(
@@ -595,7 +597,7 @@ def search_view(request, filter_type):
   )
   # print('POSTS CHECK 1: ', posts)
   # CATEGORY
-  if filter_type and filter_type != 'all' and filter_type != 'posts' and filter_type != 'people':
+  if filter_type and filter_type not in ['all', 'posts', 'people']:
     posts = posts.filter(category__name=filter_type)
     if query:
       posts = posts.filter(Q(title__icontains=normalized_query) | Q(description__icontains=normalized_query))
@@ -604,7 +606,7 @@ def search_view(request, filter_type):
   # print('POSTS CHECK 2: ', posts)
 
   # POSTS AND ALL + QUERY
-  if query and filter_type == 'posts' or filter_type == 'all':
+  if query and (filter_type == 'posts' or filter_type == 'all'):
     # print('POSTS CHECK 3: ', posts)
     posts = posts.filter(Q(title__icontains=normalized_query) | Q(description__icontains=normalized_query))
     # print('POSTS CHECK 4: ', posts)
@@ -632,6 +634,39 @@ def search_view(request, filter_type):
     }
 
   return render(request, 'OnlyPans/search.html', context)
+
+def post_popup(request, post_id):
+  post = get_object_or_404(Post, post_id=post_id)
+  comments = post.comment_set.all()
+
+  post.ingredients_list = [ingredient.strip() for ingredient in re.split(r',\s*(?![^()]*\))', post.ingredients)] 
+  post_images = post.images.all()
+  like_count = Like.objects.filter(post=post).count()
+  comment_count = Comment.objects.filter(post=post).count()
+  post_data = {
+    'first_name': post.user.first_name,
+    'last_name': post.user.last_name,
+    'created_at': post.created_at,
+    'avatar_url': post.user.avatar.url,
+    'title': post.title,
+    'description': post.description,
+    'ingredients': post.ingredients_list,
+    'images': [image.image.url for image in post_images],
+    'comments': [{'first_name': comment.user.first_name,
+                  'last_name': comment.user.last_name,
+                  'avatar_url': comment.user.avatar.url,
+                  'content': comment.message,
+                  'created_at': comment.created_at} for comment in comments],
+    'like_count': like_count,
+    'comment_count': comment_count,
+  }
+  print('KAYATA: ', post_data)
+
+  # context = {
+  #   'post': post,
+  #   'comments': comments,
+  # }
+  return JsonResponse(post_data)
 
 #post pop up modal test
 def test(request):
