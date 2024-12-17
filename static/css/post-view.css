@@ -1,5 +1,4 @@
 .popup-container {
-  text-align: center;
   max-width: 600px;
   width: 100%;
 }
@@ -26,7 +25,7 @@
   width: 100%;
   height: 100%;
   background: rgba(0,0,0,0.5);
-  z-index: 1000;
+  z-index: 2;
   overflow-y: auto;
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -134,14 +133,15 @@
 }
 
 .close-popup {
-  color: var(--red-color);
+  color: var(--accent-color);
   font-size: 24px;
   cursor: pointer;
   display: inline-block;
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 .close-popup:hover {
   transform: scale(1.4);
+  color: var(--red-color)
 }
 
 .popup-body {
@@ -268,29 +268,64 @@
 /*COMMENT SECTION*/
 .popup-comments-section {
   padding: 15px;
-  border-top: 1px solid #f1f1f1;
+  border-top: 1px solid var(--accent-color);
+  background: var(--darker-primary-color);
 }
 
 .single-comment {
   display: flex;
   margin-bottom: 15px;
+  background: var(--primary-color);
+  border-radius: 10px;
+  padding: 10px;
+
+  gap: 10px;
 }
 
 .comment-avatar {
-  width: 35px;
-  height: 35px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   margin-right: 10px;
+  border: 1px solid var(--accent-color);
 }
 
 .comment-content {
   flex-grow: 1;
+  width: calc(100% - 50x);
 }
 
 .comment-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 5px;
+}
+.commentor-details {
+  display: flex;
+  flex-direction: column;
+}
+.comment-controls {
+  display: flex;
+  gap: 10px;
+}
+.comment-control-btn {
+  color: var(--accent-color);
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.3s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+}
+.comment-control-btn:hover {
+  transform: scale(1.4);
+}
+.comment-control-btn.delete-btn {
+  font-size: 24px;
+  font-weight: bold;
+  transition: color 0.3 ease-in-out, transform 0.3s ease-in-out;
+}
+.comment-control-btn.delete-btn:hover {
+  color: var(--red-color);
 }
 
 .comment-author {
@@ -301,6 +336,10 @@
 .comment-time {
   color: #888;
   font-size: 12px;
+  display: block;
+}
+.comment-message {
+  text-align: left;
 }
 /*ADD COMMENT FIXED*/
 .comment-input-container {

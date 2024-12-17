@@ -1,4 +1,8 @@
 {% load static %}
+<!--modal para sa messages-->
+{% include 'OnlyPans/modals/messages_modal.html' %}
+<script src="{% static 'js/search-delete.js' %}" defer></script>
+
 <link rel="stylesheet" href="{% static 'css/post-view.css' %}">
 <div class="popup-container">
   <div class="post-popup" id="postPopup">
@@ -67,10 +71,20 @@
           <img src="{{ comment.user.avatar.url }}" alt="{{ comment.user.username }}" class="comment-avatar">
           <div class="comment-content">
             <div class="comment-header">
-              <span class="comment-author">{{ comment.user.first_name }} {{ comment.user.last_name }}</span>
-              <span class="comment-time">{{ comment.created_at }}</span>
+              <div class="commentor-details">
+                <span class="comment-author">{{ comment.user.first_name }} {{ comment.user.last_name }}</span>
+                <span class="comment-time">{{ comment.created_at }}</span>
+              </div>
+              <div class="comment-controls">
+                <span class="comment-control-btn edit-btn" data-comment-id="{{  comment.comment_id }}" title="Edit Comment">
+                  <i class="fas fa-edit"></i>
+                </span>
+                <span class="comment-control-btn delete-btn" data-comment-id="{{ comment.comment_id }}" title="Delete Comment">
+                  ✖
+                </span>
+              </div>
             </div>
-            <p>{{ comment.content }}</p>
+            <p class="comment-message">{{ comment.content }}</p>
           </div>
         </div>
         {% endfor %}
@@ -79,7 +93,8 @@
       <div class="comment-input-container">
         <input type="text" placeholder="Write a comment..." aria-label="Comment input">
         <button type="submit">Send</button>
-    </div>
+      </div>
     </div>
   </div>
 </div>
+

@@ -56,7 +56,7 @@ function showPopup(event) {
   console.log('Post ID:', postId);
 
   // Construct the URL dynamically
-  const url = `/search/post-view/${postId}/`;
+  const url = `/search/post_view/${postId}/`;
   console.log('Fetching from:', url);
 
   // Fetch data from the backend
@@ -103,16 +103,31 @@ function showPopup(event) {
         data.comments.forEach((comment) => {
           const commentDiv = document.createElement('div');
           commentDiv.classList.add('single-comment');
+          commentDiv.setAttribute('data-comment-id', comment.comment_id);
           commentDiv.innerHTML = `
-          <img src=${comment.avatar_url} class="comment-avatar" >
+            <img src="${comment.avatar_url}" class="comment-avatar">
             <div class="comment-content">
               <div class="comment-header">
-                <span class="comment-author">${comment.first_name} ${comment.last_name}</span>
-                <span class="comment-time">${timeSince(comment.created_at)}</span>
+                <div class="commentor-details">
+                  <span class="comment-author">${comment.first_name} ${comment.last_name}</span>
+                  <span class="comment-time">${timeSince(comment.created_at)}.</span>
+                </div>  
+                <div class="comment-controls">
+                  ${comment.commentor_username === data.logged_username ? `
+                    <span class="comment-control-btn edit-btn" data-comment-id="${comment.comment_id}" title="Edit Comment">
+                      <i class="fas fa-edit"></i>
+                    </span>
+                    <span class="comment-control-btn delete-btn" data-comment-id="${comment.comment_id}" 
+                    title="Delete Comment">
+                      &times;
+                    </span>
+                  ` : ''}
+                </div>
               </div>
-              <p>${comment.content}</p>
+              <p>${comment.content} ${comment.comment_id}</p>
             </div>
           `;
+
           commentsSection.appendChild(commentDiv);
         });
       }
@@ -149,3 +164,5 @@ function timeSince(date) {
     return "Just now";
   }
 }
+
+/*===============================CLAUDE==================================*/

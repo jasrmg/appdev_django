@@ -636,6 +636,7 @@ def search_view(request, filter_type):
   return render(request, 'OnlyPans/search.html', context)
 
 def post_popup(request, post_id):
+  current_username = request.user.username
   post = get_object_or_404(Post, post_id=post_id)
   comments = post.comment_set.all()
 
@@ -644,6 +645,7 @@ def post_popup(request, post_id):
   like_count = Like.objects.filter(post=post).count()
   comment_count = Comment.objects.filter(post=post).count()
   post_data = {
+    'logged_username': current_username,
     'first_name': post.user.first_name,
     'last_name': post.user.last_name,
     'created_at': post.created_at,
@@ -652,15 +654,16 @@ def post_popup(request, post_id):
     'description': post.description,
     'ingredients': post.ingredients_list,
     'images': [image.image.url for image in post_images],
-    'comments': [{'first_name': comment.user.first_name,
+    'comments': [{'comment_id': comment.comment_id,
+                  'first_name': comment.user.first_name,
                   'last_name': comment.user.last_name,
+                  'commentor_username': comment.user.username, 
                   'avatar_url': comment.user.avatar.url,
                   'content': comment.message,
                   'created_at': comment.created_at} for comment in comments],
     'like_count': like_count,
     'comment_count': comment_count,
   }
-  print('KAYATA: ', post_data)
 
   # context = {
   #   'post': post,
