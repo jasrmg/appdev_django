@@ -465,16 +465,18 @@ def save_comment(request):#wa na giapil ang id kay apil na siya sa post body
 #delete comment
 @login_required
 def delete_comment(request, comment_id):
-    comment = get_object_or_404(Comment, comment_id=comment_id)
-    if request.method == 'POST' and comment.user == request.user:
-        post = comment.post
-        comment_count = Comment.objects.filter(post=post).count()
-        print(comment_count)
-        return JsonResponse({
-          'status': 'success',
-          'comment_count': comment_count, 
-          'response': 'YAWA KA BAI'
-        })
+  print('nag delete')
+  comment = get_object_or_404(Comment, comment_id=comment_id)
+  if request.method == 'POST' and comment.user == request.user:
+    post = comment.post
+    comment.delete()
+    comment_count = Comment.objects.filter(post=post).count()
+    print(comment_count)
+    return JsonResponse({
+      'status': 'success',
+      'comment_count': comment_count, 
+      'response': 'YAWAAAAA D MAKUHA RESPONSEEEE!!! FUCK JS'
+    })
     return JsonResponse({'status': 'error'}, status=403)
 
 from django.db.models import F

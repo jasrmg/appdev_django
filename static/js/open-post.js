@@ -96,8 +96,19 @@ function showPopup(event) {
       const commentsSection = document.querySelector('.popup-comments-section');
       commentsSection.innerHTML = ''; // Clear existing comments
       if (data.comments.length === 0) {
-        const noCommentsMessage = document.createElement('p');
-        noCommentsMessage.textContent = "NO ONE LEFT A COMMENT";
+        const noCommentsMessage = document.createElement('div');
+        noCommentsMessage.classList.add('no-comment');
+        noCommentsMessage.classList.add('single-comment');
+        // noCommentsMessage.setAttribute('data-comment-id', comment.comment_id);
+        noCommentsMessage.innerHTML = `
+        <div class="comment-content">
+          <div class="comment-header">
+            <div class="commentor-details">
+            </div>
+          </div>
+          <p class="comment-message">No one left a comment on this post.</p>
+        </div>
+        `;
         commentsSection.appendChild(noCommentsMessage);
       } else {
         data.comments.forEach((comment) => {
@@ -169,6 +180,33 @@ function timeSince(date) {
 function updateCommentCount(count) {
   const commentCountElement = document.querySelector('.comment-count');
   commentCountElement.innerHTML = `<i class="fas fa-comment"></i> ${count} Comments`;
+
+  // Check if there are no comments left
+  const commentsSection = document.querySelector('.popup-comments-section');
+  if (count === 0 && commentsSection) {
+    // Clear existing content
+    commentsSection.innerHTML = '';
+
+    // Add "no comments" message
+    const noCommentsMessage = document.createElement('div');
+    noCommentsMessage.classList.add('no-comment');
+    noCommentsMessage.classList.add('single-comment');
+    noCommentsMessage.innerHTML = `
+      <div class="comment-content">
+        <div class="comment-header">
+          <div class="commentor-details">
+          </div>
+        </div>
+        <p class="comment-message">No one left a comment on this post.</p>
+      </div>
+    `;
+    commentsSection.appendChild(noCommentsMessage);
+  } else if (commentsSection) {
+    const noCommentElement =  commentsSection.querySelector('.no-comment');
+    if (noCommentElement) {
+      noCommentElement.remove();
+    }
+  }
 }
 window.updateCommentCount = updateCommentCount;
 

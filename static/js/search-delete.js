@@ -57,11 +57,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Function to update the comment count in the DOM
-  function updateCommentCount(commentCount) {
-    const commentCountElement = document.querySelector('.comment-count');
-    if (commentCountElement) {
-      commentCountElement.innerHTML = `<i class="fas fa-comment"></i> ${commentCount} Comments`;
-    }
-  }
+  // // Function to update the comment count in the DOM
+  // function updateCommentCount(commentCount) {
+  //   const commentCountElement = document.querySelector('.comment-count');
+  //   if (commentCountElement) {
+  //     commentCountElement.innerHTML = `<i class="fas fa-comment"></i> ${commentCount} Comments`;
+  //   }
+  // }
 });
