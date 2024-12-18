@@ -44,7 +44,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Update the comment count in the DOM
             updateCommentCount(data.comment_count);
-
+            //update the comment count in the search.html template:
+            const commentCountElement = document.querySelector(`.no-of-comments[data-post-id="${POSTID}"]`)
+            if (commentCountElement) {
+              let currentCount = parseInt(commentCountElement.firstChild.textContent.trim(), 10);
+              currentCount--;
+              //update the text count:
+              commentCountElement.innerHTML = `
+                ${currentCount} <i class="fa-solid fa-comment"></i>
+              `
+            }
             // Close the modal
             deleteModal.style.display = 'none';
           } else {
@@ -56,12 +65,4 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
   });
-
-  // // Function to update the comment count in the DOM
-  // function updateCommentCount(commentCount) {
-  //   const commentCountElement = document.querySelector('.comment-count');
-  //   if (commentCountElement) {
-  //     commentCountElement.innerHTML = `<i class="fas fa-comment"></i> ${commentCount} Comments`;
-  //   }
-  // }
 });

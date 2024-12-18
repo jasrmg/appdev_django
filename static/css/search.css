@@ -268,7 +268,8 @@ span.search-post-title {
   color: var(--red-color);
   transform: scale(1.4);
 }
-.no-of-comments, .no-of-likes {
+.no-of-comments, .no-of-likes,
+.comment-count, .like-count {
   color: var(--accent-color);
   font-size: 16px;
   display: flex;

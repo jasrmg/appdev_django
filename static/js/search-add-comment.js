@@ -1,20 +1,20 @@
 document.addEventListener('DOMContentLoaded', function() {
   const commentAddBtn = document.querySelector('.comment-add-btn');
   const commentInput = document.querySelector('.add-comment');
-  const postId = document.querySelector('.post-image-link').getAttribute('data-post-id'); // Assuming the post ID is in your images
-  console.log('POST ID: ', postId);
+  
 
   commentAddBtn.addEventListener('click', function(e) {
     e.preventDefault(); // Prevent the default form submit behavior
-
     const message = commentInput.value.trim(); // Get the message from textarea
 
     if (message) {
       // Create a FormData object and append the post_id and message to it
       const formData = new FormData();
-      formData.append('post_id', postId); // Send the post ID
-      formData.append('message', message); // Send the comment message
+      //GLOBAL POST ID KAY KAPOY LABAD
+      formData.append('post_id', POSTID); 
+      formData.append('message', message);
 
+      
       // Send the request with FormData
       fetch('/add_comment/', {
         method: 'POST',
@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(response => response.json())
       .then(data => {
         if (data.success) {
+          console.log('POST ID: ', POSTID);
           // You can append the new comment to the comments section here
           const commentSection = document.querySelector('.popup-comments-section'); 
           const newCommentHTML = `
@@ -38,22 +39,33 @@ document.addEventListener('DOMContentLoaded', function() {
                     <span class="comment-time">${data.created_at}</span>
                   </div>
                   <div class="comment-controls">
-                    <span class="comment-control-btn edit-btn" data-comment-id="${data.comment_id}" title="Edit Comment">
-                      <i class="fas fa-edit"></i>
+                    <span class="comment-control-btn edit-btn" title="Edit Comment">
+                      <i class="fas fa-edit edit-btn" id="editCommentBtn-${data.comment_id}" data-comment-id="${data.comment_id}"></i>
                     </span>
                     <span class="comment-control-btn delete-btn" data-comment-id="${data.comment_id}" title="Delete Comment">&times;</span>
                   </div>
                 </div>
-                <p class="comment-message">${data.message}</p>
+                <div class="comment-message" id="comment-text-${data.comment_id}" contenteditable="false">${data.message}</div>
               </div>
             </div>
           `;
           commentSection.insertAdjacentHTML('beforeend', newCommentHTML);
-          // commentSection.innerHTML = newCommentHTML + commentSection.innerHTML; // Add new comment to the top
-          
+
           commentInput.value = ''; // Clear the textarea
           //update the comment count:
           updateCommentCount(data.comment_count);
+          //update the comment count in the search.html template
+          const commentCountElement = document.querySelector(`.no-of-comments[data-post-id="${POSTID}"]`);
+          console.log('cce: ', commentCountElement)
+          if (commentCountElement) {
+            let currentCount = parseInt(commentCountElement.firstChild.textContent.trim(), 10);
+            currentCount++;
+
+            //update the text content
+            commentCountElement.innerHTML = `
+              ${currentCount} <i class="fa-solid fa-comment"></i> 
+            `;
+          }
         } else {
           console.error('Error adding comment');
         }

@@ -4,8 +4,6 @@
 {% load custom_timesince %}
 {% load json_filter %}
 <link rel="stylesheet" href="{% static 'css/search.css' %}" />
-<script src="{% static 'js/sidebar-active.js' %}"></script>
-<script src="{% static 'js/open-post.js' %}"></script>
 
 {% if user.is_authenticated %}
 <div class="search-view-container">
@@ -143,11 +141,11 @@
         </div>
         <!--post footer-->
         <div class="search-post-footer">
-          <span class="no-of-likes">
+          <span class="no-of-likes" data-post-id="{{ post.post_id }}">
             {{ post.like_count }} 
             <i class="fa-solid fa-heart"></i>
           </span>
-          <span class="no-of-comments">
+          <span class="no-of-comments" data-post-id="{{ post.post_id }}">
             {{ post.comment_count }} 
             <i class="fa-solid fa-comment"></i>  
           </span>
@@ -168,4 +166,10 @@
   
 </div>
 {% endif %}
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/sidebar-active.js' %}" defer ></script>
+  <script src="{% static 'js/open-post.js' %}" defer ></script>
+  <script src="{% static 'js/like.js' %}" defer ></script>
 {% endblock %}

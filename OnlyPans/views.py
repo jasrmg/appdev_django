@@ -647,12 +647,14 @@ def post_popup(request, post_id):
   current_username = request.user.username
   post = get_object_or_404(Post, post_id=post_id)
   comments = post.comment_set.all()
+  user_liked = Like.objects.filter(post=post, user=request.user).exists()
 
   post.ingredients_list = [ingredient.strip() for ingredient in re.split(r',\s*(?![^()]*\))', post.ingredients)] 
   post_images = post.images.all()
   like_count = Like.objects.filter(post=post).count()
   comment_count = Comment.objects.filter(post=post).count()
   post_data = {
+    'user_liked': user_liked,
     'logged_username': current_username,
     'first_name': post.user.first_name,
     'last_name': post.user.last_name,

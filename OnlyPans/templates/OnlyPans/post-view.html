@@ -1,7 +1,5 @@
 {% load static %}
 
-<script src="{% static 'js/search-delete.js' %}" defer></script>
-<script src="{% static 'js/search-add-comment.js' %}" defer></script>
 
 <link rel="stylesheet" href="{% static 'css/post-view.css' %}">
 <div class="popup-container">
@@ -50,12 +48,12 @@
       </div>
       <!--STATS-->
       <div class="popup-stats">
-        <span class="like-count"><i class="fas fa-heart"></i> {{ post_data.like_count }} Likes</span>
+        <span class="like-count"><i class="fas fa-heart"></i>Likes</span>
         <span class="comment-count"><i class="fas fa-comment"></i> {{ post_data.comments|length }} Comments</span>
       </div>
       <!--LIKE AND COMMENT BUTTONS-->
       <div class="popup-interaction-buttons">
-        <button class="like-button">
+        <button class="like-button" data-post-id="{{ post_data.post_id }}">
           <i class="fas fa-heart"></i>
           <span class="like-button-text">Like</span>
         </button>
@@ -99,4 +97,8 @@
     </div>
   </div>
 </div>
-
+{% block scripts %}
+  <script src="{% static 'js/search-delete.js' %}" defer></script>
+  <script src="{% static 'js/search-add-comment.js' %}" defer></script>
+  <script src="{% static 'js/search-edit-comment.js' %}" defer></script>
+{% endblock %}

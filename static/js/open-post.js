@@ -1,3 +1,4 @@
+let POSTID = null;
 document.addEventListener('DOMContentLoaded', function () {
   // Select all post image links and add a click event listener to each
   const postLinks = document.querySelectorAll('.post-image-link');
@@ -45,18 +46,22 @@ function showPopup(event) {
   event.preventDefault();
 
   // Get the post ID from the clicked element
-  const postId = event.currentTarget.getAttribute('data-post-id');
+  // const postId = event.currentTarget.getAttribute('data-post-id');
+  POSTID = event.target.closest('.post-image-link').getAttribute('data-post-id');
+  const popupContainer = document.querySelector('.popup-container');
+  popupContainer.dataset.postId = POSTID;
+  console.log('NEW POST ID: ', POSTID)
   
-  if (!postId) {
+  if (!POSTID) {
     console.error('Post ID is undefined.');
     return;
   }
 
   // Log postId to verify
-  console.log('Post ID:', postId);
+  console.log('Post ID:', POSTID);
 
   // Construct the URL dynamically
-  const url = `/search/post_view/${postId}/`;
+  const url = `/search/post_view/${POSTID}/`;
   console.log('Fetching from:', url);
 
   // Fetch data from the backend
@@ -89,8 +94,23 @@ function showPopup(event) {
       document.querySelector('.popup-image').src = data.images[0];
 
       // Update stats
-      document.querySelector('.like-count').innerHTML = `<i class="fas fa-heart"></i> ${data.like_count} Likes`;
-      document.querySelector('.comment-count').innerHTML = `<i class="fas fa-comment"></i> ${data.comment_count} Comments`;
+      document.querySelector('.like-count').innerHTML = `
+        ${data.like_count}<i class="fas fa-heart"></i> 
+      `;
+      document.querySelector('.comment-count').innerHTML = `
+      ${data.comment_count}<i class="fas fa-comment"></i> 
+      `;
+
+      //like and comment buttons
+      document.querySelector('.like-button').setAttribute('data-post-id', POSTID);
+      document.querySelector('.comment-button').setAttribute('data-post-id', POSTID)
+      const likeButtonText = document.querySelector('.like-button .like-button-text');
+      if (data.user_liked) {
+        likeButtonText.textContent = 'Liked';
+      } else {
+        likeButtonText.textContent = 'Like';
+      }
+      
 
       // Update comments
       const commentsSection = document.querySelector('.popup-comments-section');
@@ -125,8 +145,9 @@ function showPopup(event) {
                 </div>  
                 <div class="comment-controls">
                   ${comment.commentor_username === data.logged_username ? `
-                    <span class="comment-control-btn edit-btn" data-comment-id="${comment.comment_id}" title="Edit Comment">
-                      <i class="fas fa-edit"></i>
+                    <span class="comment-control-btn edit-btn" title="Edit Comment">
+                      <i class="fas fa-edit edit-btn" 
+                      id="editCommentBtn-${comment.comment_id}" data-comment-id="${comment.comment_id}"></i>
                     </span>
                     <span class="comment-control-btn delete-btn" data-comment-id="${comment.comment_id}" 
                     title="Delete Comment">
@@ -135,8 +156,8 @@ function showPopup(event) {
                   ` : ''}
                 </div>
               </div>
-              <p class="comment-message">${comment.content}</p>
-            </div>
+              <div class="comment-message" id="comment-text-${comment.comment_id}" contenteditable="false">${comment.content}</div>
+              </div>
           `;
 
           commentsSection.appendChild(commentDiv);
@@ -179,7 +200,7 @@ function timeSince(date) {
 //comment count update:
 function updateCommentCount(count) {
   const commentCountElement = document.querySelector('.comment-count');
-  commentCountElement.innerHTML = `<i class="fas fa-comment"></i> ${count} Comments`;
+  commentCountElement.innerHTML = `<i class="fas fa-comment"></i> ${count}`;
 
   // Check if there are no comments left
   const commentsSection = document.querySelector('.popup-comments-section');

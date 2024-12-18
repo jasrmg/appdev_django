@@ -148,9 +148,7 @@
     {% endif %}
     
   </div>
-    <script>
-      
-    </script>
+
   {% include 'OnlyPans/modals/comment_delete_confirmation.html' %}
 
   <!-- Add Comment Section -->
@@ -174,7 +172,7 @@
   <p style="text-align: center; color: #8d8d8d">No post to show</p>
 </div>
 {% endif %}
-
+{% block scripts %}
       <script>
         //script para sa see more description:
         $(document).ready(function () {
@@ -214,3 +212,4 @@
         });
     
       </script>
+{% endblock %}

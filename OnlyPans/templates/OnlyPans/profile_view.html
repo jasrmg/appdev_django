@@ -257,13 +257,7 @@
             color: var(--secondary-text-color);
           }
         </style>
-        <!--ajax import for like unlike no refresh-->
-        <script src="{% static 'js/post.js' %}"></script>
-        <!--script for comment-->
-        <script>
-          window.addCommentUrl = "{% url 'add_comment' %}";
-        </script>
-        <script src="{% static 'js/comment.js' %}"></script>
+
       </div>
 
       <!-- Loading indicator -->
@@ -272,12 +266,21 @@
 
   </div>
 </div>
+{% block scripts %}
+<!--ajax import for like unlike no refresh-->
+<script src="{% static 'js/post.js' %}"></script>
+<!--script for comment-->
+<script>
+  window.addCommentUrl = "{% url 'add_comment' %}";
+</script>
+<script src="{% static 'js/comment.js' %}"></script>
 <!--scripts for showing the posts-->
+<script src="{% static 'js/showposts.js' %}"></script>
+{% endblock %}
 <script>
   var username = "{{ user.username | escapejs }}"
   var followUrl = "{% url 'follow_user' user.username %}"
   console.log("{{user.username}}")
 </script>
-<script src="{% static 'js/showposts.js' %}"></script>
 
 {% endif %} {% endblock %}

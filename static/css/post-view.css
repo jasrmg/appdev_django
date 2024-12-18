@@ -344,6 +344,32 @@
 .comment-message {
   text-align: left;
 }
+.comment-message[contenteditable="true"] {
+  outline: 1px solid var(--accent-color);  
+  pointer-events: auto;
+  background: var(--darker-primary-color);
+  padding: 5px;
+  border-radius: 20px;
+}
+/* .comment-input-container.edit-mode {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 5px;
+} */
+.comment-save-btn {
+  color: var(--accent-color);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+.comment-save-btn:hover {
+  transform: scale(1.2);
+}
+
 /*ADD COMMENT FIXED*/
 .comment-input-container {
   position: sticky;

@@ -151,8 +151,6 @@
     </div>
   </nav>
   {% block content %} 
-  
-  
   {% endblock %}
 
   <!--delete confirmation modal-->
@@ -165,9 +163,11 @@
   {% include 'OnlyPans/modals/comment_delete_confirmation.html' %}
 
   <script>
-  // GLOBAL CSRF TOKEN
-  window.csrfToken = $('#csrf_form input[name="csrfmiddlewaretoken"]').val()
-  </script>
+    // GLOBAL CSRF TOKEN
+    window.csrfToken = $('#csrf_form input[name="csrfmiddlewaretoken"]').val()
+    </script>
 </body>
+{% block scripts %}  
+{% endblock %}
 
 </html>
