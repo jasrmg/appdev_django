@@ -91,9 +91,7 @@
         <!--post header-->
         <div class="search-post-header">
           <div class="search-post-owner">
-            
-              <img src="{{ post.user.avatar.url }}" alt="{{ post.user.username }}" loading="lazy">
-            
+              <img src="{{ post.user.avatar.url }}" alt="{{ post.user.username }}" loading="lazy">            
             <div class="search-post-owner-details">
               <span class="owner-name">{{ post.user.first_name }} {{ post.user.last_name }}</span>
               <span class="post-date">{{ post.created_at | custom_timesince }} ago.</span>
@@ -108,7 +106,7 @@
             data-post-description="{{ post.description | escapejs }}"
             data-post-ingredients="{{ post.ingredients | escapejs }}"
             >
-              <i class="fa-solid fa-pencil-alt" title="Edit"></i>
+              <i class="fas fa-edit" title="Edit"></i>
             </button>
             <!--edit post modal is added on the base template-->
 
@@ -126,8 +124,6 @@
         <!--post body-->
         <div class="search-post-body">
           <span class="search-post-title">{{ post.title }}</span>
-          <p>{{comments_data}}</p>
-          <span>{{ post_data }}</span>
           <div class="search-post-image">
             {% if post.images.all %}
             {% for image in post.images.all %}

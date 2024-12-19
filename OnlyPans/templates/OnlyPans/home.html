@@ -6,6 +6,7 @@
 {% include 'OnlyPans/post-view.html' %}
 <!--css for home-->
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
+
   <div class="home-body-container">
     <div class="sidebar">
       <!--239x702-->
@@ -62,40 +63,75 @@
       <!--search-food-results sa search-->
       <div class="post-container">
         <!--start sa post-->
-        <div class="home-post">
-          <!--post header-->
-          <div class="home-post-header">
-            <div class="home-post-owner">
-              <img src="https://via.placeholder.com/45" alt="" loading="lazy">
-              <div class="home-post-owner-details">
-                <span class="owner-name">Ethan Acasio</span>
-                <span class="post-date">2 months ago.</span>
+        {# {% for post in posts %} #}
+          <div class="home-post">
+            <!--post header-->
+            <div class="home-post-header">
+              <div class="home-post-owner">
+                <img src="https://via.placeholder.com/45" alt="" loading="lazy">
+                <div class="home-post-owner-details">
+                  <span class="owner-name">Ethan Acasio</span>
+                  <span class="post-date">2 months ago.</span>
+                </div>
+              </div>
+              {# {% if request.user == post.user %} #}
+              <div class="home-post-actions">
+                <button class="edit-icon" title="Edit"
+                id="openEditPostModalBtn"
+                data-post-id="{{ post.post_id }}"
+                data-post-category="{{ post.category_id }}"
+                data-post-description="{{ post.description | escapejs }}"
+                data-post-ingredients="{{ post.ingredients | escapejs}}">
+                  <i class="fas fa-edit" ></i>
+                </button>
+                <button class="delete-post-button" title="Delete"
+                id="deletePostModalBtn"
+                data-post-id="{{ post.post_id }}"
+                data-next="{{ request.path }}">
+                  &times;
+                </button>
+              </div>
+              {# {% endif %} #}
+            </div>
+            <!--post body-->
+            <div class="home-post-body">
+              <span class="home-post-title">TEST</span>
+              <div class="home-post-image">
+              {% comment %}  
+                {% if post.images.all %}
+                  {% for image in post.images.all %} 
+              {% endcomment %}
+                <a href="javascript:void(0)" 
+                class="post-image-link"
+                data-post-id="{{ post.post_id }}"
+                onclick="showPopup(event)">
+                  <img src="https://via.placeholder.com/643x311" alt="post-image" loading="lazy">
+
+                </a>
+              {% comment %}
+                  {% endfor %}
+                {% endif %}
+              {% endcomment %}
               </div>
             </div>
-            <div class="home-post-actions">
-              <span class="edit-icon">
-                <i class="fas fa-edit" title="Edit"></i>
+            <!--post footer-->
+            <div class="home-post-footer">
+              <span class="no-of-likes" data-post-id="{{ post.post_id }}">
+                3
+                <i class="fa-solid fa-heart"></i>
               </span>
-              <span class="delete-post-button" title="Delete">
-                &times;
+              <span class="no-of-comments" data-post-id="{{ post.post_id }}">
+                3
+                <i class="fa-solid fa-comment"></i>
               </span>
             </div>
           </div>
-          <!--post body-->
-          <div class="home-post-body">
-            <span class="post-title">TEST</span>
-            <div class="post-image">
-              <a href="" class="post-image-link">
-                <img src="https://via.placeholder.com/643x311" alt="">
-              </a>
-            </div>
+          {# {% empty %} #}
+          <div class="home-post">
+            <span>No posts found.</span>
           </div>
-          <!--post footer-->
-          <div class="post-footer">
-            <span class="no-of-likes">3</span>
-            <span class="no-of-comments">3</span>
-          </div>
-        </div>
+       {# {% endfor %} #}
+       <!--if there are more than 2 posts, add pagination logic-->
       </div>
       
       <div class="extended">
