@@ -1,4 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // Check if the page is being loaded or reloaded
+    if (performance.navigation.type == 1) {
+      // If it's a reload (F5 or reload button), add `refresh=true` to the URL
+      const url = new URL(window.location.href);
+      if (!url.searchParams.has('refresh')) {
+        url.searchParams.set('refresh', 'true');
+        window.location.href = url.toString();  // Redirect to the new URL with `refresh=true`
+      }
+  }
   console.log(window.loadMorePostURL)
   let isLoading = false; 
 
@@ -13,16 +22,16 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .then(response => response.json())
     .then(data => {
-      if (data.no_more_posts) {
-        document.getElementById('no-more-posts').style.display = 'block';
-        isLoading = false;
-        console.log
-        return;
-      }
+      // if (data.no_more_posts) {
+      //   document.getElementById('no-more-posts').style.display = 'block';
+      //   isLoading = false;
+      //   return;
+      // }
+      //append a new div at the bottom ugma na lang
       data.posts_data.forEach(post => {
         const timeAgo = window.timeSince(post.created_at)
         console.log('TIME: ', timeAgo)
-        console.log('?: ', data.same_user)
+        console.log('?: ', post.same_user)
         const postHtml = `
           <div class="home-post" id="${post.post_id}">
             <div class="home-post-header">

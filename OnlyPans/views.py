@@ -727,9 +727,16 @@ def follow_user(request, username):
 
 @login_required
 def home(request):
-  print(request.user.username)
+  print('ZZZZZZZZZ: ', request)
   if request.GET.get('refresh', False):
     request.session['displayed_posts'] = []
+    
+  if request.META.get('HTTP_REFERER'):
+    referer = request.META.get('HTTP_REFERER')
+    if 'profile' in referer or 'search' in referer:
+      # Reset session for refresh logic
+      request.session['displayed_posts'] = []
+
 
   # Retrieve posts that haven't been displayed yet
   displayed_posts_ids = request.session.get('displayed_posts', [])
@@ -771,6 +778,8 @@ def load_more_posts(request):
   new_posts_query = Post.objects.exclude(post_id__in=displayed_posts_ids).order_by('?')
 
   new_posts = list(new_posts_query[:2])
+  if not new_posts:
+    return JsonResponse({'posts_data': [], 'no_more_posts': True,})
 
   displayed_posts_ids.extend([post.post_id for post in new_posts])
   request.session['displayed_posts'] = displayed_posts_ids
@@ -799,5 +808,6 @@ def load_more_posts(request):
       'comments_count': comments_count,
       'image_url': post.images.first().image.url if post.images.first() else None,
     })
+    
 
   return JsonResponse({'posts_data': posts_data})
