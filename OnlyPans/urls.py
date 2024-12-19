@@ -12,17 +12,13 @@ urlpatterns = [
 
   #logged in user:
   path('profile/<str:username>/', views.profile_view, name='profile'),
-  path('home/', views.home, name='home'),
   
   #delete post:
   path('delete_post/<int:post_id>/', views.delete_post, name='delete_post'),
   #edit post:
   path('edit_post/<int:post_id>/', views.edit_post, name='edit_post'),
-
   path('edit_profile/<str:username>/', views.edit_profile, name='edit_profile'),
   path('create_post/<str:username>/', views.create_post, name='create_post'),
-
-  
   path('edit_bio/<str:username>/', views.edit_bio, name='edit_bio'),
   
 

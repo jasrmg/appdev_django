@@ -64,13 +64,6 @@ def changepassword_view(request, username):
     
   return render(request, 'OnlyPans/profile_view.html', {'form': form})
 
-def home(request):
-  context = {
-    'title': 'OnlyPans | Home',
-    'sample_text': 'Hello World | OnlyPans Home',
-  }
-  return render(request, 'OnlyPans/home_test.html', context)
-
 def signup_view(request):
   if request.method == 'POST':
     

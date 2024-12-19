@@ -91,9 +91,9 @@
         <!--post header-->
         <div class="search-post-header">
           <div class="search-post-owner">
-            <div class="search-avatar-image">
+            
               <img src="{{ post.user.avatar.url }}" alt="{{ post.user.username }}" loading="lazy">
-            </div>
+            
             <div class="search-post-owner-details">
               <span class="owner-name">{{ post.user.first_name }} {{ post.user.last_name }}</span>
               <span class="post-date">{{ post.created_at | custom_timesince }} ago.</span>
