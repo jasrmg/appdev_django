@@ -196,6 +196,7 @@ function timeSince(date) {
     return "Just now";
   }
 }
+window.timeSince = timeSince;
 
 //comment count update:
 function updateCommentCount(count) {

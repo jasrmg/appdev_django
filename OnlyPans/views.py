@@ -724,8 +724,80 @@ def follow_user(request, username):
   
   return redirect('profile', username=target_user.username)
 
+
+@login_required
 def home(request):
+  print(request.user.username)
+  if request.GET.get('refresh', False):
+    request.session['displayed_posts'] = []
+
+  # Retrieve posts that haven't been displayed yet
+  displayed_posts_ids = request.session.get('displayed_posts', [])
+  new_posts_query = Post.objects.exclude(post_id__in=displayed_posts_ids).order_by('?')
+
+  new_posts = list(new_posts_query[:2])
+
+  displayed_posts_ids.extend([post.post_id for post in new_posts])
+  request.session['displayed_posts'] = displayed_posts_ids
+
+  # Add likes and comments data
+  posts_data = []
+  for post in new_posts:
+    likes_count = Like.objects.filter(post=post).count()
+    comments_count = Comment.objects.filter(post=post).count()
+    images = [image.image.url for image in post.images.all()]
+    posts_data.append({
+      'post': post,
+      'post_id': post.post_id,
+      'likes_count': likes_count,
+      'comments_count': comments_count,
+      'images': images,
+    })
+
   context = {
+    'posts_data': posts_data,
     'title': 'Home',
+    'user': request.user,
   }
+  print('BAI ID: ', posts_data)
+
   return render(request, 'OnlyPans/home.html', context)
+
+
+@login_required
+def load_more_posts(request):
+  # Retrieve posts that haven't been displayed yet
+  displayed_posts_ids = request.session.get('displayed_posts', [])
+  new_posts_query = Post.objects.exclude(post_id__in=displayed_posts_ids).order_by('?')
+
+  new_posts = list(new_posts_query[:2])
+
+  displayed_posts_ids.extend([post.post_id for post in new_posts])
+  request.session['displayed_posts'] = displayed_posts_ids
+
+  # Add likes and comments data
+  posts_data = []
+  for post in new_posts:
+    likes_count = Like.objects.filter(post=post).count()
+    comments_count = Comment.objects.filter(post=post).count()
+    same_user = request.user.username == post.user.username
+    posts_data.append({
+      'path': request.path,
+      'same_user': same_user,
+      'avatar': post.user.avatar.url,
+      'logged_user': request.user.username,
+      'poster_username': post.user.username,
+      'first_name': post.user.first_name,
+      'last_name': post.user.last_name,
+      'created_at': post.created_at,
+      'post_id': post.post_id,
+      'category_id': post.category_id,
+      'ingredients': post.ingredients,
+      'title': post.title,
+      'description': post.description,
+      'likes_count': likes_count,
+      'comments_count': comments_count,
+      'image_url': post.images.first().image.url if post.images.first() else None,
+    })
+
+  return JsonResponse({'posts_data': posts_data})

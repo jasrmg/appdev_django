@@ -43,5 +43,9 @@ urlpatterns = [
   path('search/post_view/<int:post_id>/', views.post_popup, name='post_popup'),
 
   #home
-  path('home/', views.home, name='home')
+  path('home/', views.home, name='home'),
+
+  #endpoint for loading more posts in home:
+  path('home/more', views.load_more_posts, name='load_more_posts'),
 ]
+
