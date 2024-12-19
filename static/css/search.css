@@ -41,19 +41,20 @@ body {
   transition: background-color 0.3s;
 }
 .filters a.active {
-  background-color: #fdeed8;
+  background-color: var(--accent-color);
+  color: var(--primary-color)
 }
 .filters a i {
   margin-right: 10px;
 }
 
 .filters a:hover {
-  background: var(--primary-color);
-  color: var(--accent-color);
+  background: var(--accent-color);
+  color: var(--primary-color);
 }
 
 .result-container {
-  margin-left: 250px;
+  margin-left: 300px;
   margin-top: 100px;
   width: 650px;
   flex: 1;
@@ -63,7 +64,7 @@ body {
   gap: 20px;
 }
  .user-results {
-  width: 600px;
+  width: 676px;
   gap: 20px;
  }
 
@@ -154,7 +155,7 @@ body {
 /* Food Post Section */
 .search-food-results {
   width: 100%;
-  max-width: 600px;
+  max-width: 676px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -237,8 +238,8 @@ span.search-post-title {
 
 .search-post-image img {
   object-fit: cover;
-  width: 570px;
-  height: 570px;
+  width: 643px;
+  max-height: 570px;
   
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);

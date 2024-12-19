@@ -57,16 +57,16 @@
             </div>
             <div class="f_modal-body">
               {% if following %}
-              {% for user in following %}
-              <a href="{% url 'profile' user.followed.username %}" style="text-decoration: none; color: inherit;">
-                <div class="f_container">
-                  <img src="{{ user.followed.avatar.url }}" alt="following profile">
-                  {{ user.followed.first_name }} {{ user.followed.last_name }}
-                </div>
-              </a>
-              {% endfor %}
+                {% for user in following %}
+                <a href="{% url 'profile' user.followed.username %}" style="text-decoration: none; color: inherit;">
+                  <div class="f_container">
+                    <img src="{{ user.followed.avatar.url }}" alt="following profile">
+                    {{ user.followed.first_name }} {{ user.followed.last_name }}
+                  </div>
+                </a>
+                {% endfor %}
               {% else %}
-              <p>No Following</p>
+                <p>No Following</p>
               {% endif %}
             </div>
           </div>

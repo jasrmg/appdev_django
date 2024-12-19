@@ -1,0 +1,101 @@
+{% load static %}
+<!--ang navbar-->
+{% include 'base.html' %}
+
+{% block content %}
+{% include 'OnlyPans/post-view.html' %}
+<!--css for home-->
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+  <div class="home-body-container">
+    <div class="sidebar">
+      <!--239x702-->
+      <div class="home-user-details">
+        <img src="https://via.placeholder.com/150" alt="">
+        <div>
+          <span class="home-name">Wire Frame</span>
+          <span class="home-username">@wire_frame</span>
+        </div>
+      </div>
+      <div class="home-categories">
+        <!--239x452-->
+        <a href="">
+          <i class="fas fa-hamburger"></i>
+          <span class="category-title">Meat</span>
+        </a>
+        <a href="">
+          <i class="fas fa-drumstick-bite"></i>
+          <span class="category-title">Chicken</span>
+        </a>
+        <a href="">
+          <i class="fas fa-fish"></i>
+          <span class="category-title">Seafood</span>
+        </a>
+        <a href="">
+          <i class="fas fa-carrot"></i>
+          <span class="category-title">Veggies</span>
+        </a>
+        <a href="">
+          <i class="fas fa-ice-cream"></i>
+          <span class="category-title">Dessert</span>
+        </a>
+        <a href="">
+          <i class="fas fa-cookie"></i>
+          <span class="category-title">Snack</span>
+        </a>
+        <a href="">
+          <i class="fas fa-coffee"></i>
+          <span class="category-title">Beverage</span>
+        </a>
+      </div>
+    </div>
+    <div class="home-content">
+      <!--w:676-->
+      <div class="home-create-post">
+        <img src="https://via.placeholder.com/45" alt="">
+        <div class="create-input">
+          <!--580x35-->
+          <span>What's cooking, Wire?</span>
+        </div>
+      </div>
+
+      <!--posts section-->
+      <div class="home-post">
+        <!--post header-->
+        <div class="home-post-header">
+          <div class="home-post-owner">
+            <img src="https://via.placeholder.com/45" alt="" loading="lazy">
+            <div class="home-post-owner-details">
+              <span class="owner-name">Ethan Acasio</span>
+              <span class="post-date">2 months ago.</span>
+            </div>
+          </div>
+          <div class="home-post-actions">
+            <span class="edit-icon">
+              <i class="fas fa-edit" title="Edit"></i>
+            </span>
+            <span class="delete-post-button" title="Delete">
+              &times;
+            </span>
+          </div>
+        </div>
+        <!--post body-->
+        <div class="home-post-body">
+          <span class="post-title">TEST</span>
+          <div class="post-image">
+            <a href="" class="post-image-link">
+              <img src="https://via.placeholder.com/643x311" alt="">
+            </a>
+          </div>
+        </div>
+        <!--post footer-->
+        <div class="post-footer">
+          <span class="no-of-likes">3</span>
+          <span class="no-of-comments">3</span>
+        </div>
+      </div>
+      <div class="extended">
+
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -9,7 +9,7 @@
   <title>
     {% block title %}
       {% if title %}
-        {{ title }}
+        OnlyPans | {{ title }}
       {% else %}
         {% if query %}
           {{ query }} - Search Results | OnlyPans
@@ -111,21 +111,21 @@
                 <form method="POST" action="{% url 'change_password' request.user.username %}">
                   {% csrf_token %}
                   <div class="form-field">
-                    <label for="old_password">Old Password</label>
+                    <label for="id_old_password">Old Password</label>
                     <div class="password-wrapper">
                       <input type="password" id="id_old_password" name="old_password" required>
                       <i class="fas fa-eye-slash" onclick="togglePassword('id_old_password')"></i>
                     </div>
                   </div>
                   <div class="form-field">
-                    <label for="new_password1">New Password</label>
+                    <label for="id_new_password1">New Password</label>
                     <div class="password-wrapper">
                       <input type="password" id="id_new_password1" name="new_password1" required>
                       <i class="fas fa-eye-slash" onclick="togglePassword('id_new_password1')"></i>
                     </div>
                   </div>
                   <div class="form-field">
-                    <label for="new_password2">Confirm New Password</label>
+                    <label for="id_new_password2">Confirm New Password</label>
                     <div class="password-wrapper">
                       <input type="password" id="id_new_password2" name="new_password2" required>
                       <i class="fas fa-eye-slash" onclick="togglePassword('id_new_password2')"></i>
@@ -157,8 +157,8 @@
   {% include 'OnlyPans/modals/post_delete_confirmation.html' %}
   <!--edit post modal-->
   {% include 'OnlyPans/modals/editpost_modal.html' %}
-  <!--post view-->
-  {% include 'OnlyPans/post-view.html' %}
+  <!--post view naa sa search ug sa home-->
+  
   <!--delete comment modal-->
   {% include 'OnlyPans/modals/comment_delete_confirmation.html' %}
 

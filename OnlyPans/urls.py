@@ -44,5 +44,8 @@ urlpatterns = [
   #search suggestions:
   path('search_suggestions/', views.search_suggestions, name='search_suggestions'),
   #pop up
-  path('search/post_view/<int:post_id>/', views.post_popup, name='post_popup')
+  path('search/post_view/<int:post_id>/', views.post_popup, name='post_popup'),
+
+  #home
+  path('home/', views.home, name='home')
 ]

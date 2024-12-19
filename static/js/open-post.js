@@ -126,7 +126,7 @@ function showPopup(event) {
             <div class="commentor-details">
             </div>
           </div>
-          <p class="comment-message">No one left a comment on this post.</p>
+          <p class="no-comment-message">No one left a comment on this post.</p>
         </div>
         `;
         commentsSection.appendChild(noCommentsMessage);
@@ -200,7 +200,7 @@ function timeSince(date) {
 //comment count update:
 function updateCommentCount(count) {
   const commentCountElement = document.querySelector('.comment-count');
-  commentCountElement.innerHTML = `<i class="fas fa-comment"></i> ${count}`;
+  commentCountElement.innerHTML = `${count} <i class="fas fa-comment"></i>`;
 
   // Check if there are no comments left
   const commentsSection = document.querySelector('.popup-comments-section');
@@ -218,7 +218,7 @@ function updateCommentCount(count) {
           <div class="commentor-details">
           </div>
         </div>
-        <p class="comment-message">No one left a comment on this post.</p>
+        <p class="no-comment-message">No one left a comment on this post.</p>
       </div>
     `;
     commentsSection.appendChild(noCommentsMessage);

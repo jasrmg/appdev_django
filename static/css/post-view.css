@@ -1,5 +1,5 @@
 .popup-container {
-  max-width: 600px;
+  max-width: 676px;
   width: 100%;
 }
 
@@ -41,7 +41,7 @@
 .post-popup-content {
   background: white;
   width: 90%;
-  max-width: 600px;
+  max-width: 676px;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
@@ -343,6 +343,9 @@
 }
 .comment-message {
   text-align: left;
+}
+.no-comment-message {
+  text-align: center;
 }
 .comment-message[contenteditable="true"] {
   outline: 1px solid var(--accent-color);  

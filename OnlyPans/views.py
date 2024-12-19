@@ -355,10 +355,10 @@ def profile_view(request, username):
         })
 
     # Followers and following
-    followers = user.followers.all()
+    followers = user.followers.exclude(follower=request.user)
     random_followers = random.sample(list(followers), min(len(followers), 6))
 
-    following = user.following.all()
+    following = user.following.exclude(followed=request.user)
 
     number_of_follower = followers.count()
     number_of_following = following.count()
@@ -368,7 +368,7 @@ def profile_view(request, username):
 
     # Context
     context = {
-        'title': 'OnlyPans | Profile',
+        'title': 'Profile',
         'user': user,
         'createpost_form': createpost_form,
         'editprofile_form': editprofile_form,
@@ -582,8 +582,9 @@ def search_suggestions(request):
   else:
     results = []
   return JsonResponse({'results': results})
-    
-from .templatetags.custom_timesince import custom_timesince    
+
+
+
 def search_view(request, filter_type):
   # Get the search query if it exists
   query = request.GET.get('q', '').strip()
@@ -730,5 +731,8 @@ def follow_user(request, username):
   
   return redirect('profile', username=target_user.username)
 
-
-
+def home(request):
+  context = {
+    'title': 'Home',
+  }
+  return render(request, 'OnlyPans/home.html', context)
