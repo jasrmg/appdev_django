@@ -73,6 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   id="openEditPostModalBtn"
                   data-post-id="${post.post_id}"
                   data-post-category="${post.category_id}"
+                  data-post-description="${post.description}"
                   data-post-ingredients="${post.ingredients}">
                     <i class="fas fa-edit" title="Edit"> </i>
                   </button>

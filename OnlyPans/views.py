@@ -244,18 +244,17 @@ def edit_post(request, post_id):
   
   print('next url: ', next_url)
   
+  if 'profile' in next_url:
+    next_url = f'/profile/{request.user.username}/'
+
+  if search_query:
+    next_url = f'/search/all/q={search_query}'
+
+  if 'home' in next_url:
+    next_url = f'/home/'
   if request.method == 'POST':
     editpost_form = EditPostForm(request.POST, instance=post)
     # print('FOOOOOOOORM!!!: ', editpost_form)
-    if 'profile' in next_url:
-      next_url = f'/profile/{request.user.username}/'
-
-    if search_query:
-      next_url = f'/search/all/q={search_query}'
-
-    if 'home' in next_url:
-      next_url = f'/home/'
-
     if editpost_form.is_valid():
       editpost_form.save()
       messages.success(request, 'Post updated!')
@@ -292,7 +291,7 @@ def delete_post(request, post_id):
 
   #default if next_url is not provided:
   if not next_url:
-    next_url = 'home'
+    next_url = 'home_default'
 
   #check if the next_url is the profile
   if 'profile' in next_url:
