@@ -3,6 +3,12 @@ document.addEventListener('DOMContentLoaded', function() {
   const searchInput = document.getElementById('search-input');
   const suggestionsDiv = document.getElementById('suggestions');
       
+  //function to close the suggestions if clicking outside
+  document.addEventListener('click', function(event) {
+    if(!searchInput.contains(event.target) && !suggestionsDiv.contains(event.target)) {
+      suggestionsDiv.innerHTML = '';
+    }
+  });
   searchInput.addEventListener('input', () => {
     const query = searchInput.value; // Keep the full query without trimming
     if (query.length > 0) {
@@ -25,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Display the custom search query at the bottom
     const customSearch = document.createElement('div');
     customSearch.innerHTML = `
-      <a href="/search/?q=${encodeURIComponent(query)}" class="custom-search-link">
+      <a href="/search/all/?q=${encodeURIComponent(query)}" class="custom-search-link">
         <div class="suggestion-search">
           <i class="fas fa-search"></i>
         </div>

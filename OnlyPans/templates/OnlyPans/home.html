@@ -20,31 +20,33 @@
       </div>
       <div class="home-categories">
         <!--239x452-->
-        <a href="">
+        <a href="" class="home-filter-link" 
+        data-category-type="Meat">
           <i class="fas fa-hamburger"></i>
           <span class="category-title">Meat</span>
         </a>
-        <a href="">
+        <a href="" class="home-filter-link" data-category-type="Chicken">
           <i class="fas fa-drumstick-bite"></i>
           <span class="category-title">Chicken</span>
         </a>
-        <a href="">
+        <a href="" class="home-filter-link" data-category-type="Seafood">
           <i class="fas fa-fish"></i>
           <span class="category-title">Seafood</span>
         </a>
-        <a href="">
+        <a href="" class="home-filter-link" data-category-type="Veggies">
           <i class="fas fa-carrot"></i>
           <span class="category-title">Veggies</span>
         </a>
-        <a href="">
+        <a href="" class="home-filter-link" data-category-type="Dessert">
           <i class="fas fa-ice-cream"></i>
           <span class="category-title">Dessert</span>
         </a>
-        <a href="">
+        <a href="" class="home-filter-link" 
+        data-category-type="Snack">
           <i class="fas fa-cookie"></i>
           <span class="category-title">Snack</span>
         </a>
-        <a href="">
+        <a href="" class="home-filter-link" data-category-type="Beverages">
           <i class="fas fa-coffee"></i>
           <span class="category-title">Beverage</span>
         </a>
@@ -138,8 +140,10 @@
   </div>
 <!--script for passing the load more post url-->
 <script>
-  window.loadMorePostURL = "{% url 'load_more_posts' %}";
+  // window.loadMorePostURL = "{% url 'load_more_posts' filter_type  %}";
+  // console.log(loadMorePostURL)
 </script>
+
 <script src="{% static 'js/open-post.js' %}" defer></script>
 <script src="{% static 'js/load-more-posts-home.js' %}" defer></script>
 {% endblock %}

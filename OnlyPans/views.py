@@ -130,7 +130,7 @@ def login_view(request):
             # If the form is valid, log in the user
             user = form.get_user()  # This will only run if the form is valid
             login(request, user)
-            return redirect('home')
+            return redirect('home_default')
         else:
             # Handle invalid login (e.g., user doesn't exist or password is incorrect)
             if user is None:
@@ -726,8 +726,12 @@ def follow_user(request, username):
 
 
 @login_required
-def home(request):
-  print('ZZZZZZZZZ: ', request)
+def home(request, filter_type='all'):
+  # session_data = request.session
+  # decoded = request.session.items()
+  # print('DECODED SESSION: ', decoded)
+  request.session['filter_type'] = filter_type
+
   if request.GET.get('refresh', False):
     request.session['displayed_posts'] = []
     
@@ -737,16 +741,26 @@ def home(request):
       # Reset session for refresh logic
       request.session['displayed_posts'] = []
 
+  session_key = "displayed_posts"
 
-  # Retrieve posts that haven't been displayed yet
-  displayed_posts_ids = request.session.get('displayed_posts', [])
-  new_posts_query = Post.objects.exclude(post_id__in=displayed_posts_ids).order_by('?')
+  #fetch the current session data
+  displayed_posts_ids = request.session.get(session_key, [])
 
-  new_posts = list(new_posts_query[:2])
+  new_posts_query = Post.objects.exclude(post_id__in=displayed_posts_ids)
 
+  if filter_type and filter_type != 'all':
+    new_posts_query = new_posts_query.filter(category__name__iexact=filter_type)
+
+  #retrieve the next 2 posts
+  new_posts = list(new_posts_query.order_by('?')[:2])
+
+  #update session with displayed posts
   displayed_posts_ids.extend([post.post_id for post in new_posts])
-  request.session['displayed_posts'] = displayed_posts_ids
+  print('DISPLAYED POST HOME! ', displayed_posts_ids)
+  
+  request.session[session_key] = displayed_posts_ids
 
+  
   # Add likes and comments data
   posts_data = []
   for post in new_posts:
@@ -763,26 +777,52 @@ def home(request):
 
   context = {
     'posts_data': posts_data,
-    'title': 'Home',
+    'title': f"Home {filter_type.capitalize() if filter_type else ''}",
     'user': request.user,
+    'filter_type': filter_type,
   }
-  print('BAI ID: ', posts_data)
-
+  
   return render(request, 'OnlyPans/home.html', context)
 
-
 @login_required
-def load_more_posts(request):
-  # Retrieve posts that haven't been displayed yet
-  displayed_posts_ids = request.session.get('displayed_posts', [])
-  new_posts_query = Post.objects.exclude(post_id__in=displayed_posts_ids).order_by('?')
+def load_more_posts(request, filter_type='all'):
+  session_data = request.session
+  decoded = request.session.items()
+  print('DECODED SESSION: ', decoded)
+  
+  if 'last_filter_type' not in request.session:
+    request.session['last_filter_type'] = filter_type
+    print('INITIALIZING LAST FILTER TYPE: ')
 
-  new_posts = list(new_posts_query[:2])
+  last_filter_type = request.session['last_filter_type']
+  print('LAST FILTER TYPE: ', last_filter_type)
+  print('CURRENT FILTER TYPE: ', filter_type)
+  
+  if filter_type != last_filter_type:
+    print('EMPTYING')
+    request.session['displayed_posts'] = []
+
+  request.session['last_filter_type'] = filter_type
+  #determine session key
+  session_key = "displayed_posts"
+  #fetch the current session data (displayed_posts) for the user
+  displayed_posts_ids = request.session.get(session_key, [])
+  print('LOAD MORE DISPLAYED POSTS: ', displayed_posts_ids)
+
+  #fetch new posts that havent been displayed yet
+  new_posts_query = Post.objects.exclude(post_id__in=displayed_posts_ids)
+  #apply the filter based on filter type:
+  if filter_type and filter_type != 'all':
+    new_posts_query = new_posts_query.filter(category__name__iexact=filter_type) 
+  
+  new_posts = list(new_posts_query.order_by('?')[:2])
+  #if no more posts
   if not new_posts:
-    return JsonResponse({'posts_data': [], 'no_more_posts': True,})
-
+    return JsonResponse({'posts_data': [], 'no_more_posts': True})
+  
+  #update session with displayed posts
   displayed_posts_ids.extend([post.post_id for post in new_posts])
-  request.session['displayed_posts'] = displayed_posts_ids
+  request.session[session_key] = displayed_posts_ids
 
   # Add likes and comments data
   posts_data = []
@@ -808,6 +848,6 @@ def load_more_posts(request):
       'comments_count': comments_count,
       'image_url': post.images.first().image.url if post.images.first() else None,
     })
-    
 
   return JsonResponse({'posts_data': posts_data})
+

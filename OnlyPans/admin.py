@@ -25,9 +25,11 @@ class CommentAdmin(admin.ModelAdmin):
 class PostAdmin(admin.ModelAdmin):
   list_display = ['post_id', 'user', 'title', 'category']
 
+class CategoryAdmin(admin.ModelAdmin):
+  list_display = ['category_id', 'name']
 admin.site.register(User, UserAdmin)
 admin.site.register(Post, PostAdmin)
-admin.site.register(Category)
+admin.site.register(Category, CategoryAdmin)
 admin.site.register(PostImage)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Follow) 

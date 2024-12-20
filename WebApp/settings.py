@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     'OnlyPans',
     'widget_tweaks',
+    'debug_toolbar',
 ]
 #customize usermodel:
 AUTH_USER_MODEL = 'OnlyPans.User'
@@ -54,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'WebApp.urls'
