@@ -3,6 +3,7 @@
 {% block content %}
 <!--pop up-->
 {% include 'OnlyPans/post-view.html' %}
+
 {% load static %}
 {% load custom_timesince %}
 {% load json_filter %}
@@ -14,16 +15,16 @@
     <h2>Search results</h2>
     <hr />
     <div class="filters">
-      <a href="{% url 'search_view' filter_type='all' %}?q={{ query }}" class="filter-link" id="all-filter" data-target="all"><i class="fas fa-th"></i> All</a>
-      <a href="{% url 'search_view' filter_type='people' %}?q={{ query }}" class="filter-link" id="people-filter" data-target="people"><i class="fas fa-users"></i> People</a>
-      <a href="{% url 'search_view' filter_type='posts' %}?q={{ query }}" class="filter-link" id="posts-filter" data-target="posts"><i class="fas fa-newspaper"></i> Posts</a>
-      <a href="{% url 'search_view' filter_type='Meat' %}?q={{ query }}" class="filter-link" id="meat-category" data-target="Meat"><i class="fas fa-hamburger"></i> Meat</a>
-      <a href="{% url 'search_view' filter_type='Chicken' %}?q={{ query }}"  class="filter-link" id="chicken-category" data-target="Chicken"><i class="fas fa-drumstick-bite"></i> Chicken</a>
-      <a href="{% url 'search_view' filter_type='Seafood' %}?q={{ query }}"  class="filter-link" id="seafood-category" data-target="Seafood"><i class="fas fa-fish"></i> Seafood</a>
-      <a href="{% url 'search_view' filter_type='Veggies' %}?q={{ query }}"  class="filter-link" id="veggies-category" data-target="Veggies"><i class="fas fa-carrot"></i> Veggies</a>
-      <a href="{% url 'search_view' filter_type='Dessert' %}?q={{ query }}"  class="filter-link" id="dessert-category" data-target="Dessert"><i class="fas fa-ice-cream"></i> Dessert</a>
-      <a href="{% url 'search_view' filter_type='Snack' %}?q={{ query }}"  class="filter-link" id="snack-category" data-target="Snack"><i class="fas fa-cookie"></i> Snack</a>
-      <a href="{% url 'search_view' filter_type='Beverage' %}?q={{ query }}"  class="filter-link"  id="beverage-category" data-target="Beverage"><i class="fas fa-coffee"></i> Beverage</a>
+      <a href="{% url 'search_view' filter_type='all' %}?filter_type=all&q={{ query }}" class="filter-link" id="all-filter" data-target="all"><i class="fas fa-th"></i> All</a>
+      <a href="{% url 'search_view' filter_type='people' %}?filter_type=people&q={{ query }}" class="filter-link" id="people-filter" data-target="people"><i class="fas fa-users"></i> People</a>
+      <a href="{% url 'search_view' filter_type='posts' %}?filter_type=posts&q={{ query }}" class="filter-link" id="posts-filter" data-target="posts"><i class="fas fa-newspaper"></i> Posts</a>
+      <a href="{% url 'search_view' filter_type='Meat' %}?filter_type=Meat&q={{ query }}" class="filter-link" id="meat-category" data-target="Meat"><i class="fas fa-hamburger"></i> Meat</a>
+      <a href="{% url 'search_view' filter_type='Chicken' %}?filter_type=Chicken&q={{ query }}"  class="filter-link" id="chicken-category" data-target="Chicken"><i class="fas fa-drumstick-bite"></i> Chicken</a>
+      <a href="{% url 'search_view' filter_type='Seafood' %}?filter_type=Seafood&q={{ query }}"  class="filter-link" id="seafood-category" data-target="Seafood"><i class="fas fa-fish"></i> Seafood</a>
+      <a href="{% url 'search_view' filter_type='Veggies' %}?filter_type=Veggies&q={{ query }}"  class="filter-link" id="veggies-category" data-target="Veggies"><i class="fas fa-carrot"></i> Veggies</a>
+      <a href="{% url 'search_view' filter_type='Dessert' %}?filter_type=Dessert&q={{ query }}"  class="filter-link" id="dessert-category" data-target="Dessert"><i class="fas fa-ice-cream"></i> Dessert</a>
+      <a href="{% url 'search_view' filter_type='Snack' %}?filter_type=Snack&q={{ query }}"  class="filter-link" id="snack-category" data-target="Snack"><i class="fas fa-cookie"></i> Snack</a>
+      <a href="{% url 'search_view' filter_type='Beverage' %}?filter_type=Beverage&q={{ query }}"  class="filter-link"  id="beverage-category" data-target="Beverage"><i class="fas fa-coffee"></i> Beverage</a>
     </div>
   </div>
 
@@ -105,6 +106,7 @@
             data-post-category="{{ post.category_id }}"
             data-post-description="{{ post.description | escapejs }}"
             data-post-ingredients="{{ post.ingredients | escapejs }}"
+            data-next="{{ request.path }}?q={{ request.GET.q }}"
             >
               <i class="fas fa-edit" title="Edit"></i>
             </button>

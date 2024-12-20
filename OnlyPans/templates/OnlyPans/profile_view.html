@@ -8,8 +8,8 @@
 
 {% if user.is_authenticated %}
 <div class="body">
-  <!--modal para sa messages-->
-  {% include 'OnlyPans/modals/messages_modal.html' %}
+  <!--modal para sa messages gi add sa base-->
+  
   <div class="profile">
     {% if is_own_profile %}
     <img src="{{ request.user.avatar.url }}" alt="Profile Picture" />

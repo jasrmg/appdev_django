@@ -67,6 +67,7 @@
       <div class="post-container">
         <!--start sa post-->
          {% for post in posts_data %} 
+         <!-- <p>{{ post.post.user.username }} and {{ request.user.username }}</p> -->
           <div class="home-post" id="post-{{ post.post_id }}">
             <!--post header-->
             <div class="home-post-header">
@@ -82,14 +83,15 @@
                   </span>
                 </div>
               </div>
-              {% if request.user == post.user %} 
+              
+              {% if request.user.username == post.post.user.username %} 
                 <div class="home-post-actions">
                   <button class="edit-icon" title="Edit"
                   id="openEditPostModalBtn"
                   data-post-id="{{ post.post.post_id }}"
                   data-post-category="{{ post.post.category_id }}"
                   data-post-description="{{ post.post.description | escapejs }}"
-                  data-post-ingredients="{{ post.post.ingredients | escapejs}}">
+                  data-post-ingredients="{{ post.post.ingredients | escapejs }}">
                     <i class="fas fa-edit" title="Edit"></i>
                   </button>
                   <button class="delete-post-button" title="Delete"

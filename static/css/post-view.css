@@ -161,6 +161,7 @@
   color: var(--secondary-color);
   margin-bottom: 20px;
   line-height: 1.6;
+  text-align: justify;
 }
 
 .ingredients-section {

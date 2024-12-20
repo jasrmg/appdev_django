@@ -237,24 +237,44 @@ def edit_post(request, post_id):
   # if request.user != post.user:
   #    return redirect('home')
   
+  # next_url = request.POST.get('next', '') or request.GET.get('next', '')
+  next_url = request.GET.get('next', request.path)
+  search_query = request.GET.get('q', '')
+  print('search query: ', search_query)
+  
+  print('next url: ', next_url)
+  
   if request.method == 'POST':
     editpost_form = EditPostForm(request.POST, instance=post)
-    print('FOOOOOOOORM!!!: ', editpost_form)
+    # print('FOOOOOOOORM!!!: ', editpost_form)
+    if 'profile' in next_url:
+      next_url = f'/profile/{request.user.username}/'
+
+    if search_query:
+      next_url = f'/search/all/q={search_query}'
+
+    if 'home' in next_url:
+      next_url = f'/home/'
+
     if editpost_form.is_valid():
       editpost_form.save()
       messages.success(request, 'Post updated!')
-      return redirect('profile', post.user.username)
+      return redirect(next_url)
     else:
       messages.error(request, 'Post update, failed: ')
       print('Errors Post: ', editpost_form.errors)
-      return redirect('profile', post.user.username) 
+      return redirect(next_url) 
   else:
     editpost_form = EditPostForm(instance=post)
   
+  
+  
+
   categories = Category.objects.all()
   context = {
     'editpost_form': editpost_form,
     'categories': categories,
+    'next_url': next_url,
   }
   return render(request, 'OnlyPans/modals/editpost_modal.html', context)
 
@@ -281,6 +301,9 @@ def delete_post(request, post_id):
   #if its from the search view
   if search_query:
     next_url = f'/search/q={search_query}'
+  
+  if 'home' in next_url:
+    next_url = f'home_default'
 
   return redirect(next_url)
 
@@ -580,6 +603,7 @@ def search_suggestions(request):
 
 def search_view(request, filter_type):
   # Get the search query if it exists
+  next_url = request.GET.get('next', request.path)
   query = request.GET.get('q', '').strip()
 
   # Normalize the search query to handle spaces and case sensitivity
@@ -633,6 +657,7 @@ def search_view(request, filter_type):
     'users': users,
     'categories': categories,
     'filter_type': filter_type,  # The filter type (e.g., 'all', 'people', 'posts', etc.)
+    'next_url': next_url,
     }
 
   return render(request, 'OnlyPans/search.html', context)
@@ -760,7 +785,7 @@ def home(request, filter_type='all'):
   
   request.session[session_key] = displayed_posts_ids
 
-  
+  categories = Category.objects.all()
   # Add likes and comments data
   posts_data = []
   for post in new_posts:
@@ -777,6 +802,7 @@ def home(request, filter_type='all'):
 
   context = {
     'posts_data': posts_data,
+    'categories': categories,
     'title': f"Home {filter_type.capitalize() if filter_type else ''}",
     'user': request.user,
     'filter_type': filter_type,
