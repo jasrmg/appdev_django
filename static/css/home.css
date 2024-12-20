@@ -134,6 +134,17 @@
   
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
+/*no more post*/
+.home-post.no-more-post {
+  margin-bottom: 20px;
+  background: var(--accent-color);
+}
+.home-post.no-more-post span {
+  text-align: center;
+  font-weight: bold;
+  color: var(--primary-color);
+  letter-spacing: 1.4px;
+}
 
 /* Post Header */
 .home-post-header {

@@ -10,9 +10,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   console.log(window.loadMorePostURL)
   let isLoading = false; 
-
+  let noMorePosts = false;
   const loadMorePosts = () => {
-    if (isLoading) return;
+    if ( noMorePosts | isLoading) return;
 
     isLoading = true;
     fetch(window.loadMorePostURL, {
@@ -22,12 +22,27 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .then(response => response.json())
     .then(data => {
-      // if (data.no_more_posts) {
-      //   document.getElementById('no-more-posts').style.display = 'block';
-      //   isLoading = false;
-      //   return;
-      // }
+      console.log('no more posts: ', data.no_more_posts)
       //append a new div at the bottom ugma na lang
+      if (data.no_more_posts) {
+        const end = document.querySelector('.no-more-post');
+        console.log('end? ', end);
+        if (end) {
+          isLoading = false;
+          return;
+        }
+        //create the div for no more posts to show.
+        const noMorePostsDiv = document.createElement('div');
+        noMorePostsDiv.className = 'home-post no-more-post';
+        noMorePostsDiv.innerHTML = `
+        <span class="no-more-post">
+          No more post to load.
+        </span>
+        `
+        document.querySelector('.post-container').appendChild(noMorePostsDiv);
+        isLoading = false;
+        return;
+      }
       data.posts_data.forEach(post => {
         const timeAgo = window.timeSince(post.created_at)
         console.log('TIME: ', timeAgo)
