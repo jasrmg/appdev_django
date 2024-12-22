@@ -231,78 +231,105 @@ def create_post(request, username):
   print('outside if: ', form)
   return render(request, 'OnlyPans/modals/create_post.html', context)
 
+# @login_required
+# def edit_post(request, post_id):
+#   post = get_object_or_404(Post, post_id=post_id)
+#   # if request.user != post.user:
+#   #    return redirect('home')
+  
+#   # next_url = request.POST.get('next', '') or request.GET.get('next', '')
+#   next_url = request.GET.get('next', request.path)
+#   search_query = request.GET.get('q', '')
+#   print('search query: ', search_query)
+  
+#   print('next url: ', next_url)
+  
+#   if 'profile' in next_url:
+#     next_url = f'/profile/{request.user.username}/'
+
+#   if search_query:
+#     next_url = f'/search/all/q={search_query}'
+
+#   if 'home' in next_url:
+#     next_url = f'/home/'
+#   if request.method == 'POST':
+#     editpost_form = EditPostForm(request.POST, instance=post)
+#     # print('FOOOOOOOORM!!!: ', editpost_form)
+#     if editpost_form.is_valid():
+#       editpost_form.save()
+#       messages.success(request, 'Post updated!')
+#       return redirect(next_url)
+#     else:
+#       messages.error(request, 'Post update, failed: ')
+#       print('Errors Post: ', editpost_form.errors)
+#       return redirect(next_url) 
+#   else:
+#     editpost_form = EditPostForm(instance=post)
+  
+#   categories = Category.objects.all()
+#   context = {
+#     'editpost_form': editpost_form,
+#     'categories': categories,
+#     'next_url': next_url,
+#   }
+#   return render(request, 'OnlyPans/modals/editpost_modal.html', context)
+
 @login_required
 def edit_post(request, post_id):
   post = get_object_or_404(Post, post_id=post_id)
-  # if request.user != post.user:
-  #    return redirect('home')
   
-  # next_url = request.POST.get('next', '') or request.GET.get('next', '')
-  next_url = request.GET.get('next', request.path)
-  search_query = request.GET.get('q', '')
-  print('search query: ', search_query)
-  
-  print('next url: ', next_url)
-  
-  if 'profile' in next_url:
-    next_url = f'/profile/{request.user.username}/'
-
-  if search_query:
-    next_url = f'/search/all/q={search_query}'
-
-  if 'home' in next_url:
-    next_url = f'/home/'
   if request.method == 'POST':
     editpost_form = EditPostForm(request.POST, instance=post)
-    # print('FOOOOOOOORM!!!: ', editpost_form)
     if editpost_form.is_valid():
       editpost_form.save()
+      if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        #return json response for ajax
+        return JsonResponse({'success': True, 'message': 'Post updated successfully!'})
       messages.success(request, 'Post updated!')
-      return redirect(next_url)
+      return redirect(request.POST.get('next', '/'))
     else:
-      messages.error(request, 'Post update, failed: ')
-      print('Errors Post: ', editpost_form.errors)
-      return redirect(next_url) 
+      if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'success': False, 'errors': editpost_form.errors })
+      messages.error(request, 'Post update failed')
+      return redirect(request.POST.get('next', '/'))
   else:
     editpost_form = EditPostForm(instance=post)
   
-  
-  
-
   categories = Category.objects.all()
   context = {
     'editpost_form': editpost_form,
     'categories': categories,
-    'next_url': next_url,
+    'next_url': request.GET.get('next', '/')
   }
   return render(request, 'OnlyPans/modals/editpost_modal.html', context)
-
 
 @login_required
 def delete_post(request, post_id):
   post = get_object_or_404(Post, post_id=post_id)
   if request.user == post.user:  # Check if the logged-in user is the owner of the post
+    search_query = request.POST.get('q')
+    next_url = request.POST.get('next', 'home/') or request.GET.get('next', 'home/')
+
+    print('NEXT URL DELETE!!: ', next_url)
+    print('SEARCH QUERY DELETE!!: ', search_query)
+
+    #check if the next_url is the profile
+    if 'profile' in next_url:
+      next_url = f'/profile/{request.user.username}/'
+      print('SA PROFILE GA DELETE')
+    elif 'search' in next_url:
+    #if its from the search view
+      next_url = f'/search/all/?q={search_query}'
+      print('SA SEARCH GA DELETE')
+    else:
+      next_url = 'home_default'
+      print('SA HOME GA DELETE')
     post.delete()
     messages.success(request, "Your post has been deleted.")
 
   #get the next parameter from the request if available
-  next_url = request.POST.get('next') or request.GET.get('next')
-  search_query = request.GET.get('q')
-
-  #default if next_url is not provided:
-  if not next_url:
-    next_url = 'home_default'
-
-  #check if the next_url is the profile
-  if 'profile' in next_url:
-    next_url = f'/profile/{request.user.username}/'
-
-  #if its from the search view
-  if search_query:
-    next_url = f'/search/q={search_query}'
   
-  if 'home' in next_url:
-    next_url = f'home_default'
+  
 
   return redirect(next_url)
 
@@ -754,6 +781,7 @@ def home(request, filter_type='all'):
   # session_data = request.session
   # decoded = request.session.items()
   # print('DECODED SESSION: ', decoded)
+  next_url = request.GET.get('next', request.path)
   request.session['filter_type'] = filter_type
 
   if request.GET.get('refresh', False):
@@ -780,7 +808,7 @@ def home(request, filter_type='all'):
 
   #update session with displayed posts
   displayed_posts_ids.extend([post.post_id for post in new_posts])
-  print('DISPLAYED POST HOME! ', displayed_posts_ids)
+  # print('DISPLAYED POST HOME! ', displayed_posts_ids)
   
   request.session[session_key] = displayed_posts_ids
 
@@ -805,6 +833,7 @@ def home(request, filter_type='all'):
     'title': f"Home {filter_type.capitalize() if filter_type else ''}",
     'user': request.user,
     'filter_type': filter_type,
+    'next_url': next_url,
   }
   
   return render(request, 'OnlyPans/home.html', context)

@@ -69,8 +69,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 </div>
                 ${post.same_user ? `
                 <div class="home-post-actions">
-                  <button class="edit-icon" title="${post.title}"
+                  <button class="edit-icon" 
                   id="openEditPostModalBtn"
+                  data-post-title="${post.title}"
                   data-post-id="${post.post_id}"
                   data-post-category="${post.category_id}"
                   data-post-description="${post.description}"
@@ -79,8 +80,8 @@ document.addEventListener("DOMContentLoaded", function () {
                   </button>
                   <button class="delete-post-button" title="Delete"
                   id="deletePostModalBtn"
-                  data-post-id="${post.post_id}
-                  data-next="${post.path}>
+                  data-post-id="${post.post_id}"
+                  data-next="home/">
                     &times;
                   </button>
                 </div>
@@ -88,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
               </div>
             
               <div class="home-post-body">
-                <span class="home-post-title">${post.title}</span>
+                <span id="post-title-${post.post_id}" class="home-post-title">${post.title}</span>
                 <div class="home-post-image">
                   <a href="javascript:void(0)"
                   class="post-image-link"

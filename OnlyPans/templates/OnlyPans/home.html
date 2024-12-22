@@ -5,6 +5,7 @@
 
 {% block content %}
 {% include 'OnlyPans/post-view.html' %}
+
 <!--css for home-->
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
 
@@ -86,7 +87,8 @@
               
               {% if request.user.username == post.post.user.username %} 
                 <div class="home-post-actions">
-                  <button class="edit-icon" title="Edit"
+                  <button class="edit-icon"
+                  data-post-title="{{ post.post.title | escapejs }}"
                   id="openEditPostModalBtn"
                   data-post-id="{{ post.post.post_id }}"
                   data-post-category="{{ post.post.category_id }}"
@@ -97,7 +99,7 @@
                   <button class="delete-post-button" title="Delete"
                   id="deletePostModalBtn"
                   data-post-id="{{ post.post.post_id }}"
-                  data-next="{{ request.path }}">
+                  data-next="home/">
                     &times;
                   </button>
                 </div>
@@ -105,7 +107,7 @@
             </div>
             <!--post body-->
             <div class="home-post-body">
-              <span class="home-post-title">{{ post.post.title }}</span>
+              <span id="post-title-{{ post.post_id }}" class="home-post-title">{{ post.post.title }}</span>
               <div class="home-post-image">  
                 {% if post.images %}
                   {% for image in post.images %} 
@@ -146,6 +148,7 @@
   // console.log(loadMorePostURL)
 </script>
 
+<script src="{% static 'js/edit-post-home.js' %}" defer></script>
 <script src="{% static 'js/open-post.js' %}" defer></script>
 <script src="{% static 'js/load-more-posts-home.js' %}" defer></script>
 {% endblock %}

@@ -20,7 +20,10 @@ urlpatterns = [
   path('edit_profile/<str:username>/', views.edit_profile, name='edit_profile'),
   path('create_post/<str:username>/', views.create_post, name='create_post'),
   path('edit_bio/<str:username>/', views.edit_bio, name='edit_bio'),
-  
+
+  #edit home search post
+  # path('home/edit-post/', views.edit_post_home_search, name="edit_post_home_search"),
+
 
   #follow unfollow
   path('follow/<str:username>/', views.follow_user, name='follow_user'),
@@ -44,7 +47,8 @@ urlpatterns = [
 
   #home
   path('home/', views.home, name='home_default'),
-  path('home/<str:filter_type>', views.home, name='home'),
+
+  # path('home/<str:filter_type>', views.home, name='home'),
 
   #endpoint for loading more posts in home:
   path('home/more/<str:filter_type>/', views.load_more_posts, name='load_more_posts'),

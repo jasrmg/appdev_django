@@ -17,10 +17,14 @@ $(document).ready(function () {
   //function to confirm delete:
   function confirmDelete(postIdDel) {
     console.log("confirm delete: ", postIdDel);
-    const nextUrl = $("#deletePostModalBtn").data("next");
+    const delnextUrl = $("#deletePostModalBtn").data("next");
+    if(!delnextUrl) {
+      $(this).attr('data-next', 'home/');
+      console.log('nisud sa if')
+    }
+    console.log('NEXT URL: ', delnextUrl);
     const searchQuery = new URLSearchParams(window.location.search).get('q');
-    console.log('NEXT URL: ', nextUrl);
-
+    console.log('QUERY: ', searchQuery)
     postIdToDelete = postIdDel;
     $deletePostModal.show();
 
@@ -39,7 +43,7 @@ $(document).ready(function () {
       $("<input>", {
         type: 'hidden',
         name: 'next',
-        value: nextUrl,
+        value: delnextUrl,
       })
     );
 
