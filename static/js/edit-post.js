@@ -140,6 +140,8 @@ $(document).ready(function () {
           // Home title change
           $(`#post-title-${postId}`).text(newTitle);
 
+          //search title change
+
           // Close the modal
           toggleModal($editPostModal, false);
 
@@ -162,32 +164,7 @@ $(document).ready(function () {
   });
   //for showing the success or error modal after edit? i global? idk
   
-  $(document).ready(function () {
-    $("#editPostForm").submit(function (e) {
-      e.preventDefault(); // Prevent form from submitting normally
   
-      const formActionUrl = $(this).attr("action");
-      const formData = $(this).serialize();
-  
-      $.ajax({
-        type: "POST",
-        url: formActionUrl,
-        data: formData,
-        success: function (response) {
-          if (response.success) {
-            // Show success modal with response message
-            showModal(response.message, 'success');
-          } else {
-            // Show error modal with default error message
-            showModal('Post update failed', 'error');
-          }
-        },
-        error: function () {
-          showModal('An error occurred. Please try again.', 'error');
-        }
-      });
-    });
-  });
   
     
   // Close modal if clicked outside of it

@@ -100,7 +100,8 @@
           </div>
           {% if request.user == post.user %}
           <div class="search-post-actions">
-            <button class="edit-icon" title="{{ post.title | escapejs }}"
+            <button class="edit-icon" 
+            data-post-title="{{ post.title | escapejs }}"
             id="openEditPostModalBtn"
             data-post-id="{{ post.post_id }}"
             data-post-category="{{ post.category_id }}"
@@ -126,7 +127,7 @@
         </div>
         <!--post body-->
         <div class="search-post-body">
-          <span class="search-post-title">{{ post.title }}</span>
+          <span class="search-post-title" id="post-title-{{ post.post_id }}">{{ post.title }}</span>
           <div class="search-post-image">
             {% if post.images.all %}
             {% for image in post.images.all %}
