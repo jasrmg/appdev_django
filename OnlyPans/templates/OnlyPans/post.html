@@ -17,14 +17,15 @@
     {% if request.user == post.user %}
 
     <div class="post_actions">
-      <button class="edit-icon" title="{{ post.title | escapejs }}"
+      <button class="edit-icon" 
+      data-post-title="{{ post.title | escapejs }}"
       id="openEditPostModalBtn"
       data-post-id="{{ post.post_id }}" 
       data-post-category="{{ post.category_id }}"
       data-post-description="{{ post.description | escapejs }}"
       data-post-ingredients="{{ post.ingredients | escapejs }}"
       >
-        <i class="fa-solid fa-pencil-alt" title="Edit"></i>
+        <i class="fas fa-edit" title="Edit"></i>
       </button>
       <!--edit post modal is added on the base template-->
   
@@ -38,7 +39,7 @@
     {% endif %}
   </div>
   <div class="post_body">
-    <h3 style="text-align: center">{{ post.title }}</h3>
+    <h3 style="text-align: center" id="post-title-{{ post.post_id }}">{{ post.title }}</h3>
     <!--DESCRIPTION-->
     <p id="truncatedDescription-{{ post.post_id }}" class="truncated">
       {{ post.description | truncatewords:30 }}
@@ -122,7 +123,7 @@
       <div class="comment_content">
         <div class="comment_info">
           <h4>{{ comment.user.first_name }} {{ comment.user.last_name }}</h4>
-          <p>{{ comment.created_at | custom_timesince }} ago</p>
+          <p>{{ comment.created_at | custom_timesince }} ago.</p>
         </div>
         <div class="edit-comment" contenteditable="false" id="comment-text-{{ comment.comment_id }}">
           {{ comment.message | truncatewords:40 }}
@@ -130,7 +131,7 @@
       </div>
       {% if comment.user == request.user %}
       <div class="comment-controls">
-        <i class="fa-solid fa-pencil-alt pen-icon" style="color: #33221a" id="editCommentBtn-{{ comment.comment_id }}"
+        <i class="fas fa-edit edit-comment-btn"  id="editCommentBtn-{{ comment.comment_id }}"
           onclick="toggleEdit('{{ comment.comment_id }}')"></i>
 
         <button class="close-button" data-comment-id="{{ comment.comment_id }}"
@@ -140,10 +141,12 @@
       </div>
       {% endif %}
       
+      
     </div>
   {% endfor %} 
+    
     {% if post.comment_count > initial_comment_limit %}
-    <span class="seeMore" data-offset="2" 
+    <span class="seeMore" data-post-id="{{ post.post_id }}" data-offset="2" 
     style="font-size: 14px; font-weight: lighter; cursor: pointer">Load more...</span>
     {% endif %}
     
@@ -167,6 +170,7 @@
     </div>
   </form>
 </div>
+
 {% endfor %} {% else %}
 <div class="post">
   <p style="text-align: center; color: #8d8d8d">No post to show</p>

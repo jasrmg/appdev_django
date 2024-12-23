@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let currentFilter = filterValue || 'all';
   let isLoading = false;
   let noMorePosts = false;
-  if (performance.navigation.type == 1 || 0 ) {
+  if (performance.navigation.type == 1 || 0 || 2 ) {
     //1 = refresh
     //0 = url click
     //2 = redirection
@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 </div>
                 ${post.same_user ? `
                 <div class="home-post-actions">
-                  <button class="edit-icon" 
+                  <button class="edit-icon edit-btn" 
                   id="openEditPostModalBtn"
                   data-post-title="${post.title}"
                   data-post-id="${post.post_id}"

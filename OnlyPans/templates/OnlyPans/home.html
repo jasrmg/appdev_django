@@ -87,7 +87,7 @@
               
               {% if request.user.username == post.post.user.username %} 
                 <div class="home-post-actions">
-                  <button class="edit-icon"
+                  <button class="edit-icon edit-btn"
                   data-post-title="{{ post.post.title | escapejs }}"
                   id="openEditPostModalBtn"
                   data-post-id="{{ post.post.post_id }}"

@@ -37,6 +37,7 @@ urlpatterns = [
   path('save_comment/', views.save_comment, name='save_comment'),
   #load more comments:
   path('load_more_comments/<int:post_id>/', views.load_more_comments, name="load_more_comments"),
+  path('fetch_next_comment/', views.fetch_next_comment, name="next_comment"),
   
   #search
   path('search/<str:filter_type>/', views.search_view, name='search_view'),
@@ -48,7 +49,7 @@ urlpatterns = [
   #home
   path('home/', views.home, name='home_default'),
 
-  # path('home/<str:filter_type>', views.home, name='home'),
+  path('home/<str:filter_type>', views.home, name='home'),
 
   #endpoint for loading more posts in home:
   path('home/more/<str:filter_type>/', views.load_more_posts, name='load_more_posts'),

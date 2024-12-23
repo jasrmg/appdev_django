@@ -24,9 +24,10 @@ def custom_timesince(value):
 
     # Calculate time difference relative to the current local time
     time_diff = timesince(value, now())
+    print(time_diff)
 
     # If the time difference is "just now", return that immediately
-    if 'just' in time_diff:
+    if 'Just' in time_diff:
         return "Just now"
 
     # Split the time difference to get the largest time unit

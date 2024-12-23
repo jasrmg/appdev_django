@@ -18,8 +18,7 @@ document.addEventListener('click', function(event) {
     }
     
     // Restore original edit and delete icons
-    const commentControlsContainer = editingComment.closest('.comment-content')
-      .querySelector('.comment-controls');
+    const commentControlsContainer = editingComment.closest('.comment-content').querySelector('.comment-controls');
     commentControlsContainer.innerHTML = `
       <span class="comment-control-btn edit-btn" title="Edit Comment">
         <i class="fas fa-edit edit-btn" id="editCommentBtn-${commentId}" data-comment-id="${commentId}"></i>

@@ -56,11 +56,6 @@ function showPopup(event) {
     console.error('Post ID is undefined.');
     return;
   }
-
-  // Log postId to verify
-  console.log('Post ID:', POSTID);
-
-  // Construct the URL dynamically
   const url = `/search/post_view/${POSTID}/`;
   console.log('Fetching from:', url);
 
@@ -174,27 +169,61 @@ function showPopup(event) {
 
 function timeSince(date) {
   const now = new Date();
-  const diffInSeconds = Math.floor((now - new Date(date)) / 1000); // time difference in seconds
+  const createdTime = new Date(date); // Make sure `createdAt` is a proper date string
+  const delta = now - createdTime; // Get the difference in milliseconds
 
-  const minutes = Math.floor(diffInSeconds / 60);
-  const hours = Math.floor(diffInSeconds / 3600);
-  const days = Math.floor(diffInSeconds / 86400);
-  const months = Math.floor(diffInSeconds / 2592000); // Approximate month (30 days)
-  const years = Math.floor(diffInSeconds / 31536000); // Approximate year (365 days)
-
-  if (years > 0) {
-    return years + " year" + (years > 1 ? "s" : "") + " ago";
-  } else if (months > 0) {
-    return months + " month" + (months > 1 ? "s" : "") + " ago";
-  } else if (days > 0) {
-    return days + " day" + (days > 1 ? "s" : "") + " ago";
-  } else if (hours > 0) {
-    return hours + " hour" + (hours > 1 ? "s" : "") + " ago";
-  } else if (minutes > 0) {
-    return minutes + " minute" + (minutes > 1 ? "s" : "") + " ago";
-  } else {
+  if (delta < 60 * 1000) {
     return "Just now";
   }
+
+  const seconds = Math.floor(delta / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  const months = Math.floor(days / 30);
+  const years = Math.floor(days / 365);
+
+  if (years > 0) {
+    return `${years} year${years > 1 ? "s" : ""} ago`;
+  }
+  if (months > 0) {
+    return `${months} month${months > 1 ? "s" : ""} ago`;
+  }
+  if (days > 0) {
+    return `${days} day${days > 1 ? "s" : ""} ago`;
+  }
+  if (hours > 0) {
+    return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+  }
+  if (minutes > 0) {
+    return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+  }
+  return "Just now"; // Should not reach here
+
+
+  // akoa giusab giparehas sa timeAgo sa comment.js
+  // const now = new Date();
+  // const diffInSeconds = Math.floor((now - new Date(date)) / 1000); // time difference in seconds
+
+  // const minutes = Math.floor(diffInSeconds / 60);
+  // const hours = Math.floor(diffInSeconds / 3600);
+  // const days = Math.floor(diffInSeconds / 86400);
+  // const months = Math.floor(diffInSeconds / 2592000); // Approximate month (30 days)
+  // const years = Math.floor(diffInSeconds / 31536000); // Approximate year (365 days)
+
+  // if (years > 0) {
+  //   return years + " year" + (years > 1 ? "s" : "") + " ago";
+  // } else if (months > 0) {
+  //   return months + " month" + (months > 1 ? "s" : "") + " ago";
+  // } else if (days > 0) {
+  //   return days + " day" + (days > 1 ? "s" : "") + " ago";
+  // } else if (hours > 0) {
+  //   return hours + " hour" + (hours > 1 ? "s" : "") + " ago";
+  // } else if (minutes > 0) {
+  //   return minutes + " minute" + (minutes > 1 ? "s" : "") + " ago";
+  // } else {
+  //   return "Just now";
+  // }
 }
 window.timeSince = timeSince;
 

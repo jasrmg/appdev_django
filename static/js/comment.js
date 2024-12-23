@@ -1,4 +1,37 @@
+//function para sa just now or sa time ig append:
+window.timeAgo = (createdAt) => {
+  const now = new Date();
+  const createdTime = new Date(createdAt); // Make sure `createdAt` is a proper date string
+  const delta = now - createdTime; // Get the difference in milliseconds
 
+  if (delta < 60 * 1000) {
+    return "Just now";
+  }
+
+  const seconds = Math.floor(delta / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  const months = Math.floor(days / 30);
+  const years = Math.floor(days / 365);
+
+  if (years > 0) {
+    return `${years} year${years > 1 ? "s" : ""} ago`;
+  }
+  if (months > 0) {
+    return `${months} month${months > 1 ? "s" : ""} ago`;
+  }
+  if (days > 0) {
+    return `${days} day${days > 1 ? "s" : ""} ago`;
+  }
+  if (hours > 0) {
+    return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+  }
+  if (minutes > 0) {
+    return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+  }
+  return "Just now"; // Should not reach here
+};
 $(document).on("submit", ".comment_section", function (event) {
   event.preventDefault();
 
@@ -25,40 +58,7 @@ $(document).on("submit", ".comment_section", function (event) {
       const commentsSection = $(`.comments_section[data-post-id="${postId}"]`);
       console.log("new comment id: ", postId);
 
-      //function para sa just now or sa time ig append:
-      const timeAgo = (createdAt) => {
-        const now = new Date();
-        const createdTime = new Date(createdAt); // Make sure `createdAt` is a proper date string
-        const delta = now - createdTime; // Get the difference in milliseconds
-
-        if (delta < 60 * 1000) {
-          return "Just now";
-        }
-
-        const seconds = Math.floor(delta / 1000);
-        const minutes = Math.floor(seconds / 60);
-        const hours = Math.floor(minutes / 60);
-        const days = Math.floor(hours / 24);
-        const months = Math.floor(days / 30);
-        const years = Math.floor(days / 365);
-
-        if (years > 0) {
-          return `${years} year${years > 1 ? "s" : ""} ago`;
-        }
-        if (months > 0) {
-          return `${months} month${months > 1 ? "s" : ""} ago`;
-        }
-        if (days > 0) {
-          return `${days} day${days > 1 ? "s" : ""} ago`;
-        }
-        if (hours > 0) {
-          return `${hours} hour${hours > 1 ? "s" : ""} ago`;
-        }
-        if (minutes > 0) {
-          return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
-        }
-        return "Just now"; // Should not reach here
-      };
+      
       const newComment = `
         <div class="comment" data-post-id="${postId}">
           <img src="${response.user_avatar}" alt="pp" class="avatar_post"/>
@@ -73,7 +73,8 @@ $(document).on("submit", ".comment_section", function (event) {
               
             </div>
             <div class="comment-controls">
-              <i class="fa-solid fa-pencil-alt pen-icon" style="color: #33221a" id="editCommentBtn-${ response.comment_id }" onclick="toggleEdit('${ response.comment_id }')"></i>
+              <i class="fas fa-edit edit-comment-btn"
+              id="editCommentBtn-${ response.comment_id }" onclick="toggleEdit('${ response.comment_id }')"></i>
               <button class="close-button" data-comment-id=${
                 response.comment_id
               }>&times;</button>
@@ -83,17 +84,28 @@ $(document).on("submit", ".comment_section", function (event) {
 
       // Append the new comment to the correct post's comments section
       commentsSection.append(newComment);
-      //ensures load more button stays at the bottom
-      const seeMoreButton = $(".seeMore");
-      commentsSection.append(seeMoreButton); // Append it below the new comment
       //count sa comments:
       const commentPostId = "{{ post.post_id }}";
       console.log("Comment Post ID: ", commentPostId);
 
       const commentCountSpan = $(`#commentCount-${postId}`);
       console.log("POST ID: ", postId);
-      const currentCount = parseInt(commentCountSpan.text(), 10);
-      commentCountSpan.text(currentCount + 1);
+
+      let initialCommentLimit = 2;
+      const seeMoreButton = $( `.seeMore[data-post-id="${postId}"]`);
+      const currentCount = parseInt(commentCountSpan.text(), 10) + 1;
+      commentCountSpan.text(currentCount);
+      if (currentCount > initialCommentLimit) {
+        seeMoreButton.show();
+      } else {
+        seeMoreButton.hide();
+      }
+      //ensures load more button stays at the bottom
+      if (seeMoreButton.length) {
+        seeMoreButton.detach();
+        commentsSection.append(seeMoreButton)
+      }
+      // commentsSection.append(seeMoreButton); // Append it below the new comment
     },
 
     error: function (xhr, status, error) {
@@ -150,12 +162,95 @@ $("#confirmDeleteBtn").on("click", function () {
 
         // Update the comment count dynamically
         const commentCountSpan = $(`#commentCount-${postIdToUpdate}`);
-        console.log("id ", postIdToUpdate);
-        const currentCount = parseInt(commentCountSpan.text(), 10);
-        commentCountSpan.text(currentCount - 1);
+        // console.log("id ", postIdToUpdate);
+        const currentCount = parseInt(commentCountSpan.text(), 10) - 1;
+        commentCountSpan.text(currentCount);
         // Hide the modal after successful deletion
         const modal = document.getElementById("commentDeleteConfirmationModal");
         modal.style.display = "none";
+
+
+        
+        // let allComments = [];
+        // $('.comment').each(function () {
+        //   const commentId = $(this).find('.close-button').data('comment-id');
+        //   if (commentId) {
+        //     allComments.push(commentId)
+        //   }
+        // })
+        // console.log('ALL COMMENTS? ', allComments);
+        
+        //if less than 2 ang comments d ta mo fetch
+        if (currentCount >= 2) {
+          //fetch 1 more comment to maintain 2 comments shown by default:
+          $.ajax({
+            type: "GET",
+            url: `/fetch_next_comment/`,
+            data: {
+              post_id: postIdToUpdate,
+              last_displayed_comment_id: commentIdToDelete,
+            },
+            success: function (response) {
+              console.log('LOGGED USER USERNAME: ', response.logged_username);
+              console.log('COMMENT: ', response.comment);
+              console.log('STATUS: ', response.status);
+              console.log('ERROR: ', response.message)
+              
+              if (response.status === "success" && response.comment) {
+                const timeAgo = window.timeAgo(response.comment.created_at)
+                // console.log('created at: ', timeAgo);
+                const commentsSection = $(`.comments_section[data-post-id="${postIdToUpdate}"]`);
+                const nextComment =  `
+                  <div class="comment" data-post-id="${postIdToUpdate}">
+                    <img src="${response.comment.user_avatar}" alt="${response.comment.username}" class="avatar_post"/>
+                    <div class="comment_content">
+                      <div class="comment_info">
+                        <h4>${response.comment.first_name} ${response.comment.last_name}</h4>
+                        <p>${timeAgo}</p>
+                      </div>
+                      <div class="edit-comment" contenteditable="false" id="comment-text-${response.comment.id}">
+                          ${response.comment.message}
+                      </div>
+                    </div>
+                    ${response.comment.username === response.logged_username ? `
+                      <div class="comment-controls">
+                        <i class="fas fa-edit edit-comment-btn" 
+                        id="editCommentBtn-${response.comment.id}" 
+                        onclick="toggleEdit('${response.comment.id}')"></i>
+                        <button class="close-button" 
+                        data-comment-id="${response.comment.id}" 
+                        onclick="openDeleteModal('${response.comment.id}')">
+                          &times;
+                        </button>
+                      </div>
+                    ` : ''}
+                  </div>
+                `;
+                const seeMoreButton = $(`.seeMore[data-post-id="${postIdToUpdate}"]`);
+                if (seeMoreButton.length > 0) {
+                  seeMoreButton.before(nextComment)
+                } else {
+                  commentsSection.append(nextComment);
+                }
+              }
+          //check if 'load more' should be removed
+          const initialCommentLimit = 2;
+          // console.log('DELETE CURRENT COUNT: ', currentCount)
+          if (currentCount <= initialCommentLimit) {
+          console.log('TRUE');
+          const seeMoreButton = $(`.seeMore[data-post-id="${postIdToUpdate}"]`);
+          if (seeMoreButton.length) {
+            seeMoreButton.remove();
+          }
+        }
+          },
+          error: function(xhr, status, error) {
+            console.error('Error fetching next comment: ', error);
+          },
+        });
+  
+        } 
+        
       } else {
         alert("Failed to delete comment");
       }
@@ -201,13 +296,13 @@ function toggleEdit(commentId) {
         $commentText.css({
           padding: "0",
         });
-        $button.removeClass("fa-check").addClass("fa-pencil-alt");
+        $button.removeClass("fa-check").addClass("fas fa-edit edit-comment-btn");
         $(document).off("click", handleOutsideClick);
       }
     }
   } else {
     $commentText.attr("contenteditable", "false");
-    $button.removeClass("fa-check").addClass("fa-pencil-alt");
+    $button.removeClass("fa-check").addClass("fas fa-edit edit-comment-btn");
     $commentText.css({
       padding: "0",
     });
@@ -295,7 +390,7 @@ $(document).on("click", ".seeMore", function () {
                 isSameUser
                   ? `
                 <div class="comment-controls">
-                    <i class="fa-solid fa-pencil-alt pen-icon" style="color: #33221a" 
+                    <i class="fas fa-edit edit-comment-btn" 
                        id="editCommentBtn-${comment.comment_id}" 
                        onclick="toggleEdit('${comment.comment_id}')"></i>
                     <button class="close-button" 

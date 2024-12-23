@@ -447,41 +447,28 @@ p:nth-of-type(3) {
 
 .comment-controls {
   display: flex;
-  /* Align controls horizontally */
   align-items: center;
-  /* Center them vertically */
   margin-left: auto;
-  /* Push controls to the right */
-}
-
-.pen-icon {
-  font-size: 10px;
-  /* Same size as close button */
-  margin-right: 5px;
-  /* Space between pen icon and close button */
-  cursor: pointer;
-  /* Pointer cursor for better UX */
-  transition: transform 0.2s;
-}
-
-.pen-icon:hover {
-  transform: scale(1.2);
+  gap: 10px;
 }
 
 .close-button {
   background: none;
   border: none;
   color: var(--secondary-color);
-  font-size: 20px;
+  font-size: 24px;
+  font-weight: bold;
   cursor: pointer;
   transition: transform 0.2s;
 }
 
 .close-button:hover {
   color: var(--red-color);
+  transform: scale(1.4);
+}
+.edit-comment-btn:hover {
   transform: scale(1.2);
 }
-
 /*para sa loader*/
 #loading {
   text-align: center;

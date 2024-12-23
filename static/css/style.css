@@ -72,9 +72,11 @@ body {
   border: none; 
   cursor: pointer
 }
-button.edit-icon i {
+button.edit-icon i,
+.edit-btn {
   color: var(--accent-color);
   margin-right: 10px;
+  font-size: 16px;
 }
 button.edit-icon i:hover {
   transform: scale(1.6);

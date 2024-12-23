@@ -407,7 +407,8 @@ def profile_view(request, username):
 
     # Fetch categories
     categories = Category.objects.all()
-
+    print('INITIAL COMMENT LIMIT: ', initial_comment_limit)
+    
     # Context
     context = {
         'title': 'Profile',
@@ -519,7 +520,36 @@ def delete_comment(request, comment_id):
       'comment_count': comment_count, 
       'response': 'YAWAAAAA D MAKUHA RESPONSEEEE!!! FUCK JS'
     })
-    return JsonResponse({'status': 'error'}, status=403)
+  return JsonResponse({'status': 'error'}, status=403)
+
+#fetch next comment
+def fetch_next_comment(request):
+  print('NI RUN ANG FETCH COMMENT PESTE')
+  post_id = request.GET.get('post_id')
+  last_displayed_comment_id = request.GET.get('last_displayed_comment_id')
+  logged_user = request.user.username
+  try:
+    comment = Comment.objects.filter(post_id=post_id).exclude(comment_id=last_displayed_comment_id).order_by('-created_at').first()
+    print('EMPTY ANG COMMENT? ', comment)
+    if comment:
+      print('nihatag sa js')
+      return JsonResponse({
+        "status": "success",
+        "logged_username": logged_user,
+        "comment": {
+          "id": comment.comment_id,
+          "user_avatar": comment.user.avatar.url,
+          "first_name": comment.user.first_name,
+          "last_name": comment.user.last_name,
+          "username": comment.user.username,
+          "created_at": comment.created_at,
+          "message": comment.message,
+        },
+      })
+    else:
+      return JsonResponse({"status": "no_more_comments"})
+  except Exception as e:
+    return JsonResponse({"status":"error", "message": str(e)})
 
 from django.db.models import F
 from django.core.serializers.json import DjangoJSONEncoder
@@ -813,12 +843,14 @@ def home(request, filter_type='all'):
   request.session[session_key] = displayed_posts_ids
 
   categories = Category.objects.all()
+  
   # Add likes and comments data
   posts_data = []
   for post in new_posts:
     likes_count = Like.objects.filter(post=post).count()
     comments_count = Comment.objects.filter(post=post).count()
     images = [image.image.url for image in post.images.all()]
+    
     posts_data.append({
       'post': post,
       'post_id': post.post_id,

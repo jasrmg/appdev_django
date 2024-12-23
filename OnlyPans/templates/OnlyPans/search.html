@@ -100,7 +100,7 @@
           </div>
           {% if request.user == post.user %}
           <div class="search-post-actions">
-            <button class="edit-icon" 
+            <button class="edit-icon edit-btn" 
             data-post-title="{{ post.title | escapejs }}"
             id="openEditPostModalBtn"
             data-post-id="{{ post.post_id }}"
