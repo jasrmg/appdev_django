@@ -22,34 +22,46 @@
       <div class="home-categories">
         <!--239x452-->
         <a href="" class="home-filter-link" 
-        data-category-type="Meat">
+        data-category-type="Meat"
+        data-target="Meat">
           <i class="fas fa-hamburger"></i>
-          <span class="category-title">Meat</span>
-        </a>
-        <a href="" class="home-filter-link" data-category-type="Chicken">
-          <i class="fas fa-drumstick-bite"></i>
-          <span class="category-title">Chicken</span>
-        </a>
-        <a href="" class="home-filter-link" data-category-type="Seafood">
-          <i class="fas fa-fish"></i>
-          <span class="category-title">Seafood</span>
-        </a>
-        <a href="" class="home-filter-link" data-category-type="Veggies">
-          <i class="fas fa-carrot"></i>
-          <span class="category-title">Veggies</span>
-        </a>
-        <a href="" class="home-filter-link" data-category-type="Dessert">
-          <i class="fas fa-ice-cream"></i>
-          <span class="category-title">Dessert</span>
+          Meat
         </a>
         <a href="" class="home-filter-link" 
-        data-category-type="Snack">
-          <i class="fas fa-cookie"></i>
-          <span class="category-title">Snack</span>
+        data-category-type="Chicken"
+        data-target="Chicken">
+          <i class="fas fa-drumstick-bite"></i>
+          Chicken
         </a>
-        <a href="" class="home-filter-link" data-category-type="Beverages">
+        <a href="" class="home-filter-link" 
+        data-category-type="Seafood"
+        data-target="Seafood">
+          <i class="fas fa-fish"></i>
+          Seafood
+        </a>
+        <a href="" class="home-filter-link" 
+        data-category-type="Veggies"
+        data-target="Veggies">
+          <i class="fas fa-carrot"></i>
+          Veggies
+        </a>
+        <a href="" class="home-filter-link" 
+        data-category-type="Dessert"
+        data-target="Dessert">
+          <i class="fas fa-ice-cream"></i>
+          Dessert
+        </a>
+        <a href="" class="home-filter-link" 
+        data-category-type="Snack"
+        data-target="Snack">
+          <i class="fas fa-cookie"></i>
+          Snack
+        </a>
+        <a href="" class="home-filter-link" 
+        data-category-type="Beverages"
+        data-target="Beverages">
           <i class="fas fa-coffee"></i>
-          <span class="category-title">Beverage</span>
+          Beverage
         </a>
       </div>
     </div>
@@ -59,10 +71,50 @@
         <img src="{{ user.avatar.url }}" alt="{{ user.username }}">
         <div class="create-input">
           <!--580x35-->
-          <span>What's cooking, {{ user.first_name }}?</span>
+          <span id="create-post-home-btn">What's cooking, {{ user.first_name }}?</span>
+        </div>
+        <!--CREATE POST HOME MODAL-->
+        <div id="create-post-home" class="modal">
+          <div class="createPostContent">
+            <div class="modal-header">
+              <span class="close" id="createPostX">&times;</span>
+              <h2>Create Post</h2>
+            </div>
+            <div class="modal-body">
+              <form action="{% url 'create_post_home' request.user.username %}" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                  <div class="form-field">
+                    {{ createpost_form.title.label }}<br/>
+                    {{ createpost_form.title }}
+                  </div>
+                  <div class="form-field">
+                    {{ createpost_form.category.label }}<br/>
+                    {{ createpost_form.category }}
+                  </div>
+                  <div class="form-field">
+                    {{ createpost_form.description.label }}<br/>
+                    {{ createpost_form.description }}
+                  </div>
+                  <div class="form-field">
+                    {{ createpost_form.ingredients.label }}<br/>
+                    {{ createpost_form.ingredients }}
+                  </div>
+                  <div class="form-field">
+                    {{ createpost_form.image.label }} <br/>
+                    {{ createpost_form.image }}
+                  </div>
+                  <input type="hidden" name="create_post_home" />
+                  <div class="modal-footer">
+                    <input type="submit" value="Submit"
+                    id="create-post-home-submit-btn" disabled />
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
-
+      <h2>{{ filter_type | title }}</h2>
       <!--posts section-->
       <!--search-food-results sa search-->
       <div class="post-container">
@@ -148,7 +200,9 @@
   // console.log(loadMorePostURL)
 </script>
 
-<script src="{% static 'js/edit-post-home.js' %}" defer></script>
+<!-- <script src="{% static 'js/edit-post-home.js' %}" defer></script> -->
 <script src="{% static 'js/open-post.js' %}" defer></script>
 <script src="{% static 'js/load-more-posts-home.js' %}" defer></script>
+<script src="{% static 'js/home-sidebar-active.js' %}" defer></script>
+<script src="{% static 'js/create-post-home.js' %}" defer></script>
 {% endblock %}

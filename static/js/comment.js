@@ -30,7 +30,7 @@ window.timeAgo = (createdAt) => {
   if (minutes > 0) {
     return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
   }
-  return "Just now"; // Should not reach here
+  return "Just now."; // Should not reach here
 };
 $(document).on("submit", ".comment_section", function (event) {
   event.preventDefault();

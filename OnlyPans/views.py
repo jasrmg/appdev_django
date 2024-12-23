@@ -195,6 +195,42 @@ def edit_bio(request, username):
      form = EditProfileForm(instance=user) 
   return render(request, 'OnlyPans/modals/edit_bio.html', {'editbio_form': form})
 
+def create_post_home(request, username):
+  if request.method == 'POST':
+    createpost_form = CreatePostForm(request.POST, request.FILES)
+    if createpost_form.is_valid():
+      post = createpost_form.save(commit=False)
+      post.user = request.user
+      post.category = Category.objects.get(category_id=request.POST.get('category'))
+      post.save()
+
+      #if image is uploaded, save the image
+      images = request.FILES.getlist('image')
+      for image in images:
+        PostImage.objects.create(post=post, image=image)
+
+      response_data = {
+        'success': True,
+        'new_post_id': post.post_id,
+        'title': post.title,
+        'description': post.description,
+        'ingredients': post.ingredients,
+        # 'category': post.category.name,
+        'category_id': post.category.category_id,
+        'image': post.images.first().image.url if post.images.exists() else '',
+        'avatar': post.user.avatar.url,
+        'username': post.user.username,
+        'first_name': post.user.first_name,
+        'last_name': post.user.last_name,
+        'created_at': post.created_at,
+        'likes_count': post.like_set.count(),
+        'comments_count': post.comment_set.count(),
+      }
+      return JsonResponse(response_data)
+    else:
+      return JsonResponse({'success': False, 'message': 'Form is invalid'})
+  return JsonResponse({'success': False, 'message': 'Invalid request'})
+
 def create_post(request, username):
   user = get_object_or_404(User, username=username)
   form = None
@@ -329,8 +365,6 @@ def delete_post(request, post_id):
 
   #get the next parameter from the request if available
   
-  
-
   return redirect(next_url)
 
 import re
@@ -811,6 +845,7 @@ def home(request, filter_type='all'):
   # session_data = request.session
   # decoded = request.session.items()
   # print('DECODED SESSION: ', decoded)
+  createpost_form = CreatePostForm(request.POST, request.FILES)
   next_url = request.GET.get('next', request.path)
   request.session['filter_type'] = filter_type
 
@@ -836,6 +871,9 @@ def home(request, filter_type='all'):
   #retrieve the next 2 posts
   new_posts = list(new_posts_query.order_by('?')[:2])
 
+  if not new_posts:
+    return JsonResponse({'no_more_posts': True})
+
   #update session with displayed posts
   displayed_posts_ids.extend([post.post_id for post in new_posts])
   # print('DISPLAYED POST HOME! ', displayed_posts_ids)
@@ -844,6 +882,14 @@ def home(request, filter_type='all'):
 
   categories = Category.objects.all()
   
+  # posts_by_category = {}
+
+  # for post in new_posts:
+  #   category_name = post.category.name
+  #   if category_name not in posts_by_category:
+  #     posts_by_category[category_name] = []
+  #   posts_by_category[category_name].append(post)
+
   # Add likes and comments data
   posts_data = []
   for post in new_posts:
@@ -860,9 +906,11 @@ def home(request, filter_type='all'):
     })
 
   context = {
+    # 'posts_by_category': posts_by_category,
+    'createpost_form': createpost_form,
     'posts_data': posts_data,
     'categories': categories,
-    'title': f"Home {filter_type.capitalize() if filter_type else ''}",
+    'title': 'Home',
     'user': request.user,
     'filter_type': filter_type,
     'next_url': next_url,
@@ -876,40 +924,44 @@ def load_more_posts(request, filter_type='all'):
   decoded = request.session.items()
   print('DECODED SESSION: ', decoded)
   
+  displayed_posts_ids = request.session.get('displayed_posts', [])
+  print('DISPLAYED POST IDS NEW: ', displayed_posts_ids)
+
+  #initialize the last filter type in session if it does not exist
   if 'last_filter_type' not in request.session:
     request.session['last_filter_type'] = filter_type
     print('INITIALIZING LAST FILTER TYPE: ')
 
   last_filter_type = request.session['last_filter_type']
-  print('LAST FILTER TYPE: ', last_filter_type)
-  print('CURRENT FILTER TYPE: ', filter_type)
+  # print('LAST FILTER TYPE: ', last_filter_type)
+  # print('CURRENT FILTER TYPE: ', filter_type)
   
   if filter_type != last_filter_type:
     print('EMPTYING')
     request.session['displayed_posts'] = []
+    displayed_posts_ids = []
 
   request.session['last_filter_type'] = filter_type
-  #determine session key
-  session_key = "displayed_posts"
-  #fetch the current session data (displayed_posts) for the user
-  displayed_posts_ids = request.session.get(session_key, [])
-  print('LOAD MORE DISPLAYED POSTS: ', displayed_posts_ids)
 
-  #fetch new posts that havent been displayed yet
+  #fetch new posts excluding the ones already displayed
   new_posts_query = Post.objects.exclude(post_id__in=displayed_posts_ids)
-  #apply the filter based on filter type:
+
+  #apply the filter
   if filter_type and filter_type != 'all':
     new_posts_query = new_posts_query.filter(category__name__iexact=filter_type) 
-  
+
+  #fetch a set of 2 new posts
   new_posts = list(new_posts_query.order_by('?')[:2])
+  
   #if no more posts
   if not new_posts:
     return JsonResponse({'posts_data': [], 'no_more_posts': True})
   
   #update session with displayed posts
   displayed_posts_ids.extend([post.post_id for post in new_posts])
-  request.session[session_key] = displayed_posts_ids
+  request.session['displayed_posts'] = displayed_posts_ids
 
+  
   # Add likes and comments data
   posts_data = []
   for post in new_posts:

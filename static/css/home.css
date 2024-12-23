@@ -1,12 +1,6 @@
-
 .home-body-container {
   background: #fdeed8;
   
-}
-.nav {
-  width: 100%;
-  height: 123px;
-  background: #33221a;
 }
 .home-body-container {
   display: flex;
@@ -30,6 +24,10 @@
   margin-top: 80px;
 }
 
+.home-content h2 {
+  color: var(--secondary-color);
+  margin: 5px 0;
+}
 .sidebar div {
   display: flex;
   flex-direction: column;
@@ -73,11 +71,17 @@
   border-radius: 10px;
   transition: all 0.2s ease-in-out;
 }
+
 .home-categories a:hover {
-  background-color: #33221a;
+  background-color: var(--accent-color);
 }
-.home-categories a:hover i, a:hover .category-title {
-  color: #fdeed8;
+
+.home-categories a:hover i, a:hover {
+  color: var(--primary-color);
+}
+.home-categories a.active {
+  color: var(--primary-color);
+  background: var(--accent-color);
 }
 .home-categories a i {
   width: 25px;
@@ -94,7 +98,7 @@
   padding: 10px;
   background-color: #E6D4BC;
   border-radius: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 1s0px;
 }
 .home-create-post img {
   width: 45px;
@@ -191,22 +195,21 @@
   background: none;
 }
 
-
 /* .search-post-delete {
   font-size: 20px;
   font-weight: bold;
   color: var(--accent-color);
   transition: transform 0.3s ease, color 0.3s ease;
-} */
-
-/* Post Body */
-.home-post-body {
-  margin: 10px 0;
-  text-align: center;
-}
-
-span.home-post-title {
-  font-size: 18px;
+  } */
+  
+  /* Post Body */
+  .home-post-body {
+    margin: 10px 0;
+    text-align: center;
+  }
+  
+  span.home-post-title {
+    font-size: 18px;
   font-weight: bold;
   color: var(--secondary-color);
 }
@@ -231,18 +234,18 @@ span.home-post-title {
 }
 
 /* .search-post-edit, .search-post-delete {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
+background-color: transparent;
+border: none;
+cursor: pointer;
 }
 
 .search-post-edit:hover {
-  color: var(--secondary-color);
+color: var(--secondary-color);
 }
 
 .search-post-delete:hover {
-  color: var(--red-color);
-  transform: scale(1.4);
+color: var(--red-color);
+transform: scale(1.4);
 } */
 .no-of-comments, .no-of-likes,
 .comment-count, .like-count {
@@ -256,8 +259,9 @@ span.home-post-title {
   color: var(--red-color);
 }
 .no-of-comments .fa-comment {
-  color: var(--accent-color);
+color: var(--accent-color);
 }
+
 /*NO MORE POSTS*/
 
 /*====================================*/

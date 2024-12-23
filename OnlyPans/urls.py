@@ -19,10 +19,9 @@ urlpatterns = [
   path('edit_post/<int:post_id>/', views.edit_post, name='edit_post'),
   path('edit_profile/<str:username>/', views.edit_profile, name='edit_profile'),
   path('create_post/<str:username>/', views.create_post, name='create_post'),
+  
   path('edit_bio/<str:username>/', views.edit_bio, name='edit_bio'),
 
-  #edit home search post
-  # path('home/edit-post/', views.edit_post_home_search, name="edit_post_home_search"),
 
 
   #follow unfollow
@@ -48,6 +47,8 @@ urlpatterns = [
 
   #home
   path('home/', views.home, name='home_default'),
+  #create post home
+  path('home/create_post/<str:username>/', views.create_post_home, name="create_post_home"),
 
   path('home/<str:filter_type>', views.home, name='home'),
 

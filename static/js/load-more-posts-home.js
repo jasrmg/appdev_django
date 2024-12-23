@@ -1,10 +1,18 @@
 document.addEventListener("DOMContentLoaded", function () {
+  //i store ang first 2 nga g render sa front end
+  let displayedPostIds = []
+  const posts = document.querySelectorAll('.home-post');
+  posts.forEach(post => {
+    const postId = post.id.replace('post-', '');
+    displayedPostIds.push(postId);
+  })
+
   let currentPath = window.location.pathname;
   let filterValue = currentPath.split('/')[2]
   let currentFilter = filterValue || 'all';
   let isLoading = false;
   let noMorePosts = false;
-  if (performance.navigation.type == 1 || 0 || 2 ) {
+  if (performance.navigation.type == 1 || performance.navigation.type === 0 || performance.navigation.type === 2 ) {
     //1 = refresh
     //0 = url click
     //2 = redirection
@@ -17,12 +25,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
   
-
+  /*if (meatpost > 2) {
+    loadmoreposts 
+  }*/
   // Function to load more posts with the selected filter
   const loadMorePosts = () => {
     console.log('Loading more posts....')
     if (isLoading || noMorePosts) return;
-
+    console.log('DISPLAYED POST IDS: ', displayedPostIds)
     isLoading = true;
     const loadMorePostURL = `more/${currentFilter}/?offset=${window.offset || 0}`;    
     console.log('current filter :', currentFilter);
@@ -31,6 +41,10 @@ document.addEventListener("DOMContentLoaded", function () {
       headers: {
         "X-Requested-With": "XMLHttpRequest",
       },
+      data: {
+        filter_type: currentFilter,
+        displayed_posts: displayedPostIds,
+      }
     })
       .then(response => response.json())
       .then(data => {
