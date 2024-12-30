@@ -123,7 +123,7 @@
       <div class="comment_content">
         <div class="comment_info">
           <h4>{{ comment.user.first_name }} {{ comment.user.last_name }}</h4>
-          <p>{{ comment.created_at | custom_timesince }} ago.</p>
+          <p>{{ comment.created_at | custom_timesince }}.</p>
         </div>
         <div class="edit-comment" contenteditable="false" id="comment-text-{{ comment.comment_id }}">
           {{ comment.message | truncatewords:40 }}

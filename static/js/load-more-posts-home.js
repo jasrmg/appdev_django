@@ -71,13 +71,19 @@ document.addEventListener("DOMContentLoaded", function () {
           const timeAgo = window.timeSince(post.created_at)
           console.log('TIME: ', timeAgo)
           console.log('?: ', post.same_user)
+          const postUser = post.poster_username;
+          const profileUrl = `/profile/${postUser}/`;
           const postHtml = `
             <div class="home-post" id="post-${post.post_id}">
               <div class="home-post-header">
                 <div class="home-post-owner">
-                  <img src="${ post.avatar }" alt="${post.poster_username}" loading="lazy"> 
+                  <a href="${profileUrl}">
+                    <img src="${ post.avatar }" alt="${post.poster_username}" loading="lazy"> 
+                  </a>
                   <div class="home-post-owner-details">
-                    <span class="owner-name">${post.first_name} ${post.last_name}</span>
+                    <a href="${profileUrl}">
+                      <span class="owner-name">${post.first_name} ${post.last_name}</span>
+                    </a>
                     <span class="post-date">${timeAgo}.</span>
                   </div>
                 </div>

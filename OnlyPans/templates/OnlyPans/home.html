@@ -115,8 +115,9 @@
         </div>
       </div>
       <h2>{{ filter_type | title }}</h2>
+
+
       <!--posts section-->
-      <!--search-food-results sa search-->
       <div class="post-container">
         <!--start sa post-->
          {% for post in posts_data %} 
@@ -125,11 +126,15 @@
             <!--post header-->
             <div class="home-post-header">
               <div class="home-post-owner">
-                <img src="{{ post.post.user.avatar.url }}" alt="" loading="lazy">
+                <a href="{% url 'profile' post.post.user.username %}">
+                  <img src="{{ post.post.user.avatar.url }}" alt="" loading="lazy">
+                </a>
                 <div class="home-post-owner-details">
                   <span class="owner-name">
+                    <a href="{% url 'profile' post.post.user.username %}">
                     {{ post.post.user.first_name }}
                     {{ post.post.user.last_name }}
+                    </a>
                   </span>
                   <span class="post-date">
                     {{ post.post.created_at | custom_timesince }} ago.

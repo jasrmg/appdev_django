@@ -92,9 +92,13 @@
         <!--post header-->
         <div class="search-post-header">
           <div class="search-post-owner">
-              <img src="{{ post.user.avatar.url }}" alt="{{ post.user.username }}" loading="lazy">            
+            <a href="{% url 'profile' post.user.username %}">
+              <img src="{{ post.user.avatar.url }}" alt="{{ post.user.username }}" loading="lazy">    
+            </a>        
             <div class="search-post-owner-details">
-              <span class="owner-name">{{ post.user.first_name }} {{ post.user.last_name }}</span>
+              <a href="{% url 'profile' post.user.username %}">
+                <span class="owner-name">{{ post.user.first_name }} {{ post.user.last_name }}</span>
+              </a>
               <span class="post-date">{{ post.created_at | custom_timesince }} ago.</span>
             </div>
           </div>
