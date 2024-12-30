@@ -1,5 +1,17 @@
 $(document).ready(function () {
   // Reference to the edit post modal
+  function decodeData(value) {
+    return value
+      .replace(/\\u000D\\u000A/g, "\n")//newline
+      .replace(/\\n/g, "\n")//literal newline
+      .replace(/\\r/g, "\r")//carriage return
+      .replace(/\\u0022/g, "\"")//escaped quotes
+      .replace(/\\u0027/g, "'")// Escaped single quote
+      .replace(/\\u003C/g, "<")//escaped <
+      .replace(/\\u003E/g, ">")//escaped >
+      .replace(/\\u002D/g, "-")//escaped -
+      .replace(/\\u0026/g, "&");//escaped &
+  }
   const $editPostModal = $("#editPost");
 
   // Function to toggle modal visibility
@@ -22,6 +34,10 @@ $(document).ready(function () {
     const $editPostForm = $("#editPostForm");
     const $submitEditPostBtn = $("#editPostSubmitbtn");
 
+    //decode the description and ingredients
+    const decodedDescription = decodeData(postDescription)
+    const decodedIngredients = decodeData(postIngredients)
+
     // Set the form action dynamically based on editPostId
     const editPostActionUrl = editPostUrl.replace("0", editPostId)
     console.log('url: ', editPostActionUrl);
@@ -29,8 +45,8 @@ $(document).ready(function () {
 
     // Prefill the form fields
     $("#editPostTitle").val(postTitle);
-    $("#editPostDescription").val(postDescription);
-    $("#editPostIngredients").val(postIngredients);
+    $("#editPostDescription").val(decodedDescription);
+    $("#editPostIngredients").val(decodedIngredients);
     $("#editPostCategory").val(postCategory); // Set the category ID (not text)
 
     // Show the edit modal
@@ -143,7 +159,7 @@ $(document).ready(function () {
           // Update truncated description
           const truncatedDescription = newDescription.length > 30 ? newDescription.slice(0, 30) + '...' : newDescription;
           $(`#truncatedDescription-${postId}`).text(truncatedDescription);
-          
+
           const newIngredientsArray = [];
           let regex = /([^\(\),]+|\([^\)]+\))/g;
           let matches = newIngredients.match(regex);

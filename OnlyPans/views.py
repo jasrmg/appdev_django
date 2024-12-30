@@ -370,6 +370,7 @@ def delete_post(request, post_id):
 import re
 @login_required
 def profile_view(request, username):
+    print('PROFILE VIEW:', request.path)
     user = get_object_or_404(User, username=username)
 
     # Flags
@@ -431,14 +432,17 @@ def profile_view(request, username):
         })
 
     # Followers and following
-    followers = user.followers.exclude(follower=request.user)
+    if request.user.username in request.path: 
+      followers = user.followers.exclude(follower=request.user)
+    else:
+      followers = user.followers.all()
     random_followers = random.sample(list(followers), min(len(followers), 6))
 
     following = user.following.exclude(followed=request.user)
 
     number_of_follower = followers.count()
     number_of_following = following.count()
-
+    print('PROFILE VIEW FOLLOWERS: ', number_of_follower)
     # Fetch categories
     categories = Category.objects.all()
     print('INITIAL COMMENT LIMIT: ', initial_comment_limit)
