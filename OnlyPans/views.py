@@ -715,8 +715,9 @@ def search_view(request, filter_type):
   # CATEGORY
   if filter_type and filter_type not in ['all', 'posts', 'people']:
     posts = posts.filter(category__name=filter_type)
+    #checks if same sa title, akoa g remove ang sa description
     if query:
-      posts = posts.filter(Q(title__icontains=normalized_query) | Q(description__icontains=normalized_query))
+      posts = posts.filter(Q(title__icontains=normalized_query))
     #   print('post inside if: ', posts)
     # print('POSTS CHECK not all: ', posts)
   # print('POSTS CHECK 2: ', posts)
@@ -724,7 +725,7 @@ def search_view(request, filter_type):
   # POSTS AND ALL + QUERY
   if query and (filter_type == 'posts' or filter_type == 'all'):
     # print('POSTS CHECK 3: ', posts)
-    posts = posts.filter(Q(title__icontains=normalized_query) | Q(description__icontains=normalized_query))
+    posts = posts.filter(Q(title__icontains=normalized_query))
     # print('POSTS CHECK 4: ', posts)
   # print('POSTS CHECK 5: ', posts)
   posts = posts.order_by('-created_at')
@@ -732,12 +733,16 @@ def search_view(request, filter_type):
   # Search users for people filter
   users = []
   if filter_type == 'people' or filter_type == 'all':
+    query_words = normalized_query.split()
+    user_filter = Q()
+    if len(query_words) == 2:
+      first_name, last_name = query_words
+      user_filter = Q(first_name__icontains=first_name) & Q(last_name__icontains=last_name)
+    else:
+      user_filter = Q(first_name__icontains=normalized_query) | Q(last_name__icontains=normalized_query)
     users = User.objects.annotate(
-      follower_count=Count('followers', distinct=True)
-    ).filter(
-      Q(first_name__icontains=normalized_query) | Q(last_name__icontains=normalized_query)
-    ).exclude(id=request.user.id)
-
+      follower_count = Count('followers', distinct=True)
+    ).filter(user_filter).exclude(id=request.user.id)
   # Get all categories to display in the filter
   categories = Category.objects.all()
 

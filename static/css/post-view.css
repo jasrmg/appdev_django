@@ -26,7 +26,7 @@
   height: 100%;
   background: rgba(0,0,0,0.5);
   z-index: 2;
-  overflow-y: auto;
+  /* overflow-y: auto; */
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -78,16 +78,19 @@
   font-weight: bold;
   font-size: 20px;
   background: var(--darker-primary-color);
-  position: fixed;
-  top: 0;
-  left: 0;
+
 
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  position: relative;
   padding: 10px;
+
+  position: sticky;
+  top: 0;
+  left: 0;
+
+  border-bottom: 1px solid var(--accent-color);
 }
 .popup-actions {
   position: absolute;
@@ -100,7 +103,6 @@
   align-items: center;
   justify-content: space-between;
   padding: 15px;
-  border-top: 1px solid var(--accent-color);
   background: var(--darker-primary-color);
 }
 

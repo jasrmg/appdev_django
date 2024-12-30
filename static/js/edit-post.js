@@ -139,8 +139,30 @@ $(document).ready(function () {
 
           // Home title change
           $(`#post-title-${postId}`).text(newTitle);
+          
+          // Update truncated description
+          const truncatedDescription = newDescription.length > 30 ? newDescription.slice(0, 30) + '...' : newDescription;
+          $(`#truncatedDescription-${postId}`).text(truncatedDescription);
+          
+          const newIngredientsArray = [];
+          let regex = /([^\(\),]+|\([^\)]+\))/g;
+          let matches = newIngredients.match(regex);
+          if (matches) {
+            newIngredientsArray.push(...matches.map(ingredient => ingredient.trim()));
+          }
+          // const newIngredientsArray = newIngredients.split(',').map(ingredient => ingredient.trim());
 
-          //search title change
+
+          // Update full description
+          $(`#fullDescription-${postId}`).text(newDescription);
+
+          // Update truncated ingredients
+          const truncatedIngredients = newIngredientsArray.slice(0, 4).join(", ");
+          $(`#truncatedIngredients-${postId}`).html(truncatedIngredients);
+
+          // Update full ingredients
+          const fullIngredients = newIngredientsArray.join("<li></li>");
+          $(`#allIngredients-${postId}`).html(`<li>${fullIngredients}</li>`);
 
           // Close the modal
           toggleModal($editPostModal, false);

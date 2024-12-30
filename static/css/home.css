@@ -70,6 +70,7 @@
   font-size: 20px;
   border-radius: 10px;
   transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
 }
 
 .home-categories a:hover {
@@ -98,7 +99,9 @@
   padding: 10px;
   background-color: #E6D4BC;
   border-radius: 10px;
-  margin-bottom: 1s0px;
+  margin-bottom: 10px;
+
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 .home-create-post img {
   width: 45px;
@@ -136,18 +139,20 @@
   padding: 15px;
   border-radius: 5px;
   
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 /*no more post*/
 .home-post.no-more-post {
   margin-bottom: 20px;
   background: var(--accent-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 .home-post.no-more-post span {
   text-align: center;
   font-weight: bold;
   color: var(--primary-color);
   letter-spacing: 1.4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 /* Post Header */

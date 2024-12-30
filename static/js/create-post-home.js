@@ -35,6 +35,13 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('create-post-home').style.display = 'none';
   });
 
+    // Close modal when clicking outside of it
+    document.getElementById('create-post-home').addEventListener('click', function (e) {
+      if (e.target === document.getElementById('create-post-home')) {
+        document.getElementById('create-post-home').style.display = 'none';
+      }
+    });
+
   //submit the form via ajax
   form.addEventListener('submit', function (e) {
     e.preventDefault();
