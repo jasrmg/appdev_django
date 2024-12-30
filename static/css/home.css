@@ -48,14 +48,14 @@
 .home-username {
   font-weight: light;
   font-size: 15px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 .home-categories {
   height: 400px;
   width: 239px;
   display: flex;
   gap: 10px;
-  
+  margin-bottom: 10px;
 }
 .home-categories a {
   text-decoration: none;
@@ -145,14 +145,12 @@
 .home-post.no-more-post {
   margin-bottom: 20px;
   background: var(--accent-color);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 .home-post.no-more-post span {
   text-align: center;
   font-weight: bold;
   color: var(--primary-color);
   letter-spacing: 1.4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 /* Post Header */

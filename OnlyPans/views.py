@@ -854,6 +854,14 @@ def home(request, filter_type='all'):
   # session_data = request.session
   # decoded = request.session.items()
   # print('DECODED SESSION: ', decoded)
+
+  #get the previous filter from session
+  previous_filter = request.session.get('filter_type')
+  if previous_filter != filter_type:
+    clear_displayed_post(request)
+  #update the current filter in session
+  request.session['filter_type'] = filter_type
+
   createpost_form = CreatePostForm(request.POST, request.FILES)
   next_url = request.GET.get('next', request.path)
   request.session['filter_type'] = filter_type
@@ -871,21 +879,21 @@ def home(request, filter_type='all'):
 
   #fetch the current session data
   displayed_posts_ids = request.session.get(session_key, [])
-
+  print('HOME DISPLAYED POST IDS: ', displayed_posts_ids)
   new_posts_query = Post.objects.exclude(post_id__in=displayed_posts_ids)
 
   if filter_type and filter_type != 'all':
     new_posts_query = new_posts_query.filter(category__name__iexact=filter_type)
 
   #retrieve the next 2 posts
-  new_posts = list(new_posts_query.order_by('?')[:2])
+  new_posts = list(new_posts_query.order_by('-created_at')[:2])
 
   if not new_posts:
     return JsonResponse({'no_more_posts': True})
 
   #update session with displayed posts
-  displayed_posts_ids.extend([post.post_id for post in new_posts])
-  # print('DISPLAYED POST HOME! ', displayed_posts_ids)
+  displayed_posts_ids = list(set(displayed_posts_ids + [post.post_id for post in new_posts]))
+  request.session['displayed_posts'] = displayed_posts_ids
   
   request.session[session_key] = displayed_posts_ids
 
@@ -929,45 +937,37 @@ def home(request, filter_type='all'):
 
 @login_required
 def load_more_posts(request, filter_type='all'):
-  session_data = request.session
-  decoded = request.session.items()
-  print('DECODED SESSION: ', decoded)
-  
+
+  #get both current session filter and last filter
+  current_session_filter = request.session.get('filter_type')
+  if filter_type != current_session_filter:
+    clear_displayed_post(request)
+    request.session['filter_type'] = filter_type
+
   displayed_posts_ids = request.session.get('displayed_posts', [])
-  print('DISPLAYED POST IDS NEW: ', displayed_posts_ids)
-
-  #initialize the last filter type in session if it does not exist
-  if 'last_filter_type' not in request.session:
-    request.session['last_filter_type'] = filter_type
-    print('INITIALIZING LAST FILTER TYPE: ')
-
-  last_filter_type = request.session['last_filter_type']
-  # print('LAST FILTER TYPE: ', last_filter_type)
-  # print('CURRENT FILTER TYPE: ', filter_type)
   
-  if filter_type != last_filter_type:
-    print('EMPTYING')
-    request.session['displayed_posts'] = []
-    displayed_posts_ids = []
+
 
   request.session['last_filter_type'] = filter_type
 
   #fetch new posts excluding the ones already displayed
-  new_posts_query = Post.objects.exclude(post_id__in=displayed_posts_ids)
+  new_posts_query = Post.objects.exclude(
+    post_id__in=displayed_posts_ids
+  ).order_by('-created_at')
 
   #apply the filter
   if filter_type and filter_type != 'all':
     new_posts_query = new_posts_query.filter(category__name__iexact=filter_type) 
 
   #fetch a set of 2 new posts
-  new_posts = list(new_posts_query.order_by('?')[:2])
+  new_posts = list(new_posts_query.order_by('-created_at')[:2])
   
   #if no more posts
   if not new_posts:
     return JsonResponse({'posts_data': [], 'no_more_posts': True})
   
   #update session with displayed posts
-  displayed_posts_ids.extend([post.post_id for post in new_posts])
+  displayed_posts_ids = list(set(displayed_posts_ids + [post.post_id for post in new_posts]))
   request.session['displayed_posts'] = displayed_posts_ids
 
   
@@ -998,3 +998,6 @@ def load_more_posts(request, filter_type='all'):
 
   return JsonResponse({'posts_data': posts_data})
 
+def clear_displayed_post(request):
+  request.session['displayed_posts'] = []
+  request.session['last_filter_type'] = None
