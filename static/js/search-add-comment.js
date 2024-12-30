@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(data => {
         if (data.success) {
           console.log('POST ID: ', POSTID);
+          const createdAt = window.timeSince(data.createdAt)
           // You can append the new comment to the comments section here
           const commentSection = document.querySelector('.popup-comments-section'); 
           const newCommentHTML = `
@@ -36,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="comment-header">
                   <div class="commentor-details">
                     <span class="comment-author">${data.user_name}</span>
-                    <span class="comment-time">${data.created_at}</span>
+                    <span class="comment-time">${createdAt}.</span>
                   </div>
                   <div class="comment-controls">
                     <span class="comment-control-btn edit-btn" title="Edit Comment">
